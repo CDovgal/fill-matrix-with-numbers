@@ -128,20 +128,18 @@ vector<int> generateFibonacci(int n)
 
 void fillByFibonacciNumb(int n) //filled by Fibonacci number in memory location order
 {
-  vector <vector<int>> fibnumb_filled(n, vector<int>(n));
   int k = 0;
 
-  for (int i = 0; i < n; ++i)
+  vector <int> fibnumb_filled(n*n);
+  fibnumb_filled = generateFibonacci(n*n);
+
+  for (int i = 0; i < n*n; ++i)
   {
-    for (int j = 0; j < n; ++j)
-    {
-      fibnumb_filled[i][j] = generateFibonacci(n*n).at(k++);
-      cout << fibnumb_filled[i][j] << "\t";
-    }
-    cout << "\n";
+      cout << fibnumb_filled[i] << "\t";
+      if ((i+1)%(n) == 0)
+        cout << "\n";
   }
 }
-
 
 
 int main(int argc, char **argv)
