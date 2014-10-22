@@ -95,13 +95,13 @@ void fillTopRight(int n)
       int iRowStep = iRow;
       int iColStep = iCol;
 
-      if (iRow < n - 1)
-          iRowStep = iRow++;
-      else
+      if (iCol > 0)
           iColStep = iCol--;
+      else
+          iRowStep = iRow++;
 
-      while (iColStep >= 0 && iRowStep >= 0)
-          top_filled[iRowStep--][iColStep--] = k++;
+      while (iColStep < n && iRowStep < n)
+          top_filled[iRowStep++][iColStep++] = k++;
   }
 
   for (int i = 0; i < n; ++i)
