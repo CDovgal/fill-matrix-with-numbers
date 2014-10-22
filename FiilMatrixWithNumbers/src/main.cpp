@@ -2,11 +2,12 @@
 
 #include <iostream>
 #include <vector>
+//#include <gtest/gtest.h>
 
 using namespace std;
 
 
-void multipliedMatrix(int n)
+void fillMultipliedIndexes(int n) //filled by multiplication of indexes
 {
 	vector <vector<int>> multi(n, vector<int>(n));
 
@@ -28,7 +29,7 @@ void multipliedMatrix(int n)
 	}
 }
 
-void summedMatrix(int n)
+void fillSummedIndexes(int n) // filled by sum of matrix cells indexes
 {
 	vector <vector<int>> summ(n, vector<int>(n));
 
@@ -50,7 +51,7 @@ void summedMatrix(int n)
 	}
 }
 
-void fillBottomLeft(int n)
+void fillBottomLeft(int n) // filled by numbers in course from bottom left corbner to top right
 {
 	vector <vector<int>> bottom_filled(n, vector<int>(n));
 	int k = 1;
@@ -82,7 +83,7 @@ void fillBottomLeft(int n)
 
 }
 
-void fillTopRight(int n)
+void fillTopRight(int n) // filled by numbers in course from top right corner to left bottom
 {
 	vector <vector<int>> top_filled(n, vector<int>(n));
 
@@ -114,15 +115,64 @@ void fillTopRight(int n)
   }
 }
 
-
-int main()
+vector<int> fib(int n)
 {
+  int c, first = 0, second = 1, next;
+  vector<int> fibo;
+  for (c = 0; c < n; c++)
+  {
+    if (c <= 1)
+      next = c;
+    else
+    {
+      next = first + second;
+      first = second;
+      second = next;
+    }
+    fibo.push_back(next);
+  } 
+  return fibo;
+}
+
+
+void fillByFibonacciNumb(int n) //filled by Fibonacci number in memory location order
+{
+  vector <vector<int>> fibnumb_filled(n, vector<int>(n));
+  int k = 0;
+
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < n; ++j)
+    {
+      fibnumb_filled[i][j] = fib(n*n).at(k++);
+    }
+  }
+
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < n; ++j)
+    {
+      cout << fibnumb_filled[i][j] << "\t";
+    }
+    cout << "\n";
+  }
+}
+
+
+
+int main(int argc, char **argv)
+{
+
 	cout << "Multiplied matrix\n";
-	multipliedMatrix(4);
+	fillMultipliedIndexes(4);
 	cout << "Summed matrix\n";
-	summedMatrix(4);
+	fillSummedIndexes(4);
 	cout << "Filled bottom left\n";
 	fillBottomLeft(4);
 	cout << "Filled top right\n";
 	fillTopRight(4);
+  cout << "Filled by Fibonacci numbers\n";
+  fillByFibonacciNumb(4);
+  
+  return 0;
 }
