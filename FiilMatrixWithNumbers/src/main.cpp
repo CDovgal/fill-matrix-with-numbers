@@ -16,16 +16,9 @@ void fillMultipliedIndexes(int n) //filled by multiplication of indexes
 		for (int j = 0; j < n; ++j)
 		{
 			multi[i][j] = i*j;
+      cout << multi[i][j] << "\t";
 		}
-	}
-
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			cout << multi[i][j] << "\t";
-		}
-		cout << "\n";
+    cout << "\n";
 	}
 }
 
@@ -38,16 +31,9 @@ void fillSummedIndexes(int n) // filled by sum of matrix cells indexes
 		for (int j = 0; j < n; ++j)
 		{
 			summ[i][j] = i + j;
+      cout << summ[i][j] << "\t";
 		}
-	}
-
-	for (int i = 0; i < n; ++i)
-	{
-		for (int j = 0; j < n; ++j)
-		{
-			cout << summ[i][j] << "\t";
-		}
-		cout << "\n";
+    cout << "\n";
 	}
 }
 
