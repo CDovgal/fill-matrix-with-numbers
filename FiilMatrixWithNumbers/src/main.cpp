@@ -111,8 +111,10 @@ vector<int> generateFibonacci(int n)
 
   for (int c = 0; c < n; ++c)
   {
-    if (c <= 0)
+    if (c < 1)
       fibo.push_back(first);
+    else if (c == 1)
+      fibo.push_back(first + second);
     else
     {
       fibo.push_back(first + second);
