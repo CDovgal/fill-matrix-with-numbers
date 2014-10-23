@@ -134,6 +134,52 @@ void fillByFibonacciNumb(int n) //filled by Fibonacci number in memory location 
 }
 
 
+void fillMatrixDiagonallyByOne(int n) // fill diagonally by 1
+{
+  vector <vector<int>> diagonally_filled_by_one(n, vector<int>(n)); 
+
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < n; ++j)
+    {
+      if (i == j)
+        diagonally_filled_by_one[i][j] = 1;
+      else if (i + j == n-1)
+        diagonally_filled_by_one[i][j] = 2;
+    }
+  }
+  printMatrix(diagonally_filled_by_one);
+
+}
+
+
+void fillMatrixDiagonallyByZero(int n) // fill diagonally by ZEROs
+{
+  vector <vector<int>> diagonally_filled_by_zero(n, vector<int>(n));
+
+  for (int i = 0; i < n; ++i)
+  {
+    for (int j = 0; j < n; ++j)
+    {
+      if (i == j)
+        diagonally_filled_by_zero[i][j] = 0;
+      else if (i - j == 1)
+        diagonally_filled_by_zero[i][j] = 1;
+      else if (j - i == 1)
+        diagonally_filled_by_zero[i][j] = 2;
+    }
+  }
+  printMatrix(diagonally_filled_by_zero);
+
+}
+
+
+void fillTopLeft(int n) // fill matrix revert diagonally by numbers in order
+{
+  
+
+}
+
 int main(int argc, char **argv)
 {
   /*::testing::InitGoogleTest(&argc, argv);
@@ -149,6 +195,12 @@ int main(int argc, char **argv)
   fillTopRight(4);
   cout << "Filled by Fibonacci numbers\n";
   fillByFibonacciNumb(4);
+  cout << "Filled diagonally by 1\n";
+  fillMatrixDiagonallyByOne(4);
+  cout << "Filled diagonally by ZEROs\n";
+  fillMatrixDiagonallyByZero(4);
+  cout << "Filled matrix revert diagonally by numbers in order\n";
+  fillTopLeft(4);
 
   return 0;
 }
