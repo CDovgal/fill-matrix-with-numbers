@@ -2,23 +2,37 @@
 
 #include <iostream>
 #include <vector>
-//#include <gtest/gtest.h>
+#include <gtest/gtest.h>
 
 using namespace std;
 
+
+typedef vector <vector<int>> Matrix;
+
+void printMatrix(const Matrix& i_matrix)
+{
+  int size = i_matrix.size();
+
+  for (int i = 0; i < size; ++i)
+  {
+    for (int j = 0; j < size; ++j)
+    {
+      cout << i_matrix[i][j] << "\t";
+    }
+    cout << "\n";
+  }
+}
 
 void fillMultipliedIndexes(int n) //filled by multiplication of indexes
 {
   if (n <= 1)
     return;
-  vector <vector<int>> multi(n, vector<int>(n));
 
   for (int i = 0; i < n; ++i)
   {
     for (int j = 0; j < n; ++j)
     {
-      multi[i][j] = i*j;
-      cout << multi[i][j] << "\t";
+      cout << i*j << "\t";
     }
     cout << "\n";
   }
@@ -26,14 +40,11 @@ void fillMultipliedIndexes(int n) //filled by multiplication of indexes
 
 void fillSummedIndexes(int n) // filled by sum of matrix cells indexes
 {
-  vector <vector<int>> summ(n, vector<int>(n));
-
   for (int i = 0; i < n; ++i)
   {
     for (int j = 0; j < n; ++j)
     {
-      summ[i][j] = i + j;
-      cout << summ[i][j] << "\t";
+      cout << i + j << "\t";
     }
     cout << "\n";
   }
@@ -59,17 +70,11 @@ void fillBottomLeft(int n) // filled by numbers in course from bottom left corbn
     while (iColStep >= 0 && iRowStep >= 0)
       bottom_filled[iRowStep--][iColStep--] = k++;
   }
-
-  for (int i = 0; i < n; ++i)
-  {
-    for (int j = 0; j < n; ++j)
-    {
-      cout << bottom_filled[i][j] << "\t";
-    }
-    cout << "\n";
-  }
-
+  printMatrix(bottom_filled);
 }
+
+
+
 
 void fillTopRight(int n) // filled by numbers in course from top right corner to left bottom
 {
@@ -92,34 +97,24 @@ void fillTopRight(int n) // filled by numbers in course from top right corner to
     while (iColStep < n && iRowStep < n)
       top_filled[iRowStep++][iColStep++] = k++;
   }
-
-  for (int i = 0; i < n; ++i)
-  {
-    for (int j = 0; j < n; ++j)
-    {
-      cout << top_filled[i][j] << "\t";
-    }
-    cout << "\n";
-  }
+  printMatrix(top_filled);
 }
 
 vector<int> generateFibonacci(int n)
 {
-  int first = 0, second = 1;
+  int prev = 0, next = 1;
 
-  vector<int> fibo;
+  vector<int> fibo(n);
 
   for (int c = 0; c < n; ++c)
   {
-    if (c < 1)
-      fibo.push_back(first);
-    else if (c == 1)
-      fibo.push_back(first + second);
+    if (c <= 1)
+      fibo.at(c) = c;
     else
     {
-      fibo.push_back(first + second);
-      first = second;
-      second = fibo.at(c);
+      fibo.at(c) = fibo.at(c - 1) + fibo.at(c);
+      fibo.at(c - 1) = fibo.at(c);
+      fibo.at(c) = fibo.at(c) + fibo.at(c - 2);
     }
   }
   return fibo;
@@ -134,15 +129,18 @@ void fillByFibonacciNumb(int n) //filled by Fibonacci number in memory location 
 
   for (int i = 0; i < size; ++i)
   {
-      cout << fibnumb_filled[i] << "\t";
-      if ((i+1)%n == 0)
-        cout << "\n";
+    cout << fibnumb_filled[i] << "\t";
+    if ((i + 1) % n == 0)
+      cout << "\n";
   }
 }
 
 
 int main(int argc, char **argv)
 {
+  /*::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();*/
+
   cout << "Multiplied matrix\n";
   fillMultipliedIndexes(4);
   cout << "Summed matrix\n";
