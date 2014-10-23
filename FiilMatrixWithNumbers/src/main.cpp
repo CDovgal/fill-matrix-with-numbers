@@ -102,8 +102,6 @@ void fillTopRight(int n) // filled by numbers in course from top right corner to
 
 vector<int> generateFibonacci(int n)
 {
-  int prev = 0, next = 1;
-
   vector<int> fibo(n);
 
   for (int c = 0; c < n; ++c)
