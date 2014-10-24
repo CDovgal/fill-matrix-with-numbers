@@ -136,7 +136,7 @@ void fillByFibonacciNumb(int n) //filled by Fibonacci number in memory location 
 
 void fillMatrixDiagonallyByOne(int n) // fill diagonally by 1
 {
-  vector <vector<int>> diagonally_filled_by_one(n, vector<int>(n)); 
+  vector <vector<int>> diagonally_filled_by_one(n, vector<int>(n));
 
   for (int i = 0; i < n; ++i)
   {
@@ -144,7 +144,7 @@ void fillMatrixDiagonallyByOne(int n) // fill diagonally by 1
     {
       if (i == j)
         diagonally_filled_by_one[i][j] = 1;
-      else if (i + j == n-1)
+      else if (i + j == n - 1)
         diagonally_filled_by_one[i][j] = 2;
     }
   }
@@ -176,8 +176,26 @@ void fillMatrixDiagonallyByZero(int n) // fill diagonally by ZEROs
 
 void fillTopLeft(int n) // fill matrix revert diagonally by numbers in order
 {
-  
+  vector <vector<int>> topleft_filled(n, vector<int>(n));
+  int k = 1;
+  int iCol = 0;
+  int iRow = 0;
 
+  while (iCol < n && iRow < n)
+  {
+    int iRowStep = iRow;
+    int iColStep = iCol;
+
+    if (iCol < n - 1)
+      iColStep = iCol++;
+    else
+      iRowStep = iRow++;
+
+
+    while (iColStep >= 0 && iRowStep < n)
+      topleft_filled[iRowStep++][iColStep--] = k++;
+  }
+  printMatrix(topleft_filled);
 }
 
 int main(int argc, char **argv)
