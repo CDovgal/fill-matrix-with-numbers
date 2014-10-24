@@ -223,6 +223,31 @@ void fillBottomRight(int n) // Fill matrix by numbers in order from bottom right
   printMatrix(bottomright_filled);
 }
 
+void fillSpirallyInOrder(int n) // fill matrix in in-spiral order
+{
+  vector <vector<int>> spiral_in(n, vector<int>(n));
+  int number = 1;
+  int size = static_cast< int >(ceil(static_cast<double>(n) / 2.0));
+  int len = n;
+  int j;
+
+  for (int i = 0; i < size; ++i)
+  {
+    for (j = 0; j < len; ++j)
+      spiral_in[i][i + j] = number++;
+    for (j = 1; j < len; ++j)
+      spiral_in[i + j][n - 1 - i] = number++;
+    for (j = len - 2; j > -1; --j)
+      spiral_in[n - 1 - i][i + j] = number++;
+    for (j = len - 2; j > 0; --j)
+      spiral_in[i + j][i] = number++;
+
+    len -= 2;
+  }
+
+  printMatrix(spiral_in);
+}
+
 int main(int argc, char **argv)
 {
   /*::testing::InitGoogleTest(&argc, argv);
@@ -246,6 +271,8 @@ int main(int argc, char **argv)
   fillTopLeft(4);
   cout << "Filled matrix diagonally by numbers in order from right bottom\n";
   fillBottomRight(4);
+  cout << "Filled matrix spirally by numbers in order\n";
+  fillSpirallyInOrder(4);
 
   return 0;
 }
