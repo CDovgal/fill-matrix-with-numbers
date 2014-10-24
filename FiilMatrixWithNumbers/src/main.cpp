@@ -248,6 +248,56 @@ void fillSpirallyInOrder(int n) // fill matrix in in-spiral order
   printMatrix(spiral_in);
 }
 
+void fillSpirallyOut(int n) // fill matrix in out-spiral order
+{
+  vector <vector<int>> spiral_in(n, vector<int>(n));
+ 
+  int i = n / 2;
+  int j = n % 2 == 0 ? (n / 2) - 1 : (n / 2); 
+
+  int direction = 0; 
+  int stepsCount = 1; 
+  int stepPosition = 0; 
+  int stepChange = 0; 
+
+  for (int k = 1; k <= n * n; k++)
+  {
+    spiral_in[i][j] = k;
+
+    if (stepPosition < stepsCount)
+    {
+      stepPosition++;
+    }
+    else
+    {
+      stepPosition = 1;
+      if (stepChange == 1)
+      {
+        stepsCount++;
+      }
+      stepChange = (stepChange + 1) % 2;
+      direction = (direction + 1) % 4;
+    }
+    switch (direction)
+    {
+    case 0:
+      j++;
+      break;
+    case 1:
+      i--;
+      break;
+    case 2:
+      j--;
+      break;
+    case 3:
+      i++;
+      break;
+    }
+  }
+
+  printMatrix(spiral_in);
+}
+
 int main(int argc, char **argv)
 {
   /*::testing::InitGoogleTest(&argc, argv);
@@ -273,6 +323,8 @@ int main(int argc, char **argv)
   fillBottomRight(4);
   cout << "Filled matrix spirally by numbers in order\n";
   fillSpirallyInOrder(4);
+  cout << "Filled matrix spirally(reversed) by numbers in order\n";
+  fillSpirallyOut(4);
 
   return 0;
 }
