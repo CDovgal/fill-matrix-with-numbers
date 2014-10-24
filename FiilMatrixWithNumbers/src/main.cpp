@@ -174,7 +174,7 @@ void fillMatrixDiagonallyByZero(int n) // fill diagonally by ZEROs
 }
 
 
-void fillTopLeft(int n) // fill matrix revert diagonally by numbers in order
+void fillTopLeft(int n) // Fill matrix by numbers in order from top left bottom right.
 {
   vector <vector<int>> topleft_filled(n, vector<int>(n));
   int k = 1;
@@ -198,6 +198,31 @@ void fillTopLeft(int n) // fill matrix revert diagonally by numbers in order
   printMatrix(topleft_filled);
 }
 
+
+void fillBottomRight(int n) // Fill matrix by numbers in order from bottom right to top left.
+{
+  vector <vector<int>> bottomright_filled(n, vector<int>(n));
+  int k = 1;
+  int iCol = n - 1;
+  int iRow = n - 1;
+
+  while (iCol >= 0 && iRow >= 0)
+  {
+    int iRowStep = iRow;
+    int iColStep = iCol;
+
+    if (iCol > 0)
+      iColStep = iCol--;
+    else
+      iRowStep = iRow--;
+
+
+    while (iColStep < n  && iRowStep >= 0)
+      bottomright_filled[iRowStep--][iColStep++] = k++;
+  }
+  printMatrix(bottomright_filled);
+}
+
 int main(int argc, char **argv)
 {
   /*::testing::InitGoogleTest(&argc, argv);
@@ -217,8 +242,10 @@ int main(int argc, char **argv)
   fillMatrixDiagonallyByOne(4);
   cout << "Filled diagonally by ZEROs\n";
   fillMatrixDiagonallyByZero(4);
-  cout << "Filled matrix revert diagonally by numbers in order\n";
+  cout << "Filled matrix diagonally by numbers in order from left top\n";
   fillTopLeft(4);
+  cout << "Filled matrix diagonally by numbers in order from right bottom\n";
+  fillBottomRight(4);
 
   return 0;
 }
