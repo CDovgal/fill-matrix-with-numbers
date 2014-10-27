@@ -19,10 +19,17 @@ struct Point
 class Triangle
 {
 public:
-  Triangle(){};
+  Triangle();
+  Triangle(const Point& i_A, const Point& i_B, const Point& i_C) :m_A(i_A), m_B(i_B), m_C(i_C){};
   ~Triangle(){};
-  void checkTypeAndArea(const Point& A, const Point& B, const Point& C);
+  void checkType();
+  void checkArea();
+  void setCoords(const Point& A, const Point& B, const Point& C);
+  double triangleArea() const;
 private:
-  double triangleArea(const Point& i_A, const Point& i_B, const Point& i_C);
-  TriangleType determineTypeByCoords(const Point& A, const Point& B, const Point& C);
+  TriangleType determineTypeByCoords() const;
+  TriangleType determineType(int a, int b, int c) const;
+  Point m_A;
+  Point m_B;
+  Point m_C;
 };

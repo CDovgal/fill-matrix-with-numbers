@@ -4,52 +4,56 @@
 
 using namespace std;
 
-double Triangle::triangleArea(const Point& i_A, const Point& i_B, const Point& i_C)
+void Triangle::setCoords(const Point& A, const Point& B, const Point& C)
+{
+  m_A = A;
+  m_B = B;
+  m_C = C;
+}
+
+double Triangle::triangleArea() const
 {
   double s = 0;
 
-  s = (i_A.x*(i_B.y - i_C.y) + i_B.x*(i_C.y - i_A.y) + i_C.x*(i_A.y - i_B.y)) / 2;
+  s = (m_A.x*(m_B.y - m_C.y) + m_B.x*(m_C.y - m_A.y) + m_C.x*(m_A.y - m_B.y)) / 2;
 
   return abs(s);
 }
 
-TriangleType Triangle::determineTypeByCoords(const Point& A, const Point& B, const Point& C)
+TriangleType Triangle::determineTypeByCoords() const
 {
-  TriangleType type;
+  double a = sqrt(pow((m_B.x - m_A.x),2) + pow((m_B.y - m_A.y), 2));
+  double b = sqrt(pow((m_C.x - m_B.x), 2) + pow((m_C.y - m_B.y), 2));
+  double c = sqrt(pow((m_A.x - m_C.x), 2) + pow((m_A.y - m_C.y), 2)); 
 
-  double a = sqrt(pow((B.x - A.x),2) + pow((B.y - A.y), 2));//A.y - A.x;
-  double b = sqrt(pow((C.x - B.x), 2) + pow((C.y - B.y), 2));
-  double c = sqrt(pow((A.x - C.x), 2) + pow((A.y - C.y), 2));
-
-  if (a*a + b*b > c*c)
-    type = acute_angled;
-
-  if (a*a + b*b < c*c)
-    type = obtuse;
-
-  if (a != b && b != c)
-    type = scalene;
-
-  if (a == b || b == c || c == a)
-    type = isosceles;
-
-  if (a == b && b == c)
-    type = equilateral;
-
-  if (a*a + b*b == c*c)
-    type = right_angled;
-
-  return type;
+  return determineType(a, b, c);
 }
 
-void Triangle::checkTypeAndArea(const Point& A, const Point& B, const Point& C)
+TriangleType Triangle::determineType(int a, int b, int c) const // maybe double?????????????
 {
-  double s = triangleArea(A, B, C);
-  cout << s << endl;
+  if (a*a + b*b > c*c)
+    return acute_angled;
 
-  Triangle *tri = new Triangle;
+  if (a*a + b*b < c*c)
+    return obtuse;
 
-  TriangleType type = tri->determineTypeByCoords(A, B, C);
+  if (a != b && b != c)
+    return scalene;
+
+  if (a == b || b == c || c == a)
+    return isosceles;
+
+  if (a == b && b == c)
+    return equilateral;
+
+  if (a*a + b*b == c*c)
+    return right_angled;
+}
+
+
+void Triangle::checkType()
+{
+  TriangleType type = determineTypeByCoords();
 
   switch (type)
   {
@@ -66,8 +70,12 @@ void Triangle::checkTypeAndArea(const Point& A, const Point& B, const Point& C)
   case right_angled: cout << "Pryamougolniy\n";
     break;
   }
+}
 
-
+void Triangle::checkArea()
+{
+  double s = triangleArea();
+  cout << s << endl;
 }
 
 
