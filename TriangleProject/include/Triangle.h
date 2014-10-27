@@ -10,12 +10,19 @@ enum TriangleType
   equilateral   // ravnostoronniy  +
 };
 
+struct Point
+{
+  int x;
+  int y;
+};
+
 class Triangle
 {
 public:
   Triangle(){};
   ~Triangle(){};
-  void checkType(int a, int b, int c);
+  void checkTypeAndArea(const Point& A, const Point& B, const Point& C);
 private:
-  TriangleType determineType(int a, int b, int c);
+  double triangleArea(const Point& i_A, const Point& i_B, const Point& i_C);
+  TriangleType determineTypeByCoords(const Point& A, const Point& B, const Point& C);
 };

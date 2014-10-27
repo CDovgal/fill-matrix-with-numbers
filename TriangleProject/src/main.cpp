@@ -7,17 +7,12 @@ using namespace std;
 int main()
 {
   Triangle *tri = new Triangle;
-  int a, b, c = 0;
 
-  cout << "Enter sides:" << endl;
-  cout << "A: ";
-  cin >> a;
-  cout << "B: ";
-  cin >> b;
-  cout << "C: ";
-  cin >> c;
+  Point A = { 1, 3 };
+  Point B = { -2, -2 };
+  Point C = { 3, -1 };
 
-  tri->checkType(a, b, c);
+  tri->checkTypeAndArea(A, B, C);
 
   delete tri;
 

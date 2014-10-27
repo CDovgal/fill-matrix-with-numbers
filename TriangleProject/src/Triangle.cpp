@@ -1,11 +1,25 @@
 #include "Triangle.h"
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
-TriangleType Triangle::determineType(int a, int b, int c)
+double Triangle::triangleArea(const Point& i_A, const Point& i_B, const Point& i_C)
+{
+  double s = 0;
+
+  s = (i_A.x*(i_B.y - i_C.y) + i_B.x*(i_C.y - i_A.y) + i_C.x*(i_A.y - i_B.y)) / 2;
+
+  return abs(s);
+}
+
+TriangleType Triangle::determineTypeByCoords(const Point& A, const Point& B, const Point& C)
 {
   TriangleType type;
+
+  double a = sqrt(pow((B.x - A.x),2) + pow((B.y - A.y), 2));//A.y - A.x;
+  double b = sqrt(pow((C.x - B.x), 2) + pow((C.y - B.y), 2));
+  double c = sqrt(pow((A.x - C.x), 2) + pow((A.y - C.y), 2));
 
   if (a*a + b*b > c*c)
     type = acute_angled;
@@ -24,19 +38,18 @@ TriangleType Triangle::determineType(int a, int b, int c)
 
   if (a*a + b*b == c*c)
     type = right_angled;
-  
+
   return type;
 }
 
-
-void Triangle::checkType(int a, int b, int c)
+void Triangle::checkTypeAndArea(const Point& A, const Point& B, const Point& C)
 {
-  if (a == 0 || b == 0 || c == 0)
-    return;
+  double s = triangleArea(A, B, C);
+  cout << s << endl;
 
   Triangle *tri = new Triangle;
 
-  TriangleType type = tri->determineType(a, b, c);
+  TriangleType type = tri->determineTypeByCoords(A, B, C);
 
   switch (type)
   {
@@ -53,4 +66,8 @@ void Triangle::checkType(int a, int b, int c)
   case right_angled: cout << "Pryamougolniy\n";
     break;
   }
+
+
 }
+
+
