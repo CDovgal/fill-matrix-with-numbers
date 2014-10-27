@@ -5,7 +5,7 @@ using namespace std;
 
 int digit_sum(int number)
 {
-  unsigned sum = 0;
+  int sum = 0;
 
   while (number > 0)
   {
@@ -18,10 +18,8 @@ int digit_sum(int number)
 }
 
 
-bool checkIfLucky(int number)
+bool checkIfLucky(unsigned number)
 {
-  int sum_left = 0;
-  int sum_right = 0;
   int left = number % 1000; 
   int right = number / 1000;
 
