@@ -1,51 +1,45 @@
 #include <iostream>
 #include <cmath>
+#include <tuple>
 
 using namespace std;
 
 
-float rootDiff(float x1, float x2)
+double rootDiff(double x1, double x2)
 {
   return x1 - x2;
 }
 
-void quadraticEq(float a, float b, float c)
+tuple<double, double> quadraticEq(double a, double b, double c)
 {
   if (a == 0)
-    return;
-  float x1, x2, realPart, imaginaryPart = 0;
-  float discriminant = b*b - 4 * a*c;
+    return make_tuple(0, 0);
+
+  double x1, x2, realPart, imaginaryPart = 0;
+  double discriminant = b*b - 4 * a*c;
+
   if (a + b + c == 0)
   {
     x1 = 1;
     x2 = c / a;
-    cout << "The roots are: \n";
-    cout << "x1 = " << x1 << endl;
-    cout << "x2 = " << x2 << endl;
-    cout << "Root difference: " << rootDiff(x1, x2) << endl;
+    return make_tuple(x1,x2);
   }
   else if (discriminant > 0)
   {
     x1 = (-b + sqrt(discriminant)) / (2 * a);
     x2 = (-b - sqrt(discriminant)) / (2 * a);
-    cout << "The roots are:" << endl;
-    cout << "x1 = " << x1 << endl;
-    cout << "x2 = " << x2 << endl;
+    return make_tuple(x1, x2);
   }
   else if (discriminant == 0)
-  {
-    cout << "The roots are equal: " << endl;
+  { 
     x1 = -b / 2 * a;
-    cout << "x1 = x2 = " << x1 << endl;
+    return make_tuple(x1, x2);
   }
   else if (discriminant < 0)
   {
     realPart = -b / (2 * a);
     imaginaryPart = sqrt(-discriminant) / (2 * a);
-    cout << "Roots are complex and different." << endl;
-    cout << "x1 = " << realPart << "+" << imaginaryPart << "i" << endl;
-    cout << "x2 = " << realPart << "-" << imaginaryPart << "i" << endl;
-    //cout << "Roots are not available..\n";
+    return make_tuple(x1, x2);
   }
 }
 
@@ -53,12 +47,19 @@ void quadraticEq(float a, float b, float c)
 
 int main()
 {
-  float a, b, c;
+  double a, b, c;
   cout << "Please enter the coefficients: \n";
   cin >> a >> b >> c;
 
-  quadraticEq(a, b, c);
- 
+  double x1, x2;
 
+  tie(x1, x2) = quadraticEq(a, b, c);
+
+  cout << "Roots are: \n";
+  cout << "x1 = " << x1 << endl;
+  cout << "x2 = " << x2 << endl;
+
+  cout << "Root difference: " << rootDiff(x1, x2) << endl;
+ 
   return 0;
 }
