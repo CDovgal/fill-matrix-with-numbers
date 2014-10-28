@@ -2,15 +2,12 @@
 
 using namespace std;
 
-int day_counter(int begin_sum, int desired_sum) // we'll take 365 days in year and 30 in month
+double day_counter(double begin_sum, double desired_sum) // we'll take 365 days in year and 30 in month
 {
-  int days = 0;
+  double days = 0;
   double depo_percent = 0.1;
-  double income_aday = 0;
 
-  income_aday = (begin_sum * depo_percent);
-
-  days = (desired_sum - begin_sum) / income_aday;
+  days = log10(desired_sum / begin_sum) / log10(1 + depo_percent);
 
   return days;
 }
@@ -18,7 +15,7 @@ int day_counter(int begin_sum, int desired_sum) // we'll take 365 days in year a
 
 int main()
 {
-  int begin_sum, desired_sum = 0;
+  double begin_sum, desired_sum = 0;
 
   cout << "Enter initial sum and desired sum: \n";
   cin >> begin_sum >> desired_sum;
