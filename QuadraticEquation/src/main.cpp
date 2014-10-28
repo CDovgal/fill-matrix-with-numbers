@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cmath>
 #include <tuple>
+#include <complex>
+
 
 using namespace std;
 
@@ -10,7 +12,17 @@ double rootDiff(double x1, double x2)
   return x1 - x2;
 }
 
-tuple<double, double> quadraticEq(double a, double b, double c)
+bool isSolutionReal(double a, double b, double c)
+{
+  double discriminant = b*b - 4 * a*c;
+
+  if (discriminant >= 0)
+    return true;
+  else
+    return false;
+}
+
+tuple<double, double> realSolution(double a, double b, double c)
 {
   if (a == 0)
     return make_tuple(0, 0);
@@ -34,12 +46,16 @@ tuple<double, double> quadraticEq(double a, double b, double c)
     double x1 = -b / 2 * a;
     return make_tuple(x1, x1);
   }
-  else if (discriminant < 0)
-  {
-    double realPart = -b / (2 * a);
-    double imaginaryPart = sqrt(-discriminant) / (2 * a);
-    return make_tuple(realPart+imaginaryPart, realPart-imaginaryPart);
-  }
+}
+
+
+tuple<complex<double>, complex<double>> generalSolution(double a, double b, double c)
+{
+  double discriminant = b*b - 4 * a*c;
+  double realPart = -b / (2 * a);
+  double imaginaryPart = sqrt(-discriminant) / (2 * a);
+  complex<double> x1(realPart, imaginaryPart), x2(realPart, -imaginaryPart);
+  return make_tuple(x1, x2);
 }
 
 
@@ -50,15 +66,29 @@ int main()
   cout << "Please enter the coefficients: \n";
   cin >> a >> b >> c;
 
-  double x1, x2;
+  if (isSolutionReal(a, b, c))
+  {
+      double x1, x2;
 
-  tie(x1, x2) = quadraticEq(a, b, c);
+      tie(x1, x2) = realSolution(a, b, c);
 
-  cout << "Roots are: \n";
-  cout << "x1 = " << x1 << endl;
-  cout << "x2 = " << x2 << endl;
+      cout << "Roots are: \n";
+      cout << "x1 = " << x1 << endl;
+      cout << "x2 = " << x2 << endl;
+  }
+  else
+  {
+      double x1, x2, x3, x4;
 
-  cout << "Root difference: " << rootDiff(x1, x2) << endl;
+      auto t = generalSolution(a, b, c);
+      //double x1 = get<0>(t);
+
+      cout << "Roots are(complex): \n";
+      cout << "x1 = " << x1 << endl;
+      cout << "x2 = " << x2 << endl;
+  }
+
+  //cout << "Root difference: " << rootDiff(x1, x2) << endl;
  
   return 0;
 }
