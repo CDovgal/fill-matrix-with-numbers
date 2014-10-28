@@ -2,11 +2,11 @@
 
 using namespace std;
 
-float day_counter(int begin_sum, int desired_sum) // we'll get 365 days in year and 30 in month
+int day_counter(int begin_sum, int desired_sum) // we'll take 365 days in year and 30 in month
 {
   int days = 0;
-  float depo_percent = 0.1;
-  float income_aday = 0;
+  double depo_percent = 0.1;
+  double income_aday = 0;
 
   income_aday = (begin_sum * depo_percent) / 365;
 
