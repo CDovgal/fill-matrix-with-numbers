@@ -15,31 +15,30 @@ tuple<double, double> quadraticEq(double a, double b, double c)
   if (a == 0)
     return make_tuple(0, 0);
 
-  double x1, x2, realPart, imaginaryPart = 0;
   double discriminant = b*b - 4 * a*c;
 
   if (a + b + c == 0)
   {
-    x1 = 1;
-    x2 = c / a;
+    double x1 = 1;
+    double x2 = c / a;
     return make_tuple(x1,x2);
   }
   else if (discriminant > 0)
   {
-    x1 = (-b + sqrt(discriminant)) / (2 * a);
-    x2 = (-b - sqrt(discriminant)) / (2 * a);
+    double x1 = (-b + sqrt(discriminant)) / (2 * a);
+    double x2 = (-b - sqrt(discriminant)) / (2 * a);
     return make_tuple(x1, x2);
   }
   else if (discriminant == 0)
   { 
-    x1 = -b / 2 * a;
-    return make_tuple(x1, x2);
+    double x1 = -b / 2 * a;
+    return make_tuple(x1, x1);
   }
   else if (discriminant < 0)
   {
-    realPart = -b / (2 * a);
-    imaginaryPart = sqrt(-discriminant) / (2 * a);
-    return make_tuple(x1, x2);
+    double realPart = -b / (2 * a);
+    double imaginaryPart = sqrt(-discriminant) / (2 * a);
+    return make_tuple(realPart+imaginaryPart, realPart-imaginaryPart);
   }
 }
 
