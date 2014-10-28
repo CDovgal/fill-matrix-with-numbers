@@ -4,6 +4,11 @@
 using namespace std;
 
 
+float rootDiff(float x1, float x2)
+{
+  return x1 - x2;
+}
+
 void quadraticEq(float a, float b, float c)
 {
   if (a == 0)
@@ -17,6 +22,7 @@ void quadraticEq(float a, float b, float c)
     cout << "The roots are: \n";
     cout << "x1 = " << x1 << endl;
     cout << "x2 = " << x2 << endl;
+    cout << "Root difference: " << rootDiff(x1, x2) << endl;
   }
   else if (discriminant > 0)
   {
@@ -52,6 +58,7 @@ int main()
   cin >> a >> b >> c;
 
   quadraticEq(a, b, c);
+ 
 
   return 0;
 }
