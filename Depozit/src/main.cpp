@@ -8,7 +8,7 @@ int day_counter(int begin_sum, int desired_sum) // we'll take 365 days in year a
   double depo_percent = 0.1;
   double income_aday = 0;
 
-  income_aday = (begin_sum * depo_percent) / 365;
+  income_aday = (begin_sum * depo_percent);
 
   days = (desired_sum - begin_sum) / income_aday;
 
