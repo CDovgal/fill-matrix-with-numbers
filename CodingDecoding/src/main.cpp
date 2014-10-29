@@ -45,15 +45,9 @@ int encodeNumber(int bin)
   int count = 0;
   int numb = bin;
 
-  while (numb)
-  {
-    numb &= (numb - 1);
-    count++;
-  }
-
   cout << "COUNT " << count << endl;
 
-  return count % 2 == 0 ? bin <<= 1 : bin ^= 0;
+  return count % 2 == 0 ? bin ^= 1 : bin ^= 0;
 }
 
 int main()
