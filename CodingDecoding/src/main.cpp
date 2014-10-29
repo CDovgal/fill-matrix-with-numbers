@@ -42,18 +42,14 @@ bool checkForPair(int binary)
 
 int encodeNumber(int bin)
 {
-  int count = 0;
-  int numb = bin;
+  int numb = convertToDecimal(bin);
+  int bits_set = 0;
 
-  while (numb)
+  for (; numb; numb >>= 1)
   {
-    numb &= (numb - 1);
-    count++;
+      bits_set += numb & 1;
   }
-
-  cout << "COUNT " << count << endl;
-
-  return count % 2 == 0 ? bin <<= 1 : bin ^= 0;
+  return bits_set % 2 == 0 ? bin * 10 + 1 : bin * 10;
 }
 
 int main()
