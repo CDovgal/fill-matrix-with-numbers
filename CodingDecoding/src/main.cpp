@@ -4,7 +4,7 @@
 using namespace std;
 
 
-int converToBinary(int number)
+int convertToBinary(int number)
 {
   int bin = 0, pos = 1;
   while (number > 0)
@@ -53,14 +53,14 @@ int encodeNumber(int bin)
 }
 
 int main()
-{
+{  
   int decimal;
-
+  
   cout << "Please enter decimal number: \n";
   cin >> decimal;
   cout << "Binary representation: ";
 
-  int bin = converToBinary(decimal);
+  int bin = convertToBinary(decimal);
   cout << bin << endl;
 
   cout << "Encoded binary representation: ";
