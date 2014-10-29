@@ -15,11 +15,7 @@ double rootDiff(double x1, double x2)
 bool isSolutionReal(double a, double b, double c)
 {
   double discriminant = b*b - 4 * a*c;
-
-  if (discriminant >= 0)
-    return true;
-  else
-    return false;
+  return discriminant >= 0 ? true : false;
 }
 
 tuple<double, double> realSolution(double a, double b, double c)
@@ -54,8 +50,7 @@ tuple<complex<double>, complex<double>> generalSolution(double a, double b, doub
   double discriminant = b*b - 4 * a*c;
   double realPart = -b / (2 * a);
   double imaginaryPart = sqrt(-discriminant) / (2 * a);
-  complex<double> x1(realPart, imaginaryPart), x2(realPart, -imaginaryPart);
-  return make_tuple(x1, x2);
+  return make_tuple(complex<double>(realPart, imaginaryPart), complex<double>(realPart, -imaginaryPart));
 }
 
 
@@ -75,6 +70,7 @@ int main()
     cout << "Roots are: \n";
     cout << "x1 = " << x1 << endl;
     cout << "x2 = " << x2 << endl;
+    cout << "Root difference: " << rootDiff(x1, x2) << endl;
   }
   else
   {
@@ -83,11 +79,8 @@ int main()
     tie(x1, x2) = generalSolution(a, b, c);
 
     cout << "Roots are(complex): \n";
-    cout << "x1 = " << x1.real() << "+" << x1.imag() <<  endl;
-    cout << "x2 = " << x2.real() << x2.imag() << endl;
+    cout << "x1 = " << x1 <<  endl;
+    cout << "x2 = " << x2 << endl;
   }
-
-  //cout << "Root difference: " << rootDiff(x1, x2) << endl;
-
   return 0;
 }
