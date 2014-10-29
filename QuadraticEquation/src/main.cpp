@@ -33,7 +33,7 @@ tuple<double, double> realSolution(double a, double b, double c)
   {
     double x1 = 1;
     double x2 = c / a;
-    return make_tuple(x1,x2);
+    return make_tuple(x1, x2);
   }
   else if (discriminant > 0)
   {
@@ -42,7 +42,7 @@ tuple<double, double> realSolution(double a, double b, double c)
     return make_tuple(x1, x2);
   }
   else if (discriminant == 0)
-  { 
+  {
     double x1 = -b / 2 * a;
     return make_tuple(x1, x1);
   }
@@ -68,27 +68,26 @@ int main()
 
   if (isSolutionReal(a, b, c))
   {
-      double x1, x2;
+    double x1, x2;
 
-      tie(x1, x2) = realSolution(a, b, c);
+    tie(x1, x2) = realSolution(a, b, c);
 
-      cout << "Roots are: \n";
-      cout << "x1 = " << x1 << endl;
-      cout << "x2 = " << x2 << endl;
+    cout << "Roots are: \n";
+    cout << "x1 = " << x1 << endl;
+    cout << "x2 = " << x2 << endl;
   }
   else
   {
-      double x1, x2, x3, x4;
+    complex<double> x1, x2;
 
-      auto t = generalSolution(a, b, c);
-      //double x1 = get<0>(t);
+    tie(x1, x2) = generalSolution(a, b, c);
 
-      cout << "Roots are(complex): \n";
-      cout << "x1 = " << x1 << endl;
-      cout << "x2 = " << x2 << endl;
+    cout << "Roots are(complex): \n";
+    cout << "x1 = " << x1.real() << "+" << x1.imag() <<  endl;
+    cout << "x2 = " << x2.real() << x2.imag() << endl;
   }
 
   //cout << "Root difference: " << rootDiff(x1, x2) << endl;
- 
+
   return 0;
 }
