@@ -4,7 +4,7 @@
 using namespace std;
 
 
-int converToBinary(int number)
+int convertToBinary(int number)
 {
   int bin = 0, pos = 1;
   while (number > 0)
@@ -42,23 +42,25 @@ bool checkForPair(int binary)
 
 int encodeNumber(int bin)
 {
-  int count = 0;
-  int numb = bin;
+  int numb = convertToDecimal(bin);
+  int bits_set = 0;
 
-  cout << "COUNT " << count << endl;
-
-  return count % 2 == 0 ? bin ^= 1 : bin ^= 0;
+  for (; numb; numb >>= 1)
+  {
+      bits_set += numb & 1;
+  }
+  return bits_set % 2 == 0 ? bin * 10 + 1 : bin * 10;
 }
 
 int main()
-{
+{  
   int decimal;
-
+  
   cout << "Please enter decimal number: \n";
   cin >> decimal;
   cout << "Binary representation: ";
 
-  int bin = converToBinary(decimal);
+  int bin = convertToBinary(decimal);
   cout << bin << endl;
 
   cout << "Encoded binary representation: ";
