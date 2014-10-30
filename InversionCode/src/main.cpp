@@ -2,6 +2,18 @@
 
 using namespace std;
 
+int convertToBinary(int number)
+{
+  int bin = 0, pos = 1;
+  while (number > 0)
+  {
+    bin = bin + (number % 2) * pos;
+    number = number / 2;
+    pos *= 10;
+  }
+  return bin;
+}
+
 int inversionCodeGenerator(int bin)
 {
   int numb = bin;
@@ -20,18 +32,6 @@ int inversionCodeGenerator(int bin)
     return bin = (bin << count) | bin;
 }
 
-int convertToBinary(int number)
-{
-  int bin = 0, pos = 1;
-  while (number > 0)
-  {
-    bin = bin + (number % 2) * pos;
-    number = number / 2;
-    pos *= 10;
-  }
-  return bin;
-}
-
 int main()
 {
   int bin;
@@ -43,7 +43,6 @@ int main()
 
   cout << convertToBinary(invers) << endl;
   cout << invers << endl;
-
 
   return 0;
 }
