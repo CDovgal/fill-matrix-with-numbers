@@ -60,8 +60,14 @@ int main()
 
   cout << "Please enter encoded decimal number: \n";
   cin >> decimal;
+  cout << "Encoded decimal number in binary representation: ";
+  int bin = convertToBinary(decimal);
+  cout << bin << endl;
 
+  cout << "Decoded decimal number in binary representation: ";
   int decoded = decodeNumber(decimal);
+  int dec_bin = convertToBinary(decoded);
+  cout << dec_bin << endl;
 
   cout << "Decoded decimal representation: ";
   cout << decoded << endl;
