@@ -2,16 +2,14 @@
 
 using namespace std;
 
-int convertToBinary(int number)
+void convertToBinary(int number)
 {
-  int bin = 0, pos = 1;
-  while (number > 0)
-  {
-    bin = bin + (number % 2) * pos;
-    number = number / 2;
-    pos *= 10;
-  }
-  return bin;
+  int size = 0;
+  for (size_t tmp = number; tmp != 0; tmp >>= 1)
+    size++;
+  for (int i = size - 1; i >= 0; --i)
+    cout << ((number >> i) & 1);
+  cout << "\n";
 }
 
 int inversionCodeGenerator(int bin)
@@ -27,9 +25,15 @@ int inversionCodeGenerator(int bin)
   }
 
   if (bits_set % 2)
-    return bin = (bin << count) | ~bin;
+  {
+    bin = (bin << count) | (~bin);
+  }
   else
-    return bin = (bin << count) | bin;
+  {
+    bin = (bin << count) | bin;
+  }
+
+  return bin;
 }
 
 int main()
@@ -41,7 +45,7 @@ int main()
 
   int invers = inversionCodeGenerator(bin);
 
-  cout << convertToBinary(invers) << endl;
+  convertToBinary(invers);
   cout << invers << endl;
 
   return 0;
