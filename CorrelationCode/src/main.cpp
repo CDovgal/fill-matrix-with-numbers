@@ -4,8 +4,6 @@
 
 using namespace std;
 
-int rule(int i){ return i==0 ? 01 : 10; }
-
 deque<string> correlationCodeGenerator(int number)
 {
   deque<int> bin;
