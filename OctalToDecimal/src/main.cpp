@@ -27,10 +27,10 @@ int octalToDecimal(int oct)
 void octalToBinary(int oct)
 {
   deque<int> oct_deq;
-  
+  int numb = 0;
   while (oct)
   {
-    int numb = oct; 
+    numb = oct; 
     numb %= 10;
     oct_deq.push_front(numb);
     oct/=10;
