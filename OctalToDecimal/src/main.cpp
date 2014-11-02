@@ -27,30 +27,39 @@ int octalToDecimal(int oct)
 void octalToBinary(int oct)
 {
   deque<int> oct_deq;
+  
+  while (oct)
+  {
+    int numb = oct; 
+    numb %= 10;
+    oct_deq.push_front(numb);
+    oct/=10;
+  }
+
   int i = 0;
 
-  while (oct_deq.at(i))
+  while (i < oct_deq.size())
   {
     switch (oct_deq.at(i))
     {
-    case '0':
-      printf("000"); break;
-    case '1':
-      printf("001"); break;
-    case '2':
-      printf("010"); break;
-    case '3':
-      printf("011"); break;
-    case '4':
-      printf("100"); break;
-    case '5':
-      printf("101"); break;
-    case '6':
-      printf("110"); break;
-    case '7':
-      printf("111"); break;
+    case  0:
+      cout << "000"; break;
+    case  1:
+      cout << "001"; break;
+    case  2:
+      cout << "010"; break;
+    case  3:
+      cout << "011"; break;
+    case  4:
+      cout << "100"; break;
+    case  5:
+      cout << "101"; break;
+    case  6:
+      cout << "110"; break;
+    case  7:
+      cout << "111"; break;
     default:
-      printf("\n Invalid octal digit ", oct_deq.at(i));
+      cout << "\n Invalid octal digit ", oct_deq.at(i);
       return;
     }
     i++;
@@ -67,6 +76,7 @@ int main()
   cout << "Octal to decimal: " << octalToDecimal(octal) << endl;
 
   cout << "Octal to binary: "; octalToBinary(octal);
+  cout << endl;
 
   return 0;
 }
