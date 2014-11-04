@@ -8,10 +8,9 @@ deque<string> correlationCodeGenerator(int number)
 {
   deque<int> bin;
   deque<string> transformed;
-  int numb = number;
-  for (; numb; numb >>= 1)
+  for (; number; number >>= 1)
   {
-    bin.push_front(numb&1);
+    bin.push_front(number&1);
   }
   transformed.resize(bin.size());
 
@@ -30,7 +29,7 @@ int main()
   deque<string> transf = correlationCodeGenerator(number);
 
   for (unsigned i = 0; i < transf.size(); ++i)
-    cout << transf.at(i).c_str();
+  cout << transf.at(i).c_str();
   cout << endl;
 
   return 0;
