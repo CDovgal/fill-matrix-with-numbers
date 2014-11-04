@@ -8,10 +8,10 @@ deque<string> correlationCodeGenerator(int number)
 {
   deque<int> bin;
   deque<string> transformed;
-  int numb = number;
-  for (; numb; numb >>= 1)
+
+  for (; number; number >>= 1)
   {
-    bin.push_front(numb&1);
+    bin.push_front(number & 1);
   }
   transformed.resize(bin.size());
 
