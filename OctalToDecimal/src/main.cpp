@@ -1,5 +1,6 @@
 #include <iostream>
 #include <deque>
+#include <string>
 
 using namespace std;
 
@@ -24,46 +25,53 @@ int octalToDecimal(int oct)
   return decimal;
 }
 
-void octalToBinary(int oct)
+deque<string> octalToBinary(int oct)
 {
   deque<int> oct_deq;
-  
+  deque<string> octal_out;
+
   while (oct)
   {
-    int numb = oct; 
-    numb %= 10;
-    oct_deq.push_front(numb);
+    oct_deq.push_front(oct%10);
     oct/=10;
   }
 
-  int i = 0;
+  unsigned i = 0;
 
   while (i < oct_deq.size())
   {
     switch (oct_deq.at(i))
     {
     case  0:
-      cout << "000"; break;
+      octal_out.push_back("000"); break;
     case  1:
-      cout << "001"; break;
+      octal_out.push_back("001"); break;
     case  2:
-      cout << "010"; break;
+      octal_out.push_back("010"); break;
     case  3:
-      cout << "011"; break;
+      octal_out.push_back("011"); break;
     case  4:
-      cout << "100"; break;
+      octal_out.push_back("100"); break;
     case  5:
-      cout << "101"; break;
+      octal_out.push_back("101"); break;
     case  6:
-      cout << "110"; break;
+      octal_out.push_back("110"); break;
     case  7:
-      cout << "111"; break;
+      octal_out.push_back("111"); break;
     default:
-      cout << "\n Invalid octal digit ", oct_deq.at(i);
-      return;
+      octal_out.clear();
+      octal_out.push_back("\n Invalid octal digit ");
+      return octal_out;
     }
     i++;
   }
+  return octal_out;
+}
+
+void printOctal(deque<string> oct)
+{
+  for (unsigned i = 0; i < oct.size(); ++i)
+    cout << oct.at(i).c_str();
 }
 
 int main()
@@ -75,7 +83,9 @@ int main()
 
   cout << "Octal to decimal: " << octalToDecimal(octal) << endl;
 
-  cout << "Octal to binary: "; octalToBinary(octal);
+  cout << "Octal to binary: "; 
+  deque<string> oct = octalToBinary(octal);
+  printOctal(oct);
   cout << endl;
 
   return 0;
