@@ -37,9 +37,8 @@ int convertToBinary(int number)
 int decodeNumber(int bin)
 {
   int bits_set = 0;
-  int numb = bin;
 
-  for (; numb; numb >>= 1)
+  for (int numb = bin; numb; numb >>= 1)
   {
     bits_set += numb & 1;
   }
