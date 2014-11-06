@@ -57,9 +57,10 @@ void Labyrinth::buildMaze(int rows, int cols)
     if (!neighbours.empty())
     {
       auto cell = neighbours.at(rand() % neighbours.size()); //choose one at random
-      wall.destroy(); // and step into new cell ??? how to know which of it should be destroyed???? in which direction it
+      m_maze[cell.x][cell.y].destroy(); 
+      // and step into new cell 
       visited_cells.push_back(current_cell);
-      current_cell = cell;//set this new cell current
+      current_cell = cell; //set this new cell current
       ++visited_count;
     }
     else
