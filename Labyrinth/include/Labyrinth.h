@@ -22,7 +22,7 @@ public:
   
   ~Labyrinth(){};
   
-  void PrintMatrix() const;
+  void PrintMaze() const;
 
   bool isWall(const Cell& cell) const;
   bool isBorder(const Cell& cell) const;  
@@ -31,9 +31,13 @@ public:
   void setEntrance(const Cell& cell);
   void setExit(const Cell& cell);
 
-  void buildMaze(int rows, int cols);
+  void generateMaze();
 
   std::vector<Cell> findNeighbours(const Cell& cur_cell);
+  bool checkNeighbour(int x, int y);
+  /*Cell checkRight(int x, int y);
+  Cell checkUp(int x, int y);
+  Cell checkDown(int x, int y);*/
 
   Cell entrance() const;
   Cell exit() const;
