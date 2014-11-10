@@ -4,7 +4,7 @@ class Wall
 {
 public:
   Wall() // closed way, can be destroy by default
-    : m_is_closed(true), m_is_destroyable(false), m_is_entrance(false), m_is_exit(false)
+    : m_is_closed(true), m_is_destroyable(true), m_is_entrance(false), m_is_exit(false)
   {}
 
   bool closed() const;
