@@ -10,7 +10,7 @@ Labyrinth::Labyrinth(int i_row, int i_col)
 {
   std::srand((unsigned)time(0));
 
-  for (int i = 0; i < i_row; ++i)
+  /*for (int i = 0; i < i_row; ++i)
   {
     m_maze[i][0].makeBorder();
     m_maze[i][i_col - 1].makeBorder();
@@ -20,11 +20,24 @@ Labyrinth::Labyrinth(int i_row, int i_col)
   {
     m_maze[0][j].makeBorder();
     m_maze[i_row - 1][j].makeBorder();
+  }*/
+
+  for (int i = 0; i < i_row; ++i)
+  {
+    for (int j = 0; j < i_col; ++j)
+    {
+      m_maze[i][0].makeBorder();
+      m_maze[i][i_col - 1].makeBorder();
+      m_maze[0][j].makeBorder();
+      m_maze[i_row - 1][j].makeBorder();
+    }
   }
 
   m_maze[0][rand() % i_col].setEntrance();
 
   m_maze[i_col - 1][rand() % i_row].setExit();
+
+  PrintMaze();
 }
 
 void Labyrinth::generateMaze()
@@ -37,16 +50,12 @@ void Labyrinth::generateMaze()
 
   while (visited_count < total_cells)
   {
-    //find all neighbors of CurrentCell with all walls intact. ???
-    auto neighbours = findNeighbours(current_cell); 
+    auto neighbours = findNeighbours(current_cell);
 
     if (!neighbours.empty())
     {
       auto new_cell = neighbours.at(rand() % neighbours.size()); //choose one at random
-      if (current_cell.x == new_cell.x && current_cell.y == new_cell.y)
-        new_cell = neighbours.at(rand() % neighbours.size()); // need to say  that if cell == current_cell? choose another from neighbours
-
-      m_maze[current_cell.x][current_cell.y].destroy(); // or we should destroy at new_cell.x && new_cell.y ???
+      m_maze[new_cell.x][new_cell.y].destroy(); // or we should destroy at new_cell.x && new_cell.y ???
       visited_cells.push_back(current_cell);
       current_cell = new_cell; //set this new cell current
       ++visited_count;
@@ -54,9 +63,8 @@ void Labyrinth::generateMaze()
     else
     {
       current_cell = visited_cells.back();
-      //visited_cells.pop_back();
+      visited_cells.pop_back();
     }
-    //neighbours.clear();
   }
 }
 
@@ -110,18 +118,24 @@ void Labyrinth::PrintMaze() const
   {
     for (unsigned j = 0; j < m_maze.size(); ++j)
     {
-      if (m_maze[i][j].closed())
+      if (!m_maze[i][j].destroyable())
+        std::cout << "*";
+      else 
+      if (!m_maze[i][j].closed())
+        std::cout << " ";
+      else
+        cout << "|";
+      /*if (m_maze[i][j].closed())
         std::cout << "|";
       if (!m_maze[i][j].closed())
         std::cout << " ";
+      
       if (m_maze[i][j].destroyable())
-        std::cout << "^";
-      if (!m_maze[i][j].destroyable())
-        std::cout << "+";
-      if (m_maze[i][j].entrance())
-        std::cout << "9";
-      if (m_maze[i][j].exit())
-        std::cout << "0";
+        std::cout << "-";*/
+      //if (m_maze[i][j].entrance())
+      //  std::cout << "9";
+      //if (m_maze[i][j].exit())
+      //  std::cout << "0";
     }
     std::cout << endl;
   }
