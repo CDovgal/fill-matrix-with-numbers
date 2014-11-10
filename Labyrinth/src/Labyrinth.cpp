@@ -8,6 +8,8 @@
 Labyrinth::Labyrinth(int i_row, int i_col)
 : m_maze(i_row, std::vector<Wall>(i_col))
 {
+  std::srand((unsigned)time(0));
+
   for (int i = 0; i < i_row; ++i)
   {
     m_maze[i][0].makeBorder();
@@ -19,26 +21,10 @@ Labyrinth::Labyrinth(int i_row, int i_col)
     m_maze[0][j].makeBorder();
     m_maze[i_row - 1][j].makeBorder();
   }
-}
 
-bool Labyrinth::isBorder(const Cell& cell) const
-{
-  return true;
-}
+  m_maze[0][rand() % i_col].setEntrance();
 
-bool Labyrinth::isWall(const Cell& cell) const
-{
-  return true;
-}
-
-void Labyrinth::setEntrance(const Cell& cell)
-{
-
-}
-
-void Labyrinth::setExit(const Cell& cell)
-{
-
+  m_maze[i_col - 1][rand() % i_row].setExit();
 }
 
 void Labyrinth::generateMaze()
@@ -48,10 +34,11 @@ void Labyrinth::generateMaze()
   int total_cells = m_maze.size()*m_maze.size();
   int visited_count = 1;
 
-  Cell current_cell(rand() % m_maze.size(), rand() % m_maze.size());//entrance();
+  Cell current_cell(rand() % m_maze.size(), rand() % m_maze.size()); /*= entrance();*/
 
   while (visited_count < total_cells)
   {
+    //find all neighbors of CurrentCell with all walls intact. 
     auto neighbours = findNeighbours(current_cell);
 
     if (!neighbours.empty())
@@ -70,7 +57,7 @@ void Labyrinth::generateMaze()
       current_cell = visited_cells.back();
       visited_cells.pop_back();
     }
-    neighbours.clear();
+    //neighbours.clear();
   }
 }
 
@@ -132,37 +119,55 @@ void Labyrinth::PrintMaze() const
         std::cout << "^";
       if (!m_maze[i][j].destroyable())
         std::cout << "+";
+      if (m_maze[i][j].entrance())
+        std::cout << "9";
+      if (m_maze[i][j].exit())
+        std::cout << "0";
     }
     std::cout << endl;
   }
 }
 
-//Cell Labyrinth::checkRight(int x, int y)
-//{
-//  Cell cell_right(x, y);
-//  if (m_maze[cell_right.x + 1][cell_right.y].closed())
-//    ++cell_right.x;
-//  return cell_right;
-//}
-//
-//Cell Labyrinth::checkUp(int x, int y)
-//{
-//  Cell cell_up(x, y);
-//  if (m_maze[cell_up.x][cell_up.y - 1].closed())
-//    --cell_up.y;
-//  return cell_up;
-//}
-//
-//Cell Labyrinth::checkDown(int x, int y)
-//{
-//  Cell cell_down(x, y);
-//  if (m_maze[cell_down.x][cell_down.y + 1].closed())
-//    ++cell_down.y;
-//  return cell_down;
-//}
+
+bool Labyrinth::isBorder(const Cell& cell) const
+{
+  if (m_maze[cell.x][cell.y].destroyable())
+    return false;
+  else
+    return true;
+}
+
+bool Labyrinth::isWall(const Cell& cell) const
+{
+  if (m_maze[cell.x][cell.y].destroyable())
+    return true;
+  else
+    return false;
+}
 
 Cell Labyrinth::entrance() const
 {
-  Cell rand_cell_enter(rand() % m_maze.size(), 0);
-  return rand_cell_enter;
+  for (unsigned i = 0; i < m_maze.size(); ++i)
+  {
+    if (m_maze[0][i].entrance())
+    {
+      Cell enter_cell(0, i);
+      return enter_cell;
+    }
+  }
 }
+
+Cell Labyrinth::exit() const
+{
+  for (unsigned i = 0; i < m_maze.size(); ++i)
+  {
+    if (m_maze[m_maze.size()-1][i].exit())
+    {
+      Cell exit_cell(m_maze.size() - 1, i);
+      return exit_cell;
+    }
+  } 
+}
+
+
+
