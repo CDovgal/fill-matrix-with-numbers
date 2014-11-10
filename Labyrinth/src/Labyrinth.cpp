@@ -33,13 +33,12 @@ void Labyrinth::generateMaze()
   std::srand((unsigned)time(0));
   int total_cells = m_maze.size()*m_maze.size();
   int visited_count = 1;
-
   Cell current_cell(rand() % m_maze.size(), rand() % m_maze.size()); /*= entrance();*/
 
   while (visited_count < total_cells)
   {
-    //find all neighbors of CurrentCell with all walls intact. 
-    auto neighbours = findNeighbours(current_cell);
+    //find all neighbors of CurrentCell with all walls intact. ???
+    auto neighbours = findNeighbours(current_cell); 
 
     if (!neighbours.empty())
     {
@@ -55,7 +54,7 @@ void Labyrinth::generateMaze()
     else
     {
       current_cell = visited_cells.back();
-      visited_cells.pop_back();
+      //visited_cells.pop_back();
     }
     //neighbours.clear();
   }
@@ -161,12 +160,12 @@ Cell Labyrinth::exit() const
 {
   for (unsigned i = 0; i < m_maze.size(); ++i)
   {
-    if (m_maze[m_maze.size()-1][i].exit())
+    if (m_maze[m_maze.size() - 1][i].exit())
     {
       Cell exit_cell(m_maze.size() - 1, i);
       return exit_cell;
     }
-  } 
+  }
 }
 
 

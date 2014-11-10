@@ -10,7 +10,7 @@ using namespace std;
 
 int main()
 {
-  Labyrinth lab(10, 10);
+  Labyrinth lab(7, 7);
   lab.generateMaze();
   lab.PrintMaze();
   return 0;
