@@ -92,9 +92,9 @@ std::vector<Cell> Labyrinth::findNeighbours(const Cell& cur_cell)
 
 bool Labyrinth::checkNeighbour(int x, int y)
 {
-  Cell neigh(x, y);
+  Cell current_neighbour(x, y);
 
-  if (std::any_of(begin(m_visited_cells), end(m_visited_cells), [&](const Cell& cell){return cell == neigh; }))
+  if (std::any_of(begin(m_visited_cells), end(m_visited_cells), [&](const Cell& visited){return current_neighbour == visited; }))
     return false;
   if ((x < 0 || y < 0))
     return false;
