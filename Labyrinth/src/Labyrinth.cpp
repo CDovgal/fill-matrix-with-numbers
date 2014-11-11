@@ -10,7 +10,7 @@ Labyrinth::Labyrinth(int i_row, int i_col)
 {
   std::srand((unsigned)time(0));
 
-  /*for (int i = 0; i < i_row; ++i)
+  for (int i = 0; i < i_row; ++i)
   {
     m_maze[i][0].makeBorder();
     m_maze[i][i_col - 1].makeBorder();
@@ -20,17 +20,6 @@ Labyrinth::Labyrinth(int i_row, int i_col)
   {
     m_maze[0][j].makeBorder();
     m_maze[i_row - 1][j].makeBorder();
-  }*/
-
-  for (int i = 0; i < i_row; ++i)
-  {
-    for (int j = 0; j < i_col; ++j)
-    {
-      m_maze[i][0].makeBorder();
-      m_maze[i][i_col - 1].makeBorder();
-      m_maze[0][j].makeBorder();
-      m_maze[i_row - 1][j].makeBorder();
-    }
   }
 
   m_maze[0][rand() % i_col].setEntrance();
@@ -120,22 +109,13 @@ void Labyrinth::PrintMaze() const
     {
       if (!m_maze[i][j].destroyable())
         std::cout << "*";
-      else 
-      if (!m_maze[i][j].closed())
-        std::cout << " ";
       else
-        cout << "|";
-      /*if (m_maze[i][j].closed())
+      if (m_maze[i][j].closed())
+        std::cout << "_";
+      if (m_maze[i][j].closed())
         std::cout << "|";
       if (!m_maze[i][j].closed())
-        std::cout << " ";
-      
-      if (m_maze[i][j].destroyable())
-        std::cout << "-";*/
-      //if (m_maze[i][j].entrance())
-      //  std::cout << "9";
-      //if (m_maze[i][j].exit())
-      //  std::cout << "0";
+        std::cout << "&";
     }
     std::cout << endl;
   }
