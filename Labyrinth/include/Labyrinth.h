@@ -9,9 +9,13 @@ using namespace std;
 struct Cell
 {
   Cell(int i_x, int i_y) :x(i_x), y(i_y){};
+  
   int x;
   int y;
+  bool operator==(const Cell& rhs) const { return this->x == rhs.x && this->y == rhs.y; };
 };
+
+
 
 typedef vector<vector<Wall>> Maze;
 
@@ -40,6 +44,7 @@ public:
   
 private:
   Maze m_maze;
+  std::vector<Cell> m_visited_cells;
 };
 
 

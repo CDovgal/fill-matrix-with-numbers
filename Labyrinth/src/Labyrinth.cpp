@@ -3,6 +3,7 @@
 #include <iostream>
 #include <time.h>
 #include <algorithm>
+#include <functional>
 
 
 Labyrinth::Labyrinth(int i_row, int i_col)
@@ -31,7 +32,7 @@ Labyrinth::Labyrinth(int i_row, int i_col)
 
 void Labyrinth::generateMaze()
 {
-  std::vector<Cell> visited_cells;
+  m_visited_cells.clear();
   std::srand((unsigned)time(0));
   int total_cells = m_maze.size()*m_maze.size();
   int visited_count = 1;
@@ -45,14 +46,14 @@ void Labyrinth::generateMaze()
     {
       auto new_cell = neighbours.at(rand() % neighbours.size()); //choose one at random
       m_maze[new_cell.x][new_cell.y].destroy(); // or we should destroy at new_cell.x && new_cell.y ???
-      visited_cells.push_back(current_cell);
+      m_visited_cells.push_back(current_cell);
       current_cell = new_cell; //set this new cell current
       ++visited_count;
     }
     else
     {
-      current_cell = visited_cells.back();
-      visited_cells.pop_back();
+      current_cell = m_visited_cells.back();
+      m_visited_cells.pop_back();
     }
   }
 }
@@ -91,6 +92,10 @@ std::vector<Cell> Labyrinth::findNeighbours(const Cell& cur_cell)
 
 bool Labyrinth::checkNeighbour(int x, int y)
 {
+  Cell neigh(x, y);
+
+  if (std::any_of(begin(m_visited_cells), end(m_visited_cells), [&](const Cell& cell){return cell == neigh; }))
+    return false;
   if ((x < 0 || y < 0))
     return false;
   if (x >= m_maze.size() || y >= m_maze.size())
@@ -111,11 +116,9 @@ void Labyrinth::PrintMaze() const
         std::cout << "*";
       else
       if (m_maze[i][j].closed())
-        std::cout << "_";
-      if (m_maze[i][j].closed())
-        std::cout << "|";
-      if (!m_maze[i][j].closed())
-        std::cout << "&";
+        std::cout << "_|";
+      else
+        std::cout << " ";
     }
     std::cout << endl;
   }
