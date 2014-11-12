@@ -12,36 +12,31 @@ struct Cell
   
   int x;
   int y;
-  bool operator==(const Cell& rhs) const { return this->x == rhs.x && this->y == rhs.y; };
 };
 
-
+bool operator==(const Cell& lhs, const Cell& rhs);
 
 typedef vector<vector<Wall>> Maze;
 
 class Labyrinth
 {
 public:
-  Labyrinth(int i_row, int i_col);
-  
+  Labyrinth(int i_row, int i_col); 
   ~Labyrinth(){};
-  
-  void PrintMaze() const;
 
   bool isWall(const Cell& cell) const;
   bool isBorder(const Cell& cell) const;  
-  
-  void setEntrance(const Cell& cell);
-  void setExit(const Cell& cell);
-
-  void generateMaze();
-
-  std::vector<Cell> findNeighbours(const Cell& cur_cell);
   bool checkNeighbour(int x, int y);
 
+  void setEntrance(const Cell& cell);
+  void setExit(const Cell& cell);
+  void generateMaze();
+  void PrintMaze() const;
+
+  std::vector<Cell> findNeighbours(const Cell& cur_cell);
+  
   Cell entrance() const;
   Cell exit() const;
-  
 private:
   Maze m_maze;
   std::vector<Cell> m_visited_cells;
