@@ -4,7 +4,10 @@
 #include <time.h>
 #include <algorithm>
 #include <functional>
+#include <stack>
 
+
+bool operator==(const Cell& lhs, const Cell& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; };
 
 Labyrinth::Labyrinth(int i_row, int i_col)
 : m_maze(i_row, std::vector<Wall>(i_col))
@@ -33,30 +36,33 @@ Labyrinth::Labyrinth(int i_row, int i_col)
 void Labyrinth::generateMaze()
 {
   m_visited_cells.clear();
+  std::stack<Cell> path;
   std::srand((unsigned)time(0));
-  int total_cells = m_maze.size()*m_maze.size();
+  int total_cells = m_maze.size()*m_maze.size(); 
   int visited_count = 1;
   Cell current_cell(rand() % m_maze.size(), rand() % m_maze.size()); /*= entrance();*/
 
   while (visited_count < total_cells)
   {
     auto neighbours = findNeighbours(current_cell);
-
+    
     if (!neighbours.empty())
     {
       auto new_cell = neighbours.at(rand() % neighbours.size()); //choose one at random
-      m_maze[new_cell.x][new_cell.y].destroy(); // or we should destroy at new_cell.x && new_cell.y ???
-      m_visited_cells.push_back(current_cell);
+      m_maze[new_cell.x][new_cell.y].destroy();
+      path.push(current_cell);
       current_cell = new_cell; //set this new cell current
+      m_visited_cells.push_back(current_cell);
       ++visited_count;
     }
     else
     {
-      current_cell = m_visited_cells.back();
-      m_visited_cells.pop_back();
-    }
+      current_cell = path.top();
+      path.pop();
+    }  
   }
 }
+
 
 std::vector<Cell> Labyrinth::findNeighbours(const Cell& cur_cell)
 {
@@ -100,10 +106,8 @@ bool Labyrinth::checkNeighbour(int x, int y)
     return false;
   if (x >= m_maze.size() || y >= m_maze.size())
     return false;
-  if (m_maze[x][y].closed())
-    return true;
-  else
-    return false;
+
+  return true;
 }
 
 void Labyrinth::PrintMaze() const
