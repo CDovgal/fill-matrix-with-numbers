@@ -4,14 +4,16 @@
 #include <time.h>
 #include <algorithm>
 #include <functional>
-#include <stack>
+#include <cassert>
 
-
-bool operator==(const Cell& lhs, const Cell& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; };
 
 Labyrinth::Labyrinth(int i_row, int i_col)
-: m_maze(i_row, std::vector<Wall>(i_col))
+  : m_field(i_row, std::vector<Cell>(i_col))
+  , m_maze(i_row + 1, std::vector<Wall>(i_col + 1))
 {
+  ++i_row;
+  ++i_col;
+
   std::srand((unsigned)time(0));
 
   for (int i = 0; i < i_row; ++i)
@@ -26,85 +28,101 @@ Labyrinth::Labyrinth(int i_row, int i_col)
     m_maze[i_row - 1][j].makeBorder();
   }
 
-  m_maze[0][rand() % i_col].setEntrance();
-
-  m_maze[i_col - 1][rand() % i_row].setExit();
-
-  PrintMaze();
+  for (int i = 0; i < m_field.size(); ++i)
+  for (int j = 0; j < m_field.size(); ++j)
+  {
+    m_field[i][j].m_x = i;
+    m_field[i][j].m_y = j;
+  }
 }
 
 void Labyrinth::generateMaze()
 {
-  m_visited_cells.clear();
-  std::stack<Cell> path;
   std::srand((unsigned)time(0));
-  int total_cells = m_maze.size()*m_maze.size(); 
-  int visited_count = 1;
-  Cell current_cell(rand() % m_maze.size(), rand() % m_maze.size()); /*= entrance();*/
+  int total_cells = m_field.size()*m_field[0].size();
+  int visited_count = 0;
+  Cell* current_cell = &m_field[0][0]; /*= entrance();*/
+
+  m_backtrace.push(current_cell);
+  current_cell->m_visited = true;
 
   while (visited_count < total_cells)
   {
-    auto neighbours = findNeighbours(current_cell);
-    
+    PrintMaze();
+    auto neighbours = findNeighbours_2(*current_cell);
+
     if (!neighbours.empty())
     {
-      auto new_cell = neighbours.at(rand() % neighbours.size()); //choose one at random
-      m_maze[new_cell.x][new_cell.y].destroy();
-      path.push(current_cell);
-      current_cell = new_cell; //set this new cell current
-      m_visited_cells.push_back(current_cell);
+      Cell* next_cell = &m_field[1][0];//neighbours.at(rand() % neighbours.size()); //choose one at random
+      
+      m_maze[next_cell->m_x][next_cell->m_y].destroy(); // or we should destroy at new_cell.m_x && new_cell.m_y ???
+      m_backtrace.push(next_cell);
+      next_cell->m_visited = true;
+
+      current_cell = next_cell; //set this new cell current
       ++visited_count;
     }
     else
     {
-      current_cell = path.top();
-      path.pop();
-    }  
+      if (!m_backtrace.empty())
+      {
+        current_cell = m_backtrace.top();
+        m_backtrace.pop();
+      }
+      else
+        break;
+    }
   }
 }
 
-
-std::vector<Cell> Labyrinth::findNeighbours(const Cell& cur_cell)
+std::vector<Cell*> Labyrinth::findNeighbours_2(const Cell& cur_cell)
 {
-  std::vector<Cell> neighbour_cells;
+  std::vector<Cell*> not_visited;
+  
+  try
+  {
+    if (cur_cell.m_x < m_field.size()-1 && !m_field[cur_cell.m_x + 1][cur_cell.m_y].m_visited)
+      not_visited.push_back(&m_field[cur_cell.m_x + 1][cur_cell.m_y]);
+  }
+  catch (...)
+  {}
 
-  // how to say that we should step in maze and in which direction
-  if (checkNeighbour(cur_cell.x - 1, cur_cell.y))
+  try
   {
-    Cell for_check(cur_cell.x, cur_cell.y);
-    --for_check.x;
-    neighbour_cells.push_back(for_check);
+    if (cur_cell.m_y + 1 < m_field[0].size()-1 && !m_field[cur_cell.m_x][cur_cell.m_y + 1].m_visited)
+    not_visited.push_back(&m_field[cur_cell.m_x][cur_cell.m_y + 1]);
   }
-  if (checkNeighbour(cur_cell.x + 1, cur_cell.y))
+  catch (...)
+  {}
+
+  try
   {
-    Cell for_check(cur_cell.x, cur_cell.y);
-    ++for_check.x;
-    neighbour_cells.push_back(for_check);
+    if (cur_cell.m_x - 1 >= 0 && !m_field[cur_cell.m_x - 1][cur_cell.m_y].m_visited)
+    not_visited.push_back(&m_field[cur_cell.m_x - 1][cur_cell.m_y]);
   }
-  if (checkNeighbour(cur_cell.x, cur_cell.y - 1))
+  catch (...)
+  {}
+
+  try
   {
-    Cell for_check(cur_cell.x, cur_cell.y);
-    --for_check.y;
-    neighbour_cells.push_back(for_check);
+    if (cur_cell.m_y - 1 >= 0 && !m_field[cur_cell.m_x][cur_cell.m_y - 1].m_visited)
+    not_visited.push_back(&m_field[cur_cell.m_x][cur_cell.m_y - 1]);
   }
-  if (checkNeighbour(cur_cell.x, cur_cell.y + 1))
-  {
-    Cell for_check(cur_cell.x, cur_cell.y);
-    ++for_check.y;
-    neighbour_cells.push_back(for_check);
-  }
-  return neighbour_cells;
+  catch (...)
+  {}
+
+  return not_visited;
 }
 
-bool Labyrinth::checkNeighbour(int x, int y)
+bool Labyrinth::checkNeighbour(const Cell& i_cell)
 {
-  Cell current_neighbour(x, y);
+  if (i_cell.m_visited)
+    return false;
 
-  if (std::any_of(begin(m_visited_cells), end(m_visited_cells), [&](const Cell& visited){return current_neighbour == visited; }))
+  if (i_cell.m_x < 0 || i_cell.m_y < 0)
     return false;
-  if ((x < 0 || y < 0))
-    return false;
-  if (x >= m_maze.size() || y >= m_maze.size())
+
+  if (i_cell.m_x >= m_maze.size()-1 || i_cell.m_y >= m_maze.size()-1)
     return false;
 
   return true;
@@ -112,26 +130,62 @@ bool Labyrinth::checkNeighbour(int x, int y)
 
 void Labyrinth::PrintMaze() const
 {
-  for (unsigned i = 0; i < m_maze.size(); ++i)
+  static const int M = 6;
+  static const int N = 3;
+
+  static const char vertical_closed_wall = '|';
+  static const char vertical_opened_wall = ' ';
+
+  static const char horizontal_closed_wall = '_';
+  static const char horizontal_opened_wall = ' ';
+
+  static const std::string horizontal_closed_wall_long(M, horizontal_closed_wall); // M times '_'
+  static const std::string horizontal_opened_wall_long(M, horizontal_opened_wall); // M times ' '
+
+  static const std::string horizontal_closed_wall_short(M - 1, horizontal_closed_wall); // (M - 1) times '_'
+  static const std::string horizontal_opened_wall_short(M - 1, horizontal_opened_wall); // (M - 1) times ' '
+
+  static const std::string vertical_closed_wall_long(vertical_closed_wall + std::string(M - 1, horizontal_opened_wall)); // 1 time '_' & (M - 1) times ' '
+  static const std::string vertical_opened_wall_long(horizontal_opened_wall + std::string(M - 1, horizontal_opened_wall)); // 1 time ' ' & (M - 1) times ' '
+
+  int rows = m_maze.size() - 1;
+  assert(rows > 0);
+  int columns = m_maze[0].size() - 1;
+  assert(columns > 0);
+
+  for (unsigned j = 0; j < columns; ++j)
+    //std::cout << (m_maze[0][j].closed() ? horizontal_closed_wall_long.c_str() : horizontal_opened_wall_long.c_str());
+    std::cout << horizontal_closed_wall_long.c_str();
+  std::cout << "\n";
+
+  for (int i = 1; i <= rows; ++i)  
   {
-    for (unsigned j = 0; j < m_maze.size(); ++j)
+    for (unsigned k = 0; k < N; ++k)
     {
-      if (!m_maze[i][j].destroyable())
-        std::cout << "*";
-      else
-      if (m_maze[i][j].closed())
-        std::cout << "_|";
-      else
-        std::cout << " ";
+      for (int j = 0; j < columns; ++j)
+      {
+        if ((N-1) != k)
+        {
+          std::cout << (m_maze[i][j].closed() ? vertical_closed_wall_long.c_str() : vertical_opened_wall_long.c_str());
+        }
+        else
+        {
+          std::cout << (m_maze[i][j].closed() ? vertical_closed_wall : vertical_opened_wall);
+          std::cout << (m_maze[i+1][j].closed() ? horizontal_closed_wall_short.c_str() : horizontal_opened_wall_short.c_str());
+        }
+      }
+      //std::cout << (m_maze[i][columns].closed() ? vertical_closed_wall : vertical_opened_wall);
+      std::cout << vertical_closed_wall;
+      std::cout << "\n";
     }
-    std::cout << endl;
   }
+  std::cout << "\n";
 }
 
 
 bool Labyrinth::isBorder(const Cell& cell) const
 {
-  if (m_maze[cell.x][cell.y].destroyable())
+  if (m_maze[cell.m_x][cell.m_y].destroyable())
     return false;
   else
     return true;
@@ -139,35 +193,39 @@ bool Labyrinth::isBorder(const Cell& cell) const
 
 bool Labyrinth::isWall(const Cell& cell) const
 {
-  if (m_maze[cell.x][cell.y].destroyable())
+  if (m_maze[cell.m_x][cell.m_y].destroyable())
     return true;
   else
     return false;
 }
 
-Cell Labyrinth::entrance() const
+//Cell Labyrinth::entrance() const
+//{
+//  for (unsigned i = 0; i < m_maze.size(); ++i)
+//  {
+//    if (m_maze[0][i].entrance())
+//    {
+//      Cell enter_cell(0, i);
+//      return enter_cell;
+//    }
+//  }
+//}
+
+//Cell Labyrinth::exit() const
+//{
+//  for (unsigned i = 0; i < m_maze.size(); ++i)
+//  {
+//    if (m_maze[m_maze.size() - 1][i].exit())
+//    {
+//      Cell exit_cell(m_maze.size() - 1, i);
+//      return exit_cell;
+//    }
+//  }
+//}
+
+
+
+bool operator==(const Cell& lhv, const Cell& rhv)
 {
-  for (unsigned i = 0; i < m_maze.size(); ++i)
-  {
-    if (m_maze[0][i].entrance())
-    {
-      Cell enter_cell(0, i);
-      return enter_cell;
-    }
-  }
-}
-
-Cell Labyrinth::exit() const
-{
-  for (unsigned i = 0; i < m_maze.size(); ++i)
-  {
-    if (m_maze[m_maze.size() - 1][i].exit())
-    {
-      Cell exit_cell(m_maze.size() - 1, i);
-      return exit_cell;
-    }
-  }
-}
-
-
-
+  return lhv.m_x == rhv.m_x && lhv.m_y == rhv.m_y;
+};
