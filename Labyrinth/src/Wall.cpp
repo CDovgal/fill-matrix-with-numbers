@@ -11,25 +11,25 @@ bool Wall::destroyable() const
   return m_is_destroyable;
 }
 
-bool Wall::entrance() const
-{
-  return m_is_entrance;
-}
-
-bool Wall::exit() const
-{
-  return m_is_exit;
-}
-
-void Wall::setEntrance() 
-{
-  m_is_entrance = true;
-}
-
-void Wall::setExit()
-{
-  m_is_exit = true;
-}
+//bool Wall::entrance() const
+//{
+//  return m_is_entrance;
+//}
+//
+//bool Wall::exit() const
+//{
+//  return m_is_exit;
+//}
+//
+//void Wall::setEntrance() 
+//{
+//  m_is_entrance = true;
+//}
+//
+//void Wall::setExit()
+//{
+//  m_is_exit = true;
+//}
 
 void Wall::destroy() // destroy a wall - make a way
 {
