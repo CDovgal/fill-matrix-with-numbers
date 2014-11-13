@@ -1,0 +1,14 @@
+syntax: glob
+
+CodingDecoding/bin/
+CorrelationCode/bin/
+TriangleProject/bin/
+Ticket/bin/
+QuadraticEquation/bin/
+OctalToDecimal/bin/
+Labyrinth/bin/
+InversionCode/bin/
+FiilMatrixWithNumbers/bin/
+Depozit/bin/
+Decoding/bin/
+
