@@ -48,11 +48,9 @@ Labyrinth::Labyrinth(int i_row, int i_col)
     m_maze[i_row - 1][j].makeBorder();
   }
 
-  /*m_maze[0][entrance].setEntrance();
+  m_maze[0][rand() % i_col].setEntrance();
 
-  m_maze[i_col - 1][exit].setExit();*/
-
-  PrintMaze();
+  m_maze[i_col - 1][exit].setExit();
 }
 
 
@@ -78,7 +76,8 @@ void Labyrinth::generateMaze()
   std::srand((unsigned)time(0));
   int total_cells = mazeSize();
   int visited_count = 1;
-  Cell current_cell(rand() % mazeRows(), rand() % mazeCols()); /*= entrance();*/
+  Cell current_cell/*(rand() % mazeRows(), rand() % mazeCols()); */ = entrance();
+  m_visited_cells.push_back(current_cell);
   while (visited_count < total_cells)
   {
     auto neighbours = findNeighbours(current_cell);
@@ -88,14 +87,14 @@ void Labyrinth::generateMaze()
       auto new_cell = neighbours.at(rand() % neighbours.size()); //choose one at random // change random !!!!
       //insert checkfunction
       if (checkDirection(current_cell, new_cell) == step_right)
-        m_maze[new_cell.m_x][new_cell.m_y].destroyRightWall();
+        m_maze[current_cell.m_x][current_cell.m_y].destroyRightWall();
       else if (checkDirection(current_cell, new_cell) == step_left)
-        m_maze[new_cell.m_x][new_cell.m_y].destroyLeftWall();
+        m_maze[new_cell.m_x][new_cell.m_y].destroyRightWall();
       else if (checkDirection(current_cell, new_cell) == step_down)
-        m_maze[new_cell.m_x][new_cell.m_y].destroyDownWall();
+        m_maze[current_cell.m_x][current_cell.m_y].destroyDownWall();
       else if (checkDirection(current_cell, new_cell) == step_up)
-        m_maze[new_cell.m_x][new_cell.m_y].destroyUpWall();
-        //m_maze[new_cell.m_x][new_cell.m_y].destroy();
+        m_maze[new_cell.m_x][new_cell.m_y].destroyDownWall();
+      //m_maze[new_cell.m_x][new_cell.m_y].destroy();
       m_backtrace.push(current_cell);
       //new_cell.m_visited = true;
       current_cell = new_cell; //set this new cell current
@@ -167,16 +166,20 @@ void Labyrinth::PrintMaze() const
   {
     for (unsigned j = 0; j < mazeCols(); ++j)
     {
-      if (m_maze[i][j].entrance())
+      /*if (m_maze[i][j].entrance())
         std::cout << "En";
-      else if (m_maze[i][j].exit())
+        else if (m_maze[i][j].exit())
         std::cout << "Ex";
-      else if (!m_maze[i][j].destroyable())
-        std::cout << " *";
-      else if (m_maze[i][j].downWallClosed())
-        std::cout << "_ ";
-      else if (m_maze[i][j].rightWallClosed())
-        std::cout << " |";
+        else */if (!m_maze[i][j].destroyable())
+          std::cout << " *";
+        else if (m_maze[i][j].downWallClosed())
+          std::cout << " |";
+        else if (m_maze[i][j].rightWallClosed())
+          std::cout << "__";
+        else if (!m_maze[i][j].downWallClosed())
+          std::cout << "  ";
+        else if (!m_maze[i][j].rightWallClosed())
+          std::cout << "  ";
     }
     std::cout << endl;
   }
