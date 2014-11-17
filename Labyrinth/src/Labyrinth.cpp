@@ -31,11 +31,6 @@ Labyrinth::Labyrinth(int i_row, int i_col)
 {
   std::srand((unsigned)time(0));
 
-  std::default_random_engine generator;
-  std::uniform_int_distribution<int> distribution(0, i_col);
-  int entrance = distribution(generator);
-  int exit = distribution(generator);
-
   for (int i = 0; i < i_row; ++i)
   {
     m_maze[i][0].makeBorder();
@@ -50,7 +45,7 @@ Labyrinth::Labyrinth(int i_row, int i_col)
 
   m_maze[0][rand() % i_col].setEntrance();
 
-  m_maze[i_col - 1][exit].setExit();
+  m_maze[i_col - 1][rand() % i_row].setExit();
 }
 
 
