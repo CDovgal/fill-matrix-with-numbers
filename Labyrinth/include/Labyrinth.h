@@ -31,13 +31,13 @@ typedef vector<vector<Wall>> Maze;
 class Labyrinth
 {
 public:
+  Labyrinth(){};
   Labyrinth(int i_row, int i_col); 
   ~Labyrinth(){};
   bool isWall(const Cell& cell) const;
-  bool isBorder(const Cell& cell) const;  
+  bool isBorder(const Cell& cell) const; 
+  bool isClosed(const Cell& i_current_cell) const;
   bool checkNeighbour(int x, int y);
-  void setEntrance(const Cell& cell);
-  void setExit(const Cell& cell);
   void generateMaze();
   void PrintMaze() const;
   int mazeSize() const;

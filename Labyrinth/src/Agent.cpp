@@ -1,35 +1,90 @@
 #include "Agent.h"
 #include <vector>
-#include "Wall.h"
+#include "Labyrinth.h"
+
+
+Cell Agent::setAgentStartPosition()
+{
+  Cell agPosition = lab.entrance();
+  return agPosition;
+}
+
 
 void Agent::FindSolution()
 {
-  //Labyrinth lab(20, 20);
-  //Wall wall;
+  m_visited_cells.clear();
+  int visited_count = 1;
+  int total_cells = lab.mazeSize();
+  Cell current_cell = setAgentStartPosition();
+  m_visited_cells.push_back(current_cell);
 
-  //std::vector<Cell> visited_cells;
+  while (visited_count < total_cells) // while !lab.exit()
+  {
+    auto neighbours = lab.findNeighbours(current_cell);
 
-  //int total_cells  = 40;
-  //int visited_count = 1;
+    if (!neighbours.empty())
+    {
+      auto next_cell = neighbours.at(rand() % neighbours.size());
 
-  //Cell current_cell = lab.entrance();
+      if (lab.checkDirection(current_cell, next_cell) == step_right)
+        stepRight();
+      else if (lab.checkDirection(current_cell, next_cell) == step_left)
+        stepLeft();
+      else if (lab.checkDirection(current_cell, next_cell) == step_down)
+        stepDown();
+      else if (lab.checkDirection(current_cell, next_cell) == step_up)
+        stepUp();
 
-  //while (visited_count < total_cells)
-  //{
-  //  //find all neighbours of current cell
-  //  if (lab.isWall(current_cell))
-  //  {
-  //    //choose one at random
-  //    wall.destroy(); // and step into new cell
-  //    visited_cells.push_back(current_cell);
-  //    //this new cell set current
-  //    ++visited_count;
-  //  }
-  //  else
-  //  {
-  //    current_cell = visited_cells.back();
-  //  }
-  //}
+      m_agent_trace.push(current_cell);
+      current_cell = next_cell;
+      m_visited_cells.push_back(current_cell);
+      ++visited_count;
+    }
+    else
+    {
+      current_cell = m_agent_trace.top();
+      m_agent_trace.pop();
+    }
+  }
+}
 
+
+Cell Agent::stepLeft(const Cell& i_current_cell)
+{
+
+}
+
+void Agent::stepLeft() const
+{
+
+}
+
+Cell Agent::stepRight(const Cell& i_current_cell)
+{
+
+}
+
+void Agent::stepRight() const
+{
+
+}
+
+Cell Agent::stepUp(const Cell& i_current_cell)
+{
+
+}
+
+void Agent::stepUp() const
+{
+
+}
+
+Cell Agent::stepDown(const Cell& i_current_cell)
+{
+
+}
+
+void Agent::stepDown() const
+{
 
 }
