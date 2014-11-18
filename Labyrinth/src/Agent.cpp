@@ -10,30 +10,61 @@ Cell Agent::setAgentStartPosition()
 }
 
 
+std::vector<Cell> Agent::findOpenedWays(const Cell& i_current_cell)
+{
+  std::vector<Cell> opened_cells;
+
+  if (!isDownWallClosed(i_current_cell.m_x, i_current_cell.m_y))
+  {
+    Cell opened(i_current_cell.m_x, i_current_cell.m_y + 1);
+    opened_cells.push_back(opened);
+  }
+
+  if (!isRightWallClosed(i_current_cell.m_x, i_current_cell.m_y))
+  {
+    Cell opened(i_current_cell.m_x + 1, i_current_cell.m_y);
+    opened_cells.push_back(opened);
+  }
+
+  if (!isDownWallClosed(i_current_cell.m_x, i_current_cell.m_y - 1))
+  {
+    Cell opened(i_current_cell.m_x, i_current_cell.m_y - 1);
+    opened_cells.push_back(opened);
+  }
+
+  if (!isRightWallClosed(i_current_cell.m_x - 1, i_current_cell.m_y))
+  {
+    Cell opened(i_current_cell.m_x - 1, i_current_cell.m_y);
+    opened_cells.push_back(opened);
+  }
+
+  return opened_cells;
+}
+
 void Agent::FindSolution()
 {
   m_visited_cells.clear();
   int visited_count = 1;
-  int total_cells = lab.mazeSize();
+  int total_cells = mazeSize();
   Cell current_cell = setAgentStartPosition();
   m_visited_cells.push_back(current_cell);
 
   while (visited_count < total_cells) // while !lab.exit()
   {
-    auto neighbours = lab.findNeighbours(current_cell);
+    auto openedways = findOpenedWays(current_cell);
 
-    if (!neighbours.empty())
+    if (!openedways.empty())
     {
-      auto next_cell = neighbours.at(rand() % neighbours.size());
+      auto next_cell = openedways.at(rand() % openedways.size());
 
-      if (lab.checkDirection(current_cell, next_cell) == step_right)
+      /*if (lab.checkDirection(current_cell, next_cell) == step_right)
         stepRight();
       else if (lab.checkDirection(current_cell, next_cell) == step_left)
         stepLeft();
       else if (lab.checkDirection(current_cell, next_cell) == step_down)
         stepDown();
       else if (lab.checkDirection(current_cell, next_cell) == step_up)
-        stepUp();
+        stepUp();*/
 
       m_agent_trace.push(current_cell);
       current_cell = next_cell;
@@ -49,17 +80,7 @@ void Agent::FindSolution()
 }
 
 
-Cell Agent::stepLeft(const Cell& i_current_cell)
-{
-
-}
-
 void Agent::stepLeft() const
-{
-
-}
-
-Cell Agent::stepRight(const Cell& i_current_cell)
 {
 
 }
@@ -69,17 +90,7 @@ void Agent::stepRight() const
 
 }
 
-Cell Agent::stepUp(const Cell& i_current_cell)
-{
-
-}
-
 void Agent::stepUp() const
-{
-
-}
-
-Cell Agent::stepDown(const Cell& i_current_cell)
 {
 
 }

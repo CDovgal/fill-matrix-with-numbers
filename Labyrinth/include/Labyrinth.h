@@ -31,12 +31,14 @@ typedef vector<vector<Wall>> Maze;
 class Labyrinth
 {
 public:
-  Labyrinth(){};
   Labyrinth(int i_row, int i_col); 
   ~Labyrinth(){};
   bool isWall(const Cell& cell) const;
   bool isBorder(const Cell& cell) const; 
-  bool isClosed(const Cell& i_current_cell) const;
+  // agent
+  bool isRightWallClosed(int x, int y);
+  bool isDownWallClosed(int x, int y);
+  // agent ^
   bool checkNeighbour(int x, int y);
   void generateMaze();
   void PrintMaze() const;
