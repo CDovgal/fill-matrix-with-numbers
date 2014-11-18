@@ -3,9 +3,7 @@
 #include <vector>
 #include <time.h>
 #include <string>
-
-using namespace std;
-
+#include "Agent.h"
 
 
 int main()

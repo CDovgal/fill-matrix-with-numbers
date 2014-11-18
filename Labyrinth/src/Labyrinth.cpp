@@ -1,4 +1,5 @@
 ﻿#include "Labyrinth.h"
+#include "Agent.h"
 #include <vector>
 #include <iostream>
 #include <time.h>
@@ -10,21 +11,6 @@
 
 
 bool operator==(const Cell& lhv, const Cell& rhv) { return lhv.m_x == rhv.m_x && lhv.m_y == rhv.m_y; };
-
-int Labyrinth::mazeSize() const
-{
-  return m_maze_size;
-}
-
-int Labyrinth::mazeRows() const
-{
-  return m_row;
-}
-
-int Labyrinth::mazeCols() const
-{
-  return m_col;
-}
 
 Labyrinth::Labyrinth(int i_row, int i_col)
 : m_maze(i_row, std::vector<Wall>(i_col)), m_maze_size(i_row*i_col), m_row(i_row), m_col(i_col)
@@ -46,6 +32,21 @@ Labyrinth::Labyrinth(int i_row, int i_col)
   m_maze[0][rand() % i_col].setEntrance();
 
   m_maze[i_col - 1][rand() % i_row].setExit();
+}
+
+int Labyrinth::mazeSize() const
+{
+  return m_maze_size;
+}
+
+int Labyrinth::mazeRows() const
+{
+  return m_row;
+}
+
+int Labyrinth::mazeCols() const
+{
+  return m_col;
 }
 
 
@@ -197,7 +198,36 @@ bool Labyrinth::isWall(const Cell& cell) const
   else
     return false;
 }
+// FOR AGENT --------------------------------------------------------
 
+bool Labyrinth::isRightWallClosed(int x, int y)
+{
+  if ((x < 0 || y < 0))
+    return false;
+
+  if (x >= mazeRows() || y >= mazeCols())
+    return false;
+
+  if (m_maze[x][y].rightWallClosed())
+    return false;
+
+  return true;
+}
+
+bool Labyrinth::isDownWallClosed(int x, int y)
+{
+  if ((x < 0 || y < 0))
+    return false;
+
+  if (x >= mazeRows() || y >= mazeCols())
+    return false;
+
+  if (m_maze[x][y].downWallClosed())
+    return false;
+
+  return true;
+}
+//---------------------------------------------------------------------
 Cell Labyrinth::entrance() const
 {
   for (unsigned i = 0; i < mazeRows(); ++i)
