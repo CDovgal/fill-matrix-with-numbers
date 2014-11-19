@@ -56,6 +56,16 @@ void Wall::destroyRightWall()
   m_right_is_closed = false;
 }
 //--------------------------------
+void Wall::setVisitedByAgent() 
+{
+  m_is_visited_by_agent = true;
+}
+
+bool Wall::isVisitedByAgent() const
+{
+  return m_is_visited_by_agent;
+}
+//--------------------------------
 void Wall::restore()
 {
   m_is_closed = true;

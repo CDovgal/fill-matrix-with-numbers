@@ -8,8 +8,12 @@
 
 int main()
 {
-  Labyrinth lab(25, 25);
+  Labyrinth lab(7, 7);
   lab.generateMaze();
+  //lab.PrintMaze();
+  Agent age;
+  age.FindSolution(lab);
+  age.printAgent();
   lab.PrintMaze();
   return 0;
 }

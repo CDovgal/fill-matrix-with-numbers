@@ -26,6 +26,8 @@ struct Cell
 
 bool operator==(const Cell& lhv, const Cell& rhv);
 
+bool operator!=(const Cell& lhv, const Cell& rhv);
+
 typedef vector<vector<Wall>> Maze;
 
 class Labyrinth
@@ -40,6 +42,9 @@ public:
   bool isDownWallClosed(int x, int y);
   // agent ^
   bool checkNeighbour(int x, int y);
+  //
+  void setVisitedAg(const Cell& i_visited_cell);
+  //
   void generateMaze();
   void PrintMaze() const;
   int mazeSize() const;

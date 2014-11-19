@@ -9,7 +9,8 @@ public:
     m_down_is_closed(true), 
     m_right_is_closed(true), 
     m_is_entrance(false), 
-    m_is_exit(false)
+    m_is_exit(false),
+    m_is_visited_by_agent(false)
   {}
 
   bool closed() const;
@@ -30,8 +31,14 @@ public:
   void makeWall();
   void setEntrance();
   void setExit();
+  //------
+  void setVisitedByAgent();
+  bool isVisitedByAgent() const;
+  //------
 
 private:
+  bool m_is_visited_by_agent;
+  //--------------
   bool m_down_is_closed;
   bool m_right_is_closed;
   //-------------
