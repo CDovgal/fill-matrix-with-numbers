@@ -1,38 +1,46 @@
 #include "Agent.h"
 #include <vector>
 #include "Labyrinth.h"
+#include <iostream>
 
 
-Cell Agent::setAgentStartPosition()
+Cell Agent::setAgentStartPosition(const Labyrinth& lab)
 {
   Cell agPosition = lab.entrance();
   return agPosition;
 }
 
+bool Agent::isVisited(int x, int y)
+{
+  Cell i_current_cell(x, y);
+  if (std::any_of(begin(m_visited_cells), end(m_visited_cells), [&](const Cell& visited){return i_current_cell == visited; }))
+    return true;
+  //also we can cut m_visited_cells at all and use Cell variable m_is_visited???? 
+}
 
-std::vector<Cell> Agent::findOpenedWays(const Cell& i_current_cell)
+std::vector<Cell> Agent::findOpenedWays(const Cell& i_current_cell, Labyrinth& lab)
 {
   std::vector<Cell> opened_cells;
 
-  if (!isDownWallClosed(i_current_cell.m_x, i_current_cell.m_y))
+  if (!lab.isDownWallClosed(i_current_cell.m_x, i_current_cell.m_y) && !isVisited(i_current_cell.m_x, i_current_cell.m_y + 1))
   {
     Cell opened(i_current_cell.m_x, i_current_cell.m_y + 1);
     opened_cells.push_back(opened);
   }
 
-  if (!isRightWallClosed(i_current_cell.m_x, i_current_cell.m_y))
+  if (!lab.isRightWallClosed(i_current_cell.m_x, i_current_cell.m_y) && !isVisited(i_current_cell.m_x + 1, i_current_cell.m_y))
   {
     Cell opened(i_current_cell.m_x + 1, i_current_cell.m_y);
     opened_cells.push_back(opened);
   }
 
-  if (!isDownWallClosed(i_current_cell.m_x, i_current_cell.m_y - 1))
+  if (!lab.isDownWallClosed(i_current_cell.m_x, i_current_cell.m_y - 1) && !isVisited(i_current_cell.m_x, i_current_cell.m_y - 1))
   {
     Cell opened(i_current_cell.m_x, i_current_cell.m_y - 1);
     opened_cells.push_back(opened);
   }
 
-  if (!isRightWallClosed(i_current_cell.m_x - 1, i_current_cell.m_y))
+  if (!lab.isRightWallClosed(i_current_cell.m_x - 1, i_current_cell.m_y) && !isVisited(i_current_cell.m_x - 1, i_current_cell.m_y))
   {
     Cell opened(i_current_cell.m_x - 1, i_current_cell.m_y);
     opened_cells.push_back(opened);
@@ -41,44 +49,44 @@ std::vector<Cell> Agent::findOpenedWays(const Cell& i_current_cell)
   return opened_cells;
 }
 
-void Agent::FindSolution()
+void Agent::FindSolution(const Labyrinth& lab)
 {
   m_visited_cells.clear();
   int visited_count = 1;
-  int total_cells = mazeSize();
-  Cell current_cell = setAgentStartPosition();
+  int total_cells = lab.mazeSize();
+  Cell current_cell = setAgentStartPosition(lab);
   m_visited_cells.push_back(current_cell);
+  m_agent_trace.push(current_cell);
+  Cell exit(lab.exit());
 
-  while (visited_count < total_cells) // while !lab.exit()
+  while (/*visited_count < total_cells*/exit != current_cell) // while !lab.exit()
   {
-    auto openedways = findOpenedWays(current_cell);
+    auto openedways = findOpenedWays(current_cell, const_cast<Labyrinth&>(lab));
 
     if (!openedways.empty())
     {
       auto next_cell = openedways.at(rand() % openedways.size());
 
-      /*if (lab.checkDirection(current_cell, next_cell) == step_right)
-        stepRight();
-      else if (lab.checkDirection(current_cell, next_cell) == step_left)
-        stepLeft();
-      else if (lab.checkDirection(current_cell, next_cell) == step_down)
-        stepDown();
-      else if (lab.checkDirection(current_cell, next_cell) == step_up)
-        stepUp();*/
-
       m_agent_trace.push(current_cell);
       current_cell = next_cell;
       m_visited_cells.push_back(current_cell);
+      const_cast<Labyrinth&>(lab).setVisitedAg(current_cell);
       ++visited_count;
     }
     else
     {
-      current_cell = m_agent_trace.top();
+      current_cell = m_agent_trace.top(); // add check for empty m_agent_trace
       m_agent_trace.pop();
     }
   }
 }
 
+
+void Agent::printAgent()
+{
+  for (std::stack<Cell> dump = m_agent_trace; !dump.empty(); dump.pop())
+    std::cout << dump.top().m_x << " & " << dump.top().m_y << std::endl;
+}
 
 void Agent::stepLeft() const
 {

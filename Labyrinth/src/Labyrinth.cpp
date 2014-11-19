@@ -12,6 +12,8 @@
 
 bool operator==(const Cell& lhv, const Cell& rhv) { return lhv.m_x == rhv.m_x && lhv.m_y == rhv.m_y; };
 
+bool operator!=(const Cell& lhv, const Cell& rhv) { return !(lhv.m_x == rhv.m_x && lhv.m_y == rhv.m_y); };
+
 Labyrinth::Labyrinth(int i_row, int i_col)
 : m_maze(i_row, std::vector<Wall>(i_col)), m_maze_size(i_row*i_col), m_row(i_row), m_col(i_col)
 {
@@ -162,20 +164,22 @@ void Labyrinth::PrintMaze() const
   {
     for (unsigned j = 0; j < mazeCols(); ++j)
     {
-      /*if (m_maze[i][j].entrance())
-        std::cout << "En";
-        else if (m_maze[i][j].exit())
-        std::cout << "Ex";
-        else */if (!m_maze[i][j].destroyable())
-          std::cout << " *";
-        else if (m_maze[i][j].downWallClosed())
-          std::cout << " |";
-        else if (m_maze[i][j].rightWallClosed())
-          std::cout << "__";
-        else if (!m_maze[i][j].downWallClosed())
-          std::cout << "  ";
+      if (m_maze[i][j].entrance())
+        std::cout << " 0";
+      else if (m_maze[i][j].exit())
+        std::cout << " 0";
+      else if (!m_maze[i][j].destroyable())
+        std::cout << " *";
+      else if (m_maze[i][j].downWallClosed())
+        std::cout << " |";
+      else if (m_maze[i][j].rightWallClosed())
+        std::cout << "__";
+      else if (!m_maze[i][j].downWallClosed())
+        std::cout << "  ";
         else if (!m_maze[i][j].rightWallClosed())
-          std::cout << "  ";
+        std::cout << "  ";
+      if (m_maze[i][j].isVisitedByAgent())
+        std::cout << "^";
     }
     std::cout << endl;
   }
@@ -202,30 +206,37 @@ bool Labyrinth::isWall(const Cell& cell) const
 
 bool Labyrinth::isRightWallClosed(int x, int y)
 {
+
   if ((x < 0 || y < 0))
-    return false;
+    return true;
 
   if (x >= mazeRows() || y >= mazeCols())
-    return false;
+    return true;
 
   if (m_maze[x][y].rightWallClosed())
-    return false;
+    return true;
 
-  return true;
+  return false;
 }
 
 bool Labyrinth::isDownWallClosed(int x, int y)
 {
+
   if ((x < 0 || y < 0))
-    return false;
+    return true;
 
   if (x >= mazeRows() || y >= mazeCols())
-    return false;
+    return true;
 
   if (m_maze[x][y].downWallClosed())
-    return false;
+    return true;
 
-  return true;
+  return false;
+}
+
+void Labyrinth::setVisitedAg(const Cell& i_visited_cell)
+{
+  m_maze[i_visited_cell.m_x][i_visited_cell.m_y].setVisitedByAgent();
 }
 //---------------------------------------------------------------------
 Cell Labyrinth::entrance() const
