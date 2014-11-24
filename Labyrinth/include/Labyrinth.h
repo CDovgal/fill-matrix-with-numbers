@@ -37,16 +37,15 @@ public:
   ~Labyrinth(){};
   bool isWall(const Cell& cell) const;
   bool isBorder(const Cell& cell) const; 
+  bool isEntrance(const Cell& cell) const;
+  bool isExit(const Cell& cell) const;
   // agent
-  bool isRightWallClosed(int x, int y);
-  bool isDownWallClosed(int x, int y);
+  bool isRightWallClosed(int x, int y) const;
+  bool isDownWallClosed(int x, int y) const;
   // agent ^
   bool checkNeighbour(int x, int y);
-  //
-  void setVisitedAg(const Cell& i_visited_cell);
-  //
   void generateMaze();
-  void PrintMaze() const;
+  //void PrintMaze() const;
   int mazeSize() const;
   int mazeRows() const;
   int mazeCols() const;

@@ -10,7 +10,7 @@ Cell Agent::setAgentStartPosition(const Labyrinth& lab)
   return agPosition;
 }
 
-bool Agent::isVisited(int x, int y)
+bool Agent::isVisited(int x, int y) const
 {
   Cell i_current_cell(x, y);
   if (std::any_of(begin(m_visited_cells), end(m_visited_cells), [&](const Cell& visited){return i_current_cell == visited; }))
@@ -70,7 +70,6 @@ void Agent::FindSolution(const Labyrinth& lab)
       m_agent_trace.push(current_cell);
       current_cell = next_cell;
       m_visited_cells.push_back(current_cell);
-      const_cast<Labyrinth&>(lab).setVisitedAg(current_cell);
       ++visited_count;
     }
     else
@@ -79,14 +78,25 @@ void Agent::FindSolution(const Labyrinth& lab)
       m_agent_trace.pop();
     }
   }
-}
-
-
-void Agent::printAgent()
-{
   for (std::stack<Cell> dump = m_agent_trace; !dump.empty(); dump.pop())
-    std::cout << dump.top().m_x << " & " << dump.top().m_y << std::endl;
+    trace_path.push_back(dump.top());
 }
+
+
+//void Agent::printAgent()
+//{
+//  for (std::stack<Cell> dump = m_agent_trace; !dump.empty(); dump.pop())
+//    std::cout << dump.top().m_x << " & " << dump.top().m_y << std::endl;
+//}
+
+bool Agent::agentTrace(const Cell& i_cur_cell) const
+{
+  if (std::any_of(begin(trace_path), end(trace_path), [&](const Cell& visited){return i_cur_cell == visited; }))
+    return true;
+}
+
+
+//---------------------------------------for movement
 
 void Agent::stepLeft() const
 {
