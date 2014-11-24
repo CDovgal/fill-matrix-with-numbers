@@ -15,11 +15,17 @@ void Renderer::printMaze(const Labyrinth& i_labyrinth, const Agent& i_agent) con
     {
       Cell cur_cell(i, j);
       if (i_labyrinth.isEntrance(cur_cell))
-        std::cout << "! ";
+        std::cout << "E ";
       else if (i_labyrinth.isExit(cur_cell))
         std::cout << "? ";
       else if (i_labyrinth.isBorder(cur_cell))
         std::cout << "* ";
+      else if (i_agent.agentTrace(cur_cell) && !i_labyrinth.isRightWallClosed(i, j))
+        std::cout << "^ ";
+      else if (i_agent.agentTrace(cur_cell) && !i_labyrinth.isRightWallClosed(i, j) && !i_labyrinth.isDownWallClosed(i, j))
+        std::cout << "^ ";
+      else if (i_agent.agentTrace(cur_cell) && !i_labyrinth.isDownWallClosed(i, j))
+        std::cout << "2 ";
       else if (i_labyrinth.isDownWallClosed(i, j) && !i_labyrinth.isRightWallClosed(i, j))
         std::cout << "_ ";
       else if (!i_labyrinth.isDownWallClosed(i, j) && i_labyrinth.isRightWallClosed(i, j))
@@ -28,12 +34,6 @@ void Renderer::printMaze(const Labyrinth& i_labyrinth, const Agent& i_agent) con
         std::cout << "_|";
       else if (!i_labyrinth.isDownWallClosed(i, j) && !i_labyrinth.isRightWallClosed(i, j))
         std::cout << "  ";
-      else if (i_agent.agentTrace(cur_cell) /*&& !i_labyrinth.isDownWallClosed(i, j) && !i_labyrinth.isRightWallClosed(i, j)*/)
-        std::cout << "^ ";
-      //else if (i_agent.agentTrace(cur_cell) && !i_labyrinth.isRightWallClosed(i, j))
-      //  std::cout << "^ ";
-      /*else if (i_agent.agentTrace(cur_cell) && i_labyrinth.isRightWallClosed(i, j))
-        std::cout << "^|";*/
     }
     std::cout << endl;
   }
