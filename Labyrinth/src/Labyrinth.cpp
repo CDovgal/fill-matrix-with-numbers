@@ -31,9 +31,9 @@ Labyrinth::Labyrinth(int i_row, int i_col)
     m_maze[i_row - 1][j].makeBorder();
   }
 
-  m_maze[0][rand() % i_col].setEntrance();
+  m_maze[1][rand() % i_col].setEntrance();
 
-  m_maze[i_col - 1][rand() % i_row].setExit();
+  m_maze[i_col - 2][rand() % i_row].setExit();
 }
 
 int Labyrinth::mazeSize() const
@@ -158,35 +158,35 @@ std::vector<Cell> Labyrinth::findNeighbours(const Cell& cur_cell)
   return neighbour_cells;
 }
 
-void Labyrinth::PrintMaze() const
-{
-  for (unsigned i = 0; i < mazeRows(); ++i)
-  {
-    for (unsigned j = 0; j < mazeCols(); ++j)
-    {
-      if (m_maze[i][j].entrance())
-        std::cout << " 0";
-      else if (m_maze[i][j].exit())
-        std::cout << " 0";
-      else if (!m_maze[i][j].destroyable())
-        std::cout << " *";
-      else if (m_maze[i][j].downWallClosed())
-        std::cout << " |";
-      else if (m_maze[i][j].rightWallClosed())
-        std::cout << "__";
-      else if (!m_maze[i][j].downWallClosed())
-        std::cout << "  ";
-        else if (!m_maze[i][j].rightWallClosed())
-        std::cout << "  ";
-      if (m_maze[i][j].isVisitedByAgent())
-        std::cout << "^";
-    }
-    std::cout << endl;
-  }
-  std::cout << endl;
-}
+//void Labyrinth::PrintMaze() const
+//{
+//  for (unsigned i = 0; i < mazeRows(); ++i)
+//  {
+//    for (unsigned j = 0; j < mazeCols(); ++j)
+//    {
+//      if (m_maze[i][j].entrance())
+//        std::cout << " 0";
+//      else if (m_maze[i][j].exit())
+//        std::cout << " 0";
+//      else if (!m_maze[i][j].destroyable())
+//        std::cout << " *";
+//      else if (m_maze[i][j].downWallClosed())
+//        std::cout << " |";
+//      else if (m_maze[i][j].rightWallClosed())
+//        std::cout << "__";
+//      else if (!m_maze[i][j].downWallClosed())
+//        std::cout << "  ";
+//        else if (!m_maze[i][j].rightWallClosed())
+//        std::cout << "  ";
+//      if (m_maze[i][j].isVisitedByAgent())
+//        std::cout << "^";
+//    }
+//    std::cout << endl;
+//  }
+//  std::cout << endl;
+//}
 
-
+//--------------------------------------------------
 bool Labyrinth::isBorder(const Cell& cell) const
 {
   if (m_maze[cell.m_x][cell.m_y].destroyable())
@@ -202,11 +202,26 @@ bool Labyrinth::isWall(const Cell& cell) const
   else
     return false;
 }
+
+bool Labyrinth::isEntrance(const Cell& cell) const
+{
+  if (m_maze[cell.m_x][cell.m_y].entrance())
+    return true;
+  else
+    return false;
+}
+
+bool Labyrinth::isExit(const Cell& cell) const
+{
+  if (m_maze[cell.m_x][cell.m_y].exit())
+    return true;
+  else
+    return false;
+}
 // FOR AGENT --------------------------------------------------------
 
-bool Labyrinth::isRightWallClosed(int x, int y)
+bool Labyrinth::isRightWallClosed(int x, int y) const
 {
-
   if ((x < 0 || y < 0))
     return true;
 
@@ -219,9 +234,8 @@ bool Labyrinth::isRightWallClosed(int x, int y)
   return false;
 }
 
-bool Labyrinth::isDownWallClosed(int x, int y)
+bool Labyrinth::isDownWallClosed(int x, int y) const 
 {
-
   if ((x < 0 || y < 0))
     return true;
 
@@ -233,19 +247,14 @@ bool Labyrinth::isDownWallClosed(int x, int y)
 
   return false;
 }
-
-void Labyrinth::setVisitedAg(const Cell& i_visited_cell)
-{
-  m_maze[i_visited_cell.m_x][i_visited_cell.m_y].setVisitedByAgent();
-}
 //---------------------------------------------------------------------
 Cell Labyrinth::entrance() const
 {
   for (unsigned i = 0; i < mazeRows(); ++i)
   {
-    if (m_maze[0][i].entrance())
+    if (m_maze[1][i].entrance())
     {
-      Cell enter_cell(0, i);
+      Cell enter_cell(1, i);
       return enter_cell;
     }
   }
@@ -255,9 +264,9 @@ Cell Labyrinth::exit() const
 {
   for (unsigned i = 0; i < mazeRows(); ++i)
   {
-    if (m_maze[mazeRows() - 1][i].exit())
+    if (m_maze[mazeRows() - 2][i].exit())
     {
-      Cell exit_cell(mazeRows() - 1, i);
+      Cell exit_cell(mazeRows() - 2, i);
       return exit_cell;
     }
   }

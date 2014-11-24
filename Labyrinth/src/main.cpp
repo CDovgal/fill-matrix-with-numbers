@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Labyrinth.h"
+#include "MazeRenderer.h"
 #include <vector>
 #include <time.h>
 #include <string>
@@ -8,12 +9,7 @@
 
 int main()
 {
-  Labyrinth lab(7, 7);
-  lab.generateMaze();
-  //lab.PrintMaze();
-  Agent age;
-  age.FindSolution(lab);
-  age.printAgent();
-  lab.PrintMaze();
+  Renderer rend;
+  rend.printLabyrinth();
   return 0;
 }
