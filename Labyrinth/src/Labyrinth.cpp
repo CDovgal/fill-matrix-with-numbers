@@ -187,9 +187,9 @@ std::vector<Cell> Labyrinth::findNeighbours(const Cell& cur_cell)
 //}
 
 //--------------------------------------------------
-bool Labyrinth::isBorder(const Cell& cell) const
+bool Labyrinth::isBorder(int x, int y) const
 {
-  if (m_maze[cell.m_x][cell.m_y].destroyable())
+  if (m_maze[x][y].destroyable())
     return false;
   else
     return true;
@@ -203,17 +203,17 @@ bool Labyrinth::isWall(const Cell& cell) const
     return false;
 }
 
-bool Labyrinth::isEntrance(const Cell& cell) const
+bool Labyrinth::isEntrance(int x, int y) const
 {
-  if (m_maze[cell.m_x][cell.m_y].entrance())
+  if (m_maze[x][y].entrance())
     return true;
   else
     return false;
 }
 
-bool Labyrinth::isExit(const Cell& cell) const
+bool Labyrinth::isExit(int x, int y) const
 {
-  if (m_maze[cell.m_x][cell.m_y].exit())
+  if (m_maze[x][y].exit())
     return true;
   else
     return false;

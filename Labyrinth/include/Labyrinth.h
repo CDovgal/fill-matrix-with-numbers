@@ -36,9 +36,9 @@ public:
   Labyrinth(int i_row, int i_col); 
   ~Labyrinth(){};
   bool isWall(const Cell& cell) const;
-  bool isBorder(const Cell& cell) const; 
-  bool isEntrance(const Cell& cell) const;
-  bool isExit(const Cell& cell) const;
+  bool isBorder(int x, int y) const; 
+  bool isEntrance(int x, int y) const;
+  bool isExit(int x, int y) const;
   // agent
   bool isRightWallClosed(int x, int y) const;
   bool isDownWallClosed(int x, int y) const;
