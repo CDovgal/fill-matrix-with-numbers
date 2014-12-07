@@ -13,7 +13,11 @@ Depozit/bin/
 Decoding/bin/
 Complex/bin/
 GraphicRed/bin/
+Stroustrup/bin/
 
 OctalToDecimal/src/main.cpp.orig
 CodingDecoding/src/main.cpp.orig
 bugreport.txt
+Labyrinth/src/Agent.cpp.orig
+Labyrinth/src/main.cpp.orig
+Labyrinth/src/Labyrinth.cpp.orig
