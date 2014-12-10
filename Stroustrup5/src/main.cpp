@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <ctime>
 
 //struct Pair
 //{
@@ -145,7 +146,7 @@ int main()
   f(uc); g(uc); h(uc);
   f(sc); g(sc); h(sc);*/
 
-  char* month[12] = {"June","July","August", "September", "October", "November", "December", "January", "February", "March", "April", "May"};
+  /*char* month[12] = {"June","July","August", "September", "October", "November", "December", "January", "February", "March", "April", "May"};
   int day_count[12] = {30, 31, 30, 28, 29, 30, 30, 31, 30, 29, 27, 29};
 
   for (int i = 0; i < 12; ++i)
@@ -157,7 +158,31 @@ int main()
   for (unsigned i = 0; i < calend.size(); ++i)
   {
     std::cout << calend.at(i).month << " : " << calend.at(i).day_count << std::endl;
-  }
+  }*/
+
+
+  std::vector<int> i_vec;
+  for (unsigned i = 0; i < 100000; ++i)
+    i_vec.push_back(i);
+
+  std::clock_t start;
+  double duration;
+
+  start = std::clock();
+
+  /*for (std::vector<int>::const_iterator cit = i_vec.begin(); cit != i_vec.end(); ++cit)
+    std::cout << *cit << std::endl;*/
+
+  for (unsigned i = 0; i < i_vec.size(); ++i)
+  std::cout << i_vec.at(i) << std::endl;
+
+  duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+
+  std::cout << "printf: " << duration << '\n';
+
+  
+
+
 
   return 0;
 }
