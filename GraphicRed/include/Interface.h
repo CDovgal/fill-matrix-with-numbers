@@ -1,11 +1,13 @@
 #include <iostream>
 #include <vector>
+#include <limits.h>
 
 class Point
 {
 public:
   double m_x;
   double m_y;
+  static Point NA = { DBL_MAX, DBL_MAX };
   Point(double i_x, double i_y) : 
     m_x(i_x), 
     m_y(i_y){}
@@ -47,6 +49,10 @@ public:
   static  Polyline* IntersectTriangleWithEllipse(Triangle* i_tr, Ellipse* i_ell)
   {
     std::cout << "Triangle intersects with Ellipse\n";
+    //intersecting of triangle and ellipse will give us vector<Segment> of 4 points that we will put in poly
+    std::vector<Segment> tr_ell_seg_list;
+    Polyline *poly = new Polyline(tr_ell_seg_list);
+    return poly;
   }
 };
 
