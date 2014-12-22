@@ -7,7 +7,7 @@ class Point
 public:
   double m_x;
   double m_y;
-  static Point NA = { DBL_MAX, DBL_MAX };
+  static Point NA;
   Point(double i_x, double i_y) : 
     m_x(i_x), 
     m_y(i_y){}

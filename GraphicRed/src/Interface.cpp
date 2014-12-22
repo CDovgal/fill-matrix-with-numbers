@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #define PI 3.14159265
+Point Point::NA = { DBL_MAX, DBL_MAX };
 
 Polyline::Polyline(const std::vector<Segment>& i_segment_list) :
 m_seg_list(i_segment_list)
