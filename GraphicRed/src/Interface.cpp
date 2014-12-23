@@ -1,7 +1,10 @@
 #include "Interface.h"
 #include <iostream>
 #include <vector>
+#include <exception>
+
 #define PI 3.14159265
+
 Point Point::NA = { DBL_MAX, DBL_MAX };
 
 Polyline::Polyline(const std::vector<Segment>& i_segment_list) :
@@ -10,11 +13,31 @@ m_seg_list(i_segment_list)
   std::cout << "Polyline constr\n";
 }
 
+Polyline* Polyline::Intersect(Polyline* otherObject)
+{
+  try
+  {
+    otherObject->Intersect(this);
+  }
+  catch (std::exception& pl_exc)
+  {
+    std::cerr << "Exception caught: " << pl_exc.what() << std::endl;
+  }
+  return nullptr;
+}
+
+Polyline* Polyline::Intersect(Triangle* i_triangle)
+{
+  return nullptr;
+}
+
+Polyline* Polyline::Intersect(Ellipse* i_ellipse)
+{
+  return nullptr;
+}
+
 Triangle::Triangle(const Point& i_a, const Point& i_b, const Point& i_c) :
-Polyline(makeTriangleSegmentList(i_a, i_b, i_c)),
-m_a(i_a),
-m_b(i_b),
-m_c(i_c)
+Polyline(makeTriangleSegmentList(i_a, i_b, i_c))
 {
   std::cout << "Triangle constr\n";
 }
@@ -22,9 +45,9 @@ m_c(i_c)
 std::vector<Segment> Triangle::makeTriangleSegmentList(const Point& i_a, const Point& i_b, const Point& i_c)
 {
   std::vector<Segment> tr_seg_list;
-  Segment a({ 0, 0 }, i_a);
-  Segment b({ 0, 0 }, i_b);
-  Segment c({ 0, 0 }, i_c);
+  Segment a(Point::NA, i_a);
+  Segment b(Point::NA, i_b);
+  Segment c(Point::NA, i_c);
   tr_seg_list.push_back(a);
   tr_seg_list.push_back(b);
   tr_seg_list.push_back(c);
@@ -32,10 +55,7 @@ std::vector<Segment> Triangle::makeTriangleSegmentList(const Point& i_a, const P
 }
 
 Ellipse::Ellipse(const Point& i_center, const Point& i_a, const Point& i_b) :
-Polyline(makeEllipseSegmentList(i_center, i_a, i_b)),
-m_center(i_center),
-m_a(i_a),
-m_b(i_b)
+Polyline(makeEllipseSegmentList(i_center, i_a, i_b))
 {
   std::cout << "Ellipse constr\n";
 }
@@ -56,7 +76,7 @@ double Triangle::getArea()
 {
   /*double p = (m_a + m_b + m_c) / 2;
   double s = std::sqrt(p*(p-m_sideA)*(p-m_sideB)*(p-m_sideC));*/
-  double s = abs((m_a.m_x*(m_b.m_y - m_c.m_y) + m_b.m_x*(m_c.m_y - m_a.m_y) + m_c.m_x*(m_a.m_y - m_b.m_y)) / 2);
+  double s = 10;//abs((m_a.getX()*(m_b.getY() - m_c.getY()) + m_b.getX()*(m_c.getY() - m_a.getY()) + m_c.getX()*(m_a.getY() - m_b.getY())) / 2);
   return s;
 }
 
@@ -67,27 +87,27 @@ double Ellipse::getArea()
 }
 
 
-Polyline* Triangle::Intersect(Triangle* i_tr)
+Polyline* Triangle::Intersect(Triangle* i_triangle)
 {
-  std::cout << "Triangle intersects with triangle\n";
-  return IntersectTriangleWithTriangle(this, i_tr);
+  std::cout << "Triangle intersects with triangle (Triangle func)\n";
+  return IntersectTriangleWithTriangle(this, i_triangle);
 }
 
-Polyline* Triangle::Intersect(Ellipse* i_ell)
+Polyline* Triangle::Intersect(Ellipse* i_ellipse)
 {
-  std::cout << "Triangle intersects with ellipse\n";
-  return IntersectTriangleWithEllipse(this, i_ell);
+  std::cout << "Triangle intersects with ellipse (Triangle func)\n";
+  return IntersectTriangleWithEllipse(this, i_ellipse);
 };
 
 
-Polyline* Ellipse::Intersect(Triangle* i_tr)
+Polyline* Ellipse::Intersect(Triangle* i_triangle)
 {
-  std::cout << "Ellipse intersects with triangle\n";
-  return IntersectTriangleWithEllipse(i_tr, this);
+  std::cout << "Ellipse intersects with triangle (Ellipse func)\n";
+  return IntersectTriangleWithEllipse(i_triangle, this);
 };
 
-Polyline* Ellipse::Intersect(Ellipse* i_ell)
+Polyline* Ellipse::Intersect(Ellipse* i_ellipse)
 {
-  std::cout << "Ellipse intersects with ellipse\n";
-  return IntersectEllipseWithEllipse(this, i_ell);
+  std::cout << "Ellipse intersects with ellipse (Ellipse func)\n";
+  return IntersectEllipseWithEllipse(this, i_ellipse);
 };

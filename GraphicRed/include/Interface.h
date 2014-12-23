@@ -4,13 +4,15 @@
 
 class Point
 {
-public:
   double m_x;
   double m_y;
+public:
   static Point NA;
   Point(double i_x, double i_y) : 
     m_x(i_x), 
     m_y(i_y){}
+  double getX() const{ return m_x; };
+  double getY() const{ return m_y; };
 };
 
 struct Segment
@@ -25,11 +27,10 @@ struct Segment
 class Shape
 {
 public:
-  Shape(){};
   virtual ~Shape(){};
-  virtual void Draw()   { std::cout << "Shape draw\n"; };
-  virtual void Input()  { std::cout << "Shape input\n"; }
-  virtual void Output() { std::cout << "Shape output\n"; }
+  virtual void Draw()   = 0;
+  /*virtual void Input()  = 0;
+  virtual void Output() = 0;*/
 };
 
 
@@ -43,12 +44,12 @@ public:
   Polyline(const std::vector<Segment>& i_segment_list);
   virtual void      Draw(){ std::cout << "Polyline draw\n"; }
   virtual double    getArea(){ return 3.00; }
-  virtual Polyline* Intersect(Polyline& otherObject);
-  virtual Polyline* Intersect(Triangle& i_triangle);
-  virtual Polyline* Intersect(Ellipse& i_ellipse);
+  virtual Polyline* Intersect(Polyline* otherObject);
+  virtual Polyline* Intersect(Triangle* i_triangle);
+  virtual Polyline* Intersect(Ellipse* i_ellipse);
   static  Polyline* IntersectTriangleWithEllipse(Triangle* i_tr, Ellipse* i_ell)
   {
-    std::cout << "Triangle intersects with Ellipse\n";
+    std::cout << "Triangle intersects with Ellipse(Polyline func)\n";
     //intersecting of triangle and ellipse will give us vector<Segment> of 4 points that we will put in poly
     std::vector<Segment> tr_ell_seg_list;
     Polyline *poly = new Polyline(tr_ell_seg_list);
@@ -58,48 +59,48 @@ public:
 
 class Triangle : public Polyline
 {
-  Point m_a;
-  Point m_b;
-  Point m_c;
+  std::vector<Segment> makeTriangleSegmentList(const Point& i_a, const Point& i_b, const Point& i_c);
 public:
   Triangle(const Point& i_a, const Point& i_b, const Point& i_c);
   ~Triangle(){};
   void      Draw(){ std::cout << "Triangle draw\n"; };
   double    getArea();
-  Polyline* Intersect(Polyline* pl)
+  Polyline* Intersect(Polyline* otherObject)
   {
-    return pl->Intersect(*this);
+    return otherObject->Intersect(this);
   };
-  Polyline*        Intersect(Triangle* i_tr);
-  Polyline*        Intersect(Ellipse* i_ell);
+  Polyline*        Intersect(Triangle* i_triangle);
+  Polyline*        Intersect(Ellipse* i_ellipse);
   static Polyline* IntersectTriangleWithTriangle(Triangle* i_trl, Triangle* i_trr)
   {
-    std::cout << "Triangle intersects with triangle\n";
+    std::cout << "Triangle intersects with triangle (Triangle func)\n";
+    std::vector<Segment> tr_tr_seg_list;
+    Polyline *poly = new Polyline(tr_tr_seg_list);
+    return poly;
   }
-  std::vector<Segment> makeTriangleSegmentList(const Point& i_a, const Point& i_b, const Point& i_c);
 };
 
 class Ellipse : public Polyline
 {
-  Point m_center;
-  Point m_a;
-  Point m_b;
+  std::vector<Segment> makeEllipseSegmentList(const Point& i_center, const Point& i_a, const Point& i_b);
 public:
   Ellipse(const Point& i_center, const Point& i_a, const Point& i_b);
   ~Ellipse(){};
   void      Draw(){ std::cout << "Ellipse draw\n"; };
   double    getArea();
-  Polyline* Intersect(Polyline* pl)
+  Polyline* Intersect(Polyline* otherObject)
   {
-    return pl->Intersect(*this);
+    return otherObject->Intersect(this);
   };
   Polyline*        Intersect(Triangle* i_tr);
   Polyline*        Intersect(Ellipse* i_ell);
   static Polyline* IntersectEllipseWithEllipse(Ellipse* i_elll, Ellipse* i_ellr)
   {
-    std::cout << "Ellipse intersects with Ellipse\n";
+    std::cout << "Ellipse intersects with Ellipse(Ellipse func)\n";
+    std::vector<Segment> el_el_seg_list;
+    Polyline *poly = new Polyline(el_el_seg_list);
+    return poly;
   }
-  std::vector<Segment> makeEllipseSegmentList(const Point& i_center, const Point& i_a, const Point& i_b);
 };
 
 
