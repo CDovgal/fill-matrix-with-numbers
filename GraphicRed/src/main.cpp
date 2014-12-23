@@ -5,13 +5,13 @@
 int main()
 {
   {
-    Polyline* tr = new Triangle({ 2, 3 }, { 3, 4 }, { 4, 5 });// tri(2, 3, 4);
+    Triangle* tr = new Triangle({ 2, 3 }, { 3, 4 }, { 4, 5 });// tri(2, 3, 4);
     Polyline* ell = new Ellipse({ 2, 3 }, { 3, 4 }, { 4, 5 });// ell;
     std::vector<Segment> seg_list;
-    Polyline* pl = new Polyline(seg_list);
-    pl->Intersect(tr->Intersect(ell));
+    /*Polyline* pl = new Polyline(seg_list);
+    pl->Intersect(tr->Intersect(ell));*/
     tr->Draw();
-    tr->Intersect(ell);
+    tr->Intersect(ell)->Intersect(tr);
     //ell->Intersect(tr);
     //tr->Intersect(ell);
     //ell->Intersect(tr);

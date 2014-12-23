@@ -15,19 +15,27 @@ m_seg_list(i_segment_list)
 
 Polyline* Polyline::Intersect(Polyline* otherObject)
 {
-  try
+  /*ry
   {
     otherObject->Intersect(this);
   }
   catch (std::exception& pl_exc)
   {
     std::cerr << "Exception caught: " << pl_exc.what() << std::endl;
-  }
+  }*/
   return nullptr;
 }
 
 Polyline* Polyline::Intersect(Triangle* i_triangle)
 {
+  try
+  {
+    i_triangle->Intersect(this);
+  }
+  catch (std::exception& tr_exc)
+  {
+    std::cerr << "Exception caught: " << tr_exc.what() << std::endl;
+  }
   return nullptr;
 }
 
