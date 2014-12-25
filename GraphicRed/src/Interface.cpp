@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <exception>
+#include <memory>
 
 #define PI 3.14159265
 
@@ -37,7 +38,9 @@ Polyline(makeTriangleSegmentList(i_a, i_b, i_c))
   std::cout << "Triangle constr\n";
 }
 
-std::vector<Segment> Triangle::makeTriangleSegmentList(const Point& i_a, const Point& i_b, const Point& i_c)
+std::vector<Segment> Triangle::makeTriangleSegmentList(const Point& i_a, 
+  const Point& i_b, 
+  const Point& i_c)
 {
   std::vector<Segment> tr_seg_list;
   Segment a(Point::NA, i_a);
@@ -55,7 +58,9 @@ Polyline(makeEllipseSegmentList(i_center, i_a, i_b))
   std::cout << "Ellipse constr\n";
 }
 
-std::vector<Segment> Ellipse::makeEllipseSegmentList(const Point& i_center, const Point& i_a, const Point& i_b)
+std::vector<Segment> Ellipse::makeEllipseSegmentList(const Point& i_center, 
+  const Point& i_a, 
+  const Point& i_b)
 {
   std::vector<Segment> ell_seg_list;
   Segment arc({ 0, 0 }, i_center);
@@ -71,7 +76,8 @@ double Triangle::getArea()
 {
   /*double p = (m_a + m_b + m_c) / 2;
   double s = std::sqrt(p*(p-m_sideA)*(p-m_sideB)*(p-m_sideC));*/
-  double s = 10;//abs((m_a.getX()*(m_b.getY() - m_c.getY()) + m_b.getX()*(m_c.getY() - m_a.getY()) + m_c.getX()*(m_a.getY() - m_b.getY())) / 2);
+  double s = 10;//abs((m_a.getX()*(m_b.getY() - m_c.getY()) + m_b.getX()*
+  //(m_c.getY() - m_a.getY()) + m_c.getX()*(m_a.getY() - m_b.getY())) / 2);
   return s;
 }
 
