@@ -5,26 +5,23 @@
 
 int main()
 {
-  {
-    std::shared_ptr<Triangle> tr(new Triangle({ 2, 3 }, { 3, 4 }, { 4, 5 }));
-    std::shared_ptr<Ellipse> ell(new Ellipse({ 2, 3 }, { 3, 4 }, { 4, 5 }));
-    std::weak_ptr<Ellipse> el2;
-    //ell = el2.lock();
-    
+  { 
     //Triangle* tr = new Triangle({ 2, 3 }, { 3, 4 }, { 4, 5 });// tri(2, 3, 4);
     //Polyline* ell = new Ellipse({ 2, 3 }, { 3, 4 }, { 4, 5 });// ell;
-    //std::vector<Segment> seg_list;
-    /*Polyline* pl = new Polyline(seg_list);
-    pl->Intersect(tr->Intersect(ell));*/
-    tr->Draw();
-    tr->Intersect(ell);//???
-    //ell->Intersect(tr);
-    //tr->Intersect(ell);
-    //ell->Intersect(tr);
-    std::cout << tr->getArea() << std::endl;
+    std::unique_ptr<Triangle> tri(new Triangle({ 2, 3 }, { 3, 4 }, { 4, 5 }));
+    std::unique_ptr<Triangle> tr2(new Triangle({ 2, 3 }, { 3, 4 }, { 4, 5 }));
+    std::unique_ptr<Ellipse> ell(new Ellipse({ 2, 3 }, { 3, 4 }, { 4, 5 }));
+    std::unique_ptr<Ellipse> ell2(new Ellipse({ 2, 3 }, { 3, 4 }, { 4, 5 }));
+
+
+    
+    tri->Draw();
+    tri->Intersect(ell.get());
+    ell->Intersect(tri.get());
+    tri->Intersect(tr2.get());
+    ell->Intersect(ell2.get());
+    std::cout << tri->getArea() << std::endl;
     std::cout << ell->getArea() << std::endl;
-    /*delete tr;
-    delete ell;*/
   }
   if (_CrtDumpMemoryLeaks())
     std::cout << "OLOLO!!!!! Leaks.... :(\n";

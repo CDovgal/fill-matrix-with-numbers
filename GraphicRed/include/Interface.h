@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <limits.h>
+#include <memory>
 
 
 class not_implemented : public std::exception
@@ -41,8 +42,8 @@ class Shape
 public:
   virtual ~Shape(){};
   virtual void Draw()   = 0;
-  /*virtual void Input()  = 0;
-  virtual void Output() = 0;*/
+  virtual void Input()  = 0;
+  virtual void Output() = 0;
 };
 
 
@@ -55,23 +56,27 @@ class Polyline : public Shape
 public:
   Polyline(const std::vector<Segment>& i_segment_list);
   virtual void      Draw(){ std::cout << "Polyline draw\n"; }
+  //
   virtual double    getArea(){ return 3.00; }
-  virtual Polyline* Intersect(Polyline* otherObject);
+  virtual Polyline* Intersect(Polyline* otherObject);                          
   virtual Polyline* Intersect(Triangle* i_triangle);
   virtual Polyline* Intersect(Ellipse* i_ellipse);
   static  Polyline* IntersectTriangleWithEllipse(Triangle* i_tr, Ellipse* i_ell)
   {
     std::cout << "Triangle intersects with Ellipse(Polyline func)\n";
-    //intersecting of triangle and ellipse will give us vector<Segment> of 4 points that we will put in poly
+    //intersecting of triangle and ellipse will give us vector<Segment> of 
+    //4 points that we will put in poly
     std::vector<Segment> tr_ell_seg_list;
     Polyline *poly = new Polyline(tr_ell_seg_list);
     return poly;
   }
 };
-
+ 
 class Triangle : public Polyline
 {
-  std::vector<Segment> makeTriangleSegmentList(const Point& i_a, const Point& i_b, const Point& i_c);
+  std::vector<Segment> makeTriangleSegmentList(const Point& i_a, 
+  const Point& i_b,
+  const Point& i_c);
 public:
   Triangle(const Point& i_a, const Point& i_b, const Point& i_c);
   ~Triangle(){};
@@ -94,7 +99,9 @@ public:
 
 class Ellipse : public Polyline
 {
-  std::vector<Segment> makeEllipseSegmentList(const Point& i_center, const Point& i_a, const Point& i_b);
+  std::vector<Segment> makeEllipseSegmentList(const Point& i_center, 
+  const Point& i_a, 
+  const Point& i_b);
 public:
   Ellipse(const Point& i_center, const Point& i_a, const Point& i_b);
   ~Ellipse(){};
