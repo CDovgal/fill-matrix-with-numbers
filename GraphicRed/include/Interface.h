@@ -56,7 +56,8 @@ class Polyline : public Shape
 public:
   Polyline(const std::vector<Segment>& i_segment_list);
   virtual void      Draw(){ std::cout << "Polyline draw\n"; }
-  //
+  virtual void Input();
+  virtual void Output();
   virtual double    getArea(){ return 3.00; }
   virtual Polyline* Intersect(Polyline* otherObject);                          
   virtual Polyline* Intersect(Triangle* i_triangle);
@@ -81,6 +82,8 @@ public:
   Triangle(const Point& i_a, const Point& i_b, const Point& i_c);
   ~Triangle(){};
   void      Draw(){ std::cout << "Triangle draw\n"; };
+  void Input();
+  void Output();
   double    getArea();
   Polyline* Intersect(Polyline* otherObject)
   {
@@ -106,6 +109,8 @@ public:
   Ellipse(const Point& i_center, const Point& i_a, const Point& i_b);
   ~Ellipse(){};
   void      Draw(){ std::cout << "Ellipse draw\n"; };
+  void Input();
+  void Output();
   double    getArea();
   Polyline* Intersect(Polyline* otherObject)
   {
@@ -121,6 +126,32 @@ public:
     return poly;
   }
 };
+
+class World : public Shape
+{
+  //static World *m_instance;
+  static Polyline m_polyline;
+  //Triangle m_triangle;
+  //Ellipse m_ellipse;
+  World(){};
+  World(const World& rhv);
+  World& operator=(const World&);
+public:  
+  static World& instance()
+  {
+    static World instance;
+    return instance;
+  }
+  void Input()
+  {
+    m_polyline.Input();
+    //m_triangle.Input();
+    //m_ellipse.Input();
+  };
+  void Output(){};
+  void Draw(){};
+};
+
 
 
 

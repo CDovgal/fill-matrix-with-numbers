@@ -32,6 +32,17 @@ Polyline* Polyline::Intersect(Ellipse* i_ellipse)
   return nullptr;
 }
 
+
+void Polyline::Input()
+{
+  std::cout << "Polyline Input\n";
+}
+
+void Polyline::Output()
+{
+  std::cout << "Polyline Output\n";
+}
+
 Triangle::Triangle(const Point& i_a, const Point& i_b, const Point& i_c) :
 Polyline(makeTriangleSegmentList(i_a, i_b, i_c))
 {
@@ -52,6 +63,17 @@ std::vector<Segment> Triangle::makeTriangleSegmentList(const Point& i_a,
   return tr_seg_list;
 }
 
+void Triangle::Input()
+{
+  std::cout << "Triangle Input\n";
+}
+
+void Triangle::Output()
+{
+  std::cout << "Triangle Output\n";
+}
+
+
 Ellipse::Ellipse(const Point& i_center, const Point& i_a, const Point& i_b) :
 Polyline(makeEllipseSegmentList(i_center, i_a, i_b))
 {
@@ -71,6 +93,17 @@ std::vector<Segment> Ellipse::makeEllipseSegmentList(const Point& i_center,
   ell_seg_list.push_back(b);
   return ell_seg_list;
 }
+
+void Ellipse::Input()
+{
+  std::cout << "Ellipse Input\n";
+}
+
+void Ellipse::Output()
+{
+  std::cout << "Ellipse Output\n";
+}
+
 
 double Triangle::getArea()
 {

@@ -22,6 +22,10 @@ int main()
     ell->Intersect(ell2.get());
     std::cout << tri->getArea() << std::endl;
     std::cout << ell->getArea() << std::endl;
+
+    World& instance = World::instance();
+    instance.Input();
+
   }
   if (_CrtDumpMemoryLeaks())
     std::cout << "OLOLO!!!!! Leaks.... :(\n";
