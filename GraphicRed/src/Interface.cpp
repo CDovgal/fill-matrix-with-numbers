@@ -35,14 +35,25 @@ Polyline* Polyline::Intersect(Ellipse* i_ellipse)
 }
 
 
-void Polyline::Input()
+std::string Polyline::Input()
 {
+  std::string poly_c;
   std::cout << "Polyline Input\n";
+  return poly_c;
 }
 
-void Polyline::Output()
+std::string Polyline::Output()
 {
   std::cout << "Polyline Output\n";
+  std::string poly_coords;
+  for (unsigned i = 0; i < m_seg_list.size(); ++i)
+  {
+    poly_coords.push_back(m_seg_list.at(i).center.getX());
+    poly_coords.push_back(m_seg_list.at(i).center.getY());
+    poly_coords.push_back(m_seg_list.at(i).end.getX());
+    poly_coords.push_back(m_seg_list.at(i).end.getY());
+  }
+  return poly_coords;
 }
 
 Triangle::Triangle(const Point& i_a, const Point& i_b, const Point& i_c) :
@@ -55,7 +66,7 @@ std::vector<Segment> Triangle::makeTriangleSegmentList(const Point& i_a,
   const Point& i_b,
   const Point& i_c)
 {
-  std::vector<Segment> tr_seg_list;
+  //std::vector<Segment> tr_seg_list;
   Segment a(Point::NA, i_a);
   Segment b(Point::NA, i_b);
   Segment c(Point::NA, i_c);
@@ -65,14 +76,25 @@ std::vector<Segment> Triangle::makeTriangleSegmentList(const Point& i_a,
   return tr_seg_list;
 }
 
-void Triangle::Input()
+std::string Triangle::Input()
 {
+  std::string tr_c;
   std::cout << "Triangle Input\n";
+  return tr_c;
 }
 
-void Triangle::Output()
+std::string Triangle::Output()
 {
+  std::string tr_out;
+  for (unsigned i = 0; i < tr_seg_list.size(); ++i)
+  {
+    tr_out.push_back(tr_seg_list.at(i).center.getX());
+    tr_out.push_back(tr_seg_list.at(i).center.getY());
+    tr_out.push_back(tr_seg_list.at(i).end.getX());
+    tr_out.push_back(tr_seg_list.at(i).end.getY());
+  }
   std::cout << "Triangle Output\n";
+  return tr_out;
 }
 
 
@@ -96,14 +118,18 @@ std::vector<Segment> Ellipse::makeEllipseSegmentList(const Point& i_center,
   return ell_seg_list;
 }
 
-void Ellipse::Input()
+std::string Ellipse::Input()
 {
+  std::string ell_inp;
   std::cout << "Ellipse Input\n";
+  return ell_inp;
 }
 
-void Ellipse::Output()
+std::string Ellipse::Output()
 {
+  std::string ell_out;
   std::cout << "Ellipse Output\n";
+  return ell_out;
 }
 
 
@@ -200,7 +226,7 @@ void World::Output()
   {
     for (unsigned i = 0; i < m_shapes.size(); ++i)
     {
-      myfile << m_shapes.at(i);
+      myfile << m_shapes.at(i)->Output();
       myfile << "\n";
     }
   }
