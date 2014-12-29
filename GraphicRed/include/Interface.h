@@ -54,6 +54,7 @@ class Polyline : public Shape
 {
   std::vector<Segment> m_seg_list;
 public:
+  Polyline(){}
   Polyline(const std::vector<Segment>& i_segment_list);
   virtual void      Draw(){ std::cout << "Polyline draw\n"; }
   virtual void Input();
@@ -127,28 +128,22 @@ public:
   }
 };
 
-class World : public Shape
+class World
 {
-  //static World *m_instance;
-  static Polyline m_polyline;
-  //Triangle m_triangle;
-  //Ellipse m_ellipse;
+  std::vector<Shape*> m_shapes;
   World(){};
-  World(const World& rhv);
-  World& operator=(const World&);
+  ~World();
+  World(const World& rhv) = delete;
+  World& operator=(const World&) = delete;
 public:  
   static World& instance()
   {
     static World instance;
     return instance;
   }
-  void Input()
-  {
-    m_polyline.Input();
-    //m_triangle.Input();
-    //m_ellipse.Input();
-  };
-  void Output(){};
+  void Generate();
+  void Input();
+  void Output();
   void Draw(){};
 };
 
