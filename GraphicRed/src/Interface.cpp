@@ -3,6 +3,8 @@
 #include <vector>
 #include <exception>
 #include <memory>
+#include <fstream>
+#include <string>
 
 #define PI 3.14159265
 
@@ -49,8 +51,8 @@ Polyline(makeTriangleSegmentList(i_a, i_b, i_c))
   std::cout << "Triangle constr\n";
 }
 
-std::vector<Segment> Triangle::makeTriangleSegmentList(const Point& i_a, 
-  const Point& i_b, 
+std::vector<Segment> Triangle::makeTriangleSegmentList(const Point& i_a,
+  const Point& i_b,
   const Point& i_c)
 {
   std::vector<Segment> tr_seg_list;
@@ -80,8 +82,8 @@ Polyline(makeEllipseSegmentList(i_center, i_a, i_b))
   std::cout << "Ellipse constr\n";
 }
 
-std::vector<Segment> Ellipse::makeEllipseSegmentList(const Point& i_center, 
-  const Point& i_a, 
+std::vector<Segment> Ellipse::makeEllipseSegmentList(const Point& i_center,
+  const Point& i_a,
   const Point& i_b)
 {
   std::vector<Segment> ell_seg_list;
@@ -145,3 +147,64 @@ Polyline* Ellipse::Intersect(Ellipse* i_ellipse)
   std::cout << "Ellipse intersects with ellipse (Ellipse func)\n";
   return IntersectEllipseWithEllipse(this, i_ellipse);
 };
+
+
+void World::Generate()
+{
+  Triangle *tr1 = new Triangle({ 2, 3 }, { 3, 4 }, { 4, 5 });
+  m_shapes.push_back(tr1);
+  Triangle *tr2 = new Triangle({ 2, 3 }, { 3, 4 }, { 4, 5 });
+  m_shapes.push_back(tr2);
+  Ellipse *ell1 = new Ellipse({ 2, 3 }, { 3, 4 }, { 4, 5 });
+  m_shapes.push_back(ell1);
+  Ellipse *ell2 = new Ellipse({ 2, 3 }, { 3, 4 }, { 4, 5 });
+  m_shapes.push_back(ell2);
+
+  Polyline *pl1 = tr1->Intersect(ell1);
+  Polyline *pl2 = tr2->Intersect(ell2);
+
+  m_shapes.push_back(pl1);
+  m_shapes.push_back(pl2);
+}
+
+World::~World()
+{
+
+}
+
+
+void World::Input()
+{
+  m_shapes.clear();
+  std::string line;
+  std::ifstream myfile("shapes.sd");
+  if (myfile.is_open())
+  {
+    while (std::getline(myfile, line))
+    {
+      std::cout << line << "\n";
+      //m_shapes.push_back(myfile.getline());
+    }
+  }
+  else
+    std::cout << "Unable to open file\n";
+  myfile.close();
+}
+
+
+void World::Output()
+{
+  std::ofstream myfile;
+  myfile.open("shapes.sd");
+  if (myfile.is_open())
+  {
+    for (unsigned i = 0; i < m_shapes.size(); ++i)
+    {
+      myfile << m_shapes.at(i);
+      myfile << "\n";
+    }
+  }
+  else
+    std::cout << "Unable to open file\n";
+  myfile.close();
+}
