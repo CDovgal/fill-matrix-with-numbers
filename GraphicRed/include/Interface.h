@@ -42,8 +42,8 @@ class Shape
 public:
   virtual ~Shape(){};
   virtual void Draw() = 0;
-  virtual std::vector<double> Input() = 0;
-  virtual std::vector<double> Output() = 0;
+  virtual void Input(const std::istream& str) = 0;
+  virtual void Output(std::ostream& str) const = 0;
 };
 
 
@@ -57,8 +57,8 @@ public:
   Polyline(){}
   Polyline(const std::vector<Segment>& i_segment_list);
   virtual void      Draw(){ std::cout << "Polyline draw\n"; }
-  virtual std::vector<double> Input();
-  virtual std::vector<double> Output();
+  virtual void Input(const std::istream& str);
+  virtual void Output(std::ostream& str) const;
   virtual double    getArea(){ return 3.00; }
   virtual Polyline* Intersect(Polyline* otherObject);
   virtual Polyline* Intersect(Triangle* i_triangle);
@@ -85,13 +85,12 @@ class Triangle : public Polyline
   std::vector<Segment> makeTriangleSegmentList(const Point& i_a,
   const Point& i_b,
   const Point& i_c);
-  //std::vector<Segment> tr_seg_list; //&&&&&&&???????
 public:
   Triangle(const Point& i_a, const Point& i_b, const Point& i_c);
   ~Triangle(){};
   void      Draw(){ std::cout << "Triangle draw\n"; };
-  std::vector<double> Input();
-  std::vector<double> Output();
+  void Input(const std::istream& str);
+  void Output(std::ostream& str) const;
   double    getArea();
   Polyline* Intersect(Polyline* otherObject)
   {
@@ -117,8 +116,8 @@ public:
   Ellipse(const Point& i_center, const Point& i_a, const Point& i_b);
   ~Ellipse(){};
   void      Draw(){ std::cout << "Ellipse draw\n"; };
-  std::vector<double> Input();
-  std::vector<double> Output();
+  void Input(const std::istream& str);
+  void Output(std::ostream& str) const;
   double    getArea();
   Polyline* Intersect(Polyline* otherObject)
   {

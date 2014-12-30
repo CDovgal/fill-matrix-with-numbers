@@ -35,26 +35,26 @@ Polyline* Polyline::Intersect(Ellipse* i_ellipse)
 }
 
 
-std::vector<double> Polyline::Input()
+void Polyline::Input(const std::istream& str)
 {
   std::vector<double> poly_c;
   std::cout << "Polyline Input\n";
-  return poly_c;
 }
 
-std::vector<double> Polyline::Output()
+void Polyline::Output(std::ostream& str) const
 {
-  std::cout << "Polyline Output\n";
-  std::vector<double> poly_coords;
-
+  str << "Polyline coords: \n";
   for (unsigned i = 0; i < m_seg_list.size(); ++i)
   {
-    poly_coords.push_back(m_seg_list.at(i).center.getX());
-    poly_coords.push_back(m_seg_list.at(i).center.getY());
-    poly_coords.push_back(m_seg_list.at(i).end.getX());
-    poly_coords.push_back(m_seg_list.at(i).end.getY());
+    str << m_seg_list.at(i).center.getX();
+    str << "\n";
+    str << m_seg_list.at(i).center.getY();
+    str << "\n";
+    str << m_seg_list.at(i).end.getX();
+    str << "\n";
+    str << m_seg_list.at(i).end.getY();
+    str << "\n\n";
   }
-  return poly_coords;
 }
 
 Triangle::Triangle(const Point& i_a, const Point& i_b, const Point& i_c) :
@@ -77,25 +77,26 @@ std::vector<Segment> Triangle::makeTriangleSegmentList(const Point& i_a,
   return tr_seg_list;
 }
 
-std::vector<double> Triangle::Input()
+void Triangle::Input(const std::istream& str)
 {
   std::vector<double> tr_c;
   std::cout << "Triangle Input\n";
-  return tr_c;
 }
 
-std::vector<double> Triangle::Output()
+void Triangle::Output(std::ostream& str) const
 {
-  std::vector<double> tr_out;
-  //for (unsigned i = 0; i < tr_seg_list.size(); ++i)
-  //{
-  //tr_out.push_back(tr_seg_list.at(i).center.getX());
-  //tr_out.push_back(tr_seg_list.at(i).center.getY());
-  //tr_out.push_back(tr_seg_list.at(i).end.getX());
-  //tr_out.push_back(tr_seg_list.at(i).end.getY());
-  //}
-  std::cout << "Triangle Output\n";
-  return tr_out;
+  str << "Triangle coords: \n";
+  for (unsigned i = 0; i < m_seg_list.size(); ++i)
+  {
+    str << m_seg_list.at(i).center.getX();
+    str << "\n";
+    str << m_seg_list.at(i).center.getY();
+    str << "\n";
+    str << m_seg_list.at(i).end.getX();
+    str << "\n";
+    str << m_seg_list.at(i).end.getY();
+    str << "\n\n";
+  }
 }
 
 
@@ -119,18 +120,16 @@ std::vector<Segment> Ellipse::makeEllipseSegmentList(const Point& i_center,
   return ell_seg_list;
 }
 
-std::vector<double> Ellipse::Input()
+void Ellipse::Input(const std::istream& str)
 {
   std::vector<double> ell_inp;
   std::cout << "Ellipse Input\n";
-  return ell_inp;
 }
 
-std::vector<double> Ellipse::Output()
+void Ellipse::Output(std::ostream& str) const
 {
   std::vector<double> ell_out;
   std::cout << "Ellipse Output\n";
-  return ell_out;
 }
 
 
@@ -227,11 +226,8 @@ void World::Output()
   {
     for (unsigned i = 0; i < m_shapes.size(); ++i)
     {
-      for (unsigned j = 0; j < m_shapes.at(i)->Output().size(); ++j)
-      {
-        myfile << m_shapes.at(i)->Output().at(j);
-        myfile << "\n";
-      }
+      m_shapes.at(i)->Output(myfile);
+      //myfile << "\n";
     }
   }
   else
