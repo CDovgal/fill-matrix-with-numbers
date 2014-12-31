@@ -54,7 +54,7 @@ void Polyline::Output(std::ostream& str) const
     str << "\n";
     str << m_seg_list.at(i).end.getY();
     str << "\n\n";
-  } 
+  }
 }
 
 Triangle::Triangle(const Point& i_a, const Point& i_b, const Point& i_c) :
@@ -85,8 +85,9 @@ void Triangle::Input(const std::istream& str)
 
 void Triangle::Output(std::ostream& str) const
 {
-  str << "Triangle coords: \n";
+  //str << "Triangle coords: \n";
   Polyline::Output(str);
+  str << "----\n";
 }
 
 
@@ -118,8 +119,9 @@ void Ellipse::Input(const std::istream& str)
 
 void Ellipse::Output(std::ostream& str) const
 {
-  str << "Ellipse coords: \n";
+  //str << "Ellipse coords: \n";
   Polyline::Output(str);
+  str << "----\n";
 }
 
 
@@ -169,7 +171,7 @@ void World::Generate()
 {
   Triangle *tr1 = new Triangle({ 2, 3 }, { 3, 4 }, { 4, 5 });
   m_shapes.push_back(tr1);
-  Triangle *tr2 = new Triangle({ 2, 3 }, { 3, 4 }, { 4, 5 });
+  Triangle *tr2 = new Triangle({ 7, 2 }, { 4, 8 }, { -4, 3 });
   m_shapes.push_back(tr2);
   Ellipse *ell1 = new Ellipse({ 2, 3 }, { 3, 4 }, { 4, 5 });
   m_shapes.push_back(ell1);
@@ -185,21 +187,28 @@ void World::Generate()
 
 World::~World()
 {
-
+  if (!m_shapes.empty())
+  for (unsigned i = 0; i < m_shapes.size(); ++i)
+    delete m_shapes.at(i);
 }
 
 
 void World::Input()
 {
   m_shapes.clear();
+
+
   std::string line;
+
   std::ifstream myfile("shapes.sd");
   if (myfile.is_open())
   {
     while (std::getline(myfile, line))
     {
-      std::cout << line << "\n";
-      //m_shapes.push_back(myfile.getline());
+      if (line != "1.79769e+308" && line != "0")
+      {
+        std::cout << line << "\n";
+      }
     }
   }
   else
