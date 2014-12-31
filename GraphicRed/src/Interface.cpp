@@ -43,7 +43,7 @@ void Polyline::Input(const std::istream& str)
 
 void Polyline::Output(std::ostream& str) const
 {
-  str << "Polyline coords: \n";
+  //str << "Polyline coords: \n";
   for (unsigned i = 0; i < m_seg_list.size(); ++i)
   {
     str << m_seg_list.at(i).center.getX();
@@ -54,7 +54,7 @@ void Polyline::Output(std::ostream& str) const
     str << "\n";
     str << m_seg_list.at(i).end.getY();
     str << "\n\n";
-  }
+  } 
 }
 
 Triangle::Triangle(const Point& i_a, const Point& i_b, const Point& i_c) :
@@ -86,17 +86,7 @@ void Triangle::Input(const std::istream& str)
 void Triangle::Output(std::ostream& str) const
 {
   str << "Triangle coords: \n";
-  for (unsigned i = 0; i < m_seg_list.size(); ++i)
-  {
-    str << m_seg_list.at(i).center.getX();
-    str << "\n";
-    str << m_seg_list.at(i).center.getY();
-    str << "\n";
-    str << m_seg_list.at(i).end.getX();
-    str << "\n";
-    str << m_seg_list.at(i).end.getY();
-    str << "\n\n";
-  }
+  Polyline::Output(str);
 }
 
 
@@ -128,8 +118,8 @@ void Ellipse::Input(const std::istream& str)
 
 void Ellipse::Output(std::ostream& str) const
 {
-  std::vector<double> ell_out;
-  std::cout << "Ellipse Output\n";
+  str << "Ellipse coords: \n";
+  Polyline::Output(str);
 }
 
 

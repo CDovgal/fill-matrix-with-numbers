@@ -66,8 +66,6 @@ public:
   static  Polyline* IntersectTriangleWithEllipse(Triangle* i_tr, Ellipse* i_ell)
   {
     std::cout << "Triangle intersects with Ellipse(Polyline func)\n";
-    //intersecting of triangle and ellipse will give us vector<Segment> of 
-    //4 points that we will put in poly
     std::vector<Segment> tr_ell_seg_list;
     Segment a(Point::NA, { 3, 4 });
     Segment b(Point::NA, { 3, 4 });
