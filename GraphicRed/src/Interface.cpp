@@ -5,6 +5,7 @@
 #include <memory>
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 #define PI 3.14159265
 
@@ -35,26 +36,36 @@ Polyline* Polyline::Intersect(Ellipse* i_ellipse)
 }
 
 
-void Polyline::Input(const std::istream& str)
+void Polyline::Input(std::istream& str)
 {
-  std::vector<double> poly_c;
-  std::cout << "Polyline Input\n";
+  std::string line;
+  std::vector<double> coord_vec;
+  int seg_count = m_seg_list.size();
+  std::getline(str, line);
+  while (std::getline(str, line))
+  {
+    if (line == "----")
+      break;
+    coord_vec.push_back(atof(line.c_str()));
+  }
+  //use setX and setY for m_seglist???
 }
 
 void Polyline::Output(std::ostream& str) const
 {
-  //str << "Polyline coords: \n";
+  str << "Segment count: " << m_seg_list.size() << "\n";
   for (unsigned i = 0; i < m_seg_list.size(); ++i)
   {
-    str << m_seg_list.at(i).center.getX();
-    str << "\n";
-    str << m_seg_list.at(i).center.getY();
-    str << "\n";
+    //str << m_seg_list.at(i).center.getX();
+    //str << "\n";
+    //str << m_seg_list.at(i).center.getY();
+    //str << "\n";
     str << m_seg_list.at(i).end.getX();
     str << "\n";
     str << m_seg_list.at(i).end.getY();
-    str << "\n\n";
+    str << "\n";
   }
+  str << "----\n";
 }
 
 Triangle::Triangle(const Point& i_a, const Point& i_b, const Point& i_c) :
@@ -77,17 +88,15 @@ std::vector<Segment> Triangle::makeTriangleSegmentList(const Point& i_a,
   return tr_seg_list;
 }
 
-void Triangle::Input(const std::istream& str)
+void Triangle::Input(std::istream& str)
 {
-  std::vector<double> tr_c;
+  Polyline::Input(str);
   std::cout << "Triangle Input\n";
 }
 
 void Triangle::Output(std::ostream& str) const
 {
-  //str << "Triangle coords: \n";
   Polyline::Output(str);
-  str << "----\n";
 }
 
 
@@ -111,26 +120,21 @@ std::vector<Segment> Ellipse::makeEllipseSegmentList(const Point& i_center,
   return ell_seg_list;
 }
 
-void Ellipse::Input(const std::istream& str)
+void Ellipse::Input(std::istream& str)
 {
-  std::vector<double> ell_inp;
+  Polyline::Input(str);
   std::cout << "Ellipse Input\n";
 }
 
 void Ellipse::Output(std::ostream& str) const
 {
-  //str << "Ellipse coords: \n";
   Polyline::Output(str);
-  str << "----\n";
 }
 
 
 double Triangle::getArea()
 {
-  /*double p = (m_a + m_b + m_c) / 2;
-  double s = std::sqrt(p*(p-m_sideA)*(p-m_sideB)*(p-m_sideC));*/
-  double s = 10;//abs((m_a.getX()*(m_b.getY() - m_c.getY()) + m_b.getX()*
-  //(m_c.getY() - m_a.getY()) + m_c.getX()*(m_a.getY() - m_b.getY())) / 2);
+  double s = 10;
   return s;
 }
 
@@ -167,6 +171,14 @@ Polyline* Ellipse::Intersect(Ellipse* i_ellipse)
 };
 
 
+void World::clear_sh()
+{
+  if (!m_shapes.empty())
+  for (unsigned i = 0; i < m_shapes.size(); ++i)
+    delete m_shapes.at(i);
+  m_shapes.clear();
+}
+
 void World::Generate()
 {
   Triangle *tr1 = new Triangle({ 2, 3 }, { 3, 4 }, { 4, 5 });
@@ -187,27 +199,33 @@ void World::Generate()
 
 World::~World()
 {
-  if (!m_shapes.empty())
-  for (unsigned i = 0; i < m_shapes.size(); ++i)
-    delete m_shapes.at(i);
+  clear_sh();
 }
-
 
 void World::Input()
 {
-  m_shapes.clear();
-
-
+  clear_sh();
+  Shape *sh = nullptr;
   std::string line;
-
+  size_t shapes_count;
   std::ifstream myfile("shapes.sd");
   if (myfile.is_open())
   {
-    while (std::getline(myfile, line))
+    myfile >> shapes_count;
+    for (size_t i = 0; i < shapes_count;)
     {
-      if (line != "1.79769e+308" && line != "0")
+      std::getline(myfile, line);
+      if (line == "class Triangle")
+        sh = new Triangle();
+      else if (line == "class Ellipse")
+        sh = new Ellipse();
+      else if (line == "class Polyline")
+        sh = new Polyline(); 
+      if (sh != nullptr)
       {
-        std::cout << line << "\n";
+        sh->Input(myfile);
+        m_shapes.push_back(sh);
+        ++i;
       }
     }
   }
@@ -223,10 +241,11 @@ void World::Output()
   myfile.open("shapes.sd");
   if (myfile.is_open())
   {
+    myfile << m_shapes.size() << std::endl;
     for (unsigned i = 0; i < m_shapes.size(); ++i)
     {
+      myfile << typeid(*m_shapes.at(i)).name() << std::endl;
       m_shapes.at(i)->Output(myfile);
-      //myfile << "\n";
     }
   }
   else
