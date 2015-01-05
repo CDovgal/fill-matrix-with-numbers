@@ -21,20 +21,25 @@ class Point
   double m_y;
 public:
   static Point NA;
+  Point(){}
   Point(double i_x, double i_y) :
     m_x(i_x),
     m_y(i_y){}
   double getX() const{ return m_x; };
   double getY() const{ return m_y; };
+  void setX(double i_x){ m_x = i_x; };
+  void setY(double i_y){ m_y = i_y; };
 };
 
 struct Segment
 {
   Point center;
   Point end;
+  Segment(){}
   Segment(const Point& i_cent, const Point& i_end) :
     center(i_cent),
     end(i_end){}
+
 };
 
 class Shape
@@ -42,7 +47,7 @@ class Shape
 public:
   virtual ~Shape(){};
   virtual void Draw() = 0;
-  virtual void Input(const std::istream& str) = 0;
+  virtual void Input(std::istream& str) = 0;
   virtual void Output(std::ostream& str) const = 0;
 };
 
@@ -54,10 +59,10 @@ class Polyline : public Shape
 {
   std::vector<Segment> m_seg_list;
 public:
-  Polyline(){}
+  Polyline() : m_seg_list(0){}
   Polyline(const std::vector<Segment>& i_segment_list);
   virtual void      Draw(){ std::cout << "Polyline draw\n"; }
-  virtual void Input(const std::istream& str);
+  virtual void Input(std::istream& str);
   virtual void Output(std::ostream& str) const;
   virtual double    getArea(){ return 3.00; }
   virtual Polyline* Intersect(Polyline* otherObject);
@@ -84,10 +89,11 @@ class Triangle : public Polyline
   const Point& i_b,
   const Point& i_c);
 public:
+  Triangle() : Polyline(makeTriangleSegmentList({0,0}, {0,0}, {0,0})){};
   Triangle(const Point& i_a, const Point& i_b, const Point& i_c);
   ~Triangle(){};
   void      Draw(){ std::cout << "Triangle draw\n"; };
-  void Input(const std::istream& str);
+  void Input(std::istream& str);
   void Output(std::ostream& str) const;
   double    getArea();
   Polyline* Intersect(Polyline* otherObject)
@@ -111,10 +117,11 @@ class Ellipse : public Polyline
   const Point& i_a,
   const Point& i_b);
 public:
+  Ellipse(){}
   Ellipse(const Point& i_center, const Point& i_a, const Point& i_b);
   ~Ellipse(){};
   void      Draw(){ std::cout << "Ellipse draw\n"; };
-  void Input(const std::istream& str);
+  void Input(std::istream& str);
   void Output(std::ostream& str) const;
   double    getArea();
   Polyline* Intersect(Polyline* otherObject)
@@ -149,6 +156,7 @@ public:
   void Input();
   void Output();
   void Draw(){};
+  void clear_sh();
 };
 
 
