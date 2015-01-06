@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <deque>
 
 #define PI 3.14159265
 
@@ -35,12 +36,10 @@ Polyline* Polyline::Intersect(Ellipse* i_ellipse)
   return nullptr;
 }
 
-
 void Polyline::Input(std::istream& str)
 {
   std::string line;
-  std::vector<double> coord_vec;
-  int seg_count = m_seg_list.size();
+  std::deque<double> coord_vec;
   std::getline(str, line);
   while (std::getline(str, line))
   {
@@ -48,6 +47,13 @@ void Polyline::Input(std::istream& str)
       break;
     coord_vec.push_back(atof(line.c_str()));
   }
+  for (unsigned i = 0; i < m_seg_list.size(); ++i)
+  {
+    m_seg_list.at(i).end.setX(coord_vec.at(0));
+    m_seg_list.at(i).end.setY(coord_vec.at(1));
+    coord_vec.pop_front();
+    coord_vec.pop_front();
+  }//govnokod^
 }
 
 void Polyline::Output(std::ostream& str) const
@@ -219,7 +225,7 @@ void World::Input()
       else if (line == "class Ellipse")
         sh = new Ellipse();
       else if (line == "class Polyline")
-        sh = new Polyline(); 
+        sh = new Polyline();
       if (sh != nullptr)
       {
         sh->Input(myfile);
