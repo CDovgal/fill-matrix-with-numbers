@@ -48,7 +48,6 @@ void Polyline::Input(std::istream& str)
       break;
     coord_vec.push_back(atof(line.c_str()));
   }
-  //use setX and setY for m_seglist???
 }
 
 void Polyline::Output(std::ostream& str) const
