@@ -27,6 +27,7 @@ int main()
     instance.Generate();
     instance.Output();
     instance.Input();
+    
 
   }
   if (_CrtDumpMemoryLeaks())
