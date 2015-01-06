@@ -26,6 +26,7 @@ int main()
     World& instance = World::instance();
     instance.Generate();
     instance.Output();
+    std::cout << "-------------------------------------------------\n";
     instance.Input();
     
 

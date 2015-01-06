@@ -27,8 +27,8 @@ public:
     m_y(i_y){}
   double getX() const{ return m_x; };
   double getY() const{ return m_y; };
-  void setX(double i_x){ m_x = i_x; };
-  void setY(double i_y){ m_y = i_y; };
+  void   setX(double i_x){ m_x = i_x; };
+  void   setY(double i_y){ m_y = i_y; };
 };
 
 struct Segment
@@ -59,11 +59,11 @@ class Polyline : public Shape
 {
   std::vector<Segment> m_seg_list;
 public:
-  Polyline() : m_seg_list(0){}
+  Polyline() : m_seg_list(){};
   Polyline(const std::vector<Segment>& i_segment_list);
   virtual void      Draw(){ std::cout << "Polyline draw\n"; }
-  virtual void Input(std::istream& str);
-  virtual void Output(std::ostream& str) const;
+  virtual void      Input(std::istream& str);
+  virtual void      Output(std::ostream& str) const;
   virtual double    getArea(){ return 3.00; }
   virtual Polyline* Intersect(Polyline* otherObject);
   virtual Polyline* Intersect(Triangle* i_triangle);
@@ -89,12 +89,12 @@ class Triangle : public Polyline
   const Point& i_b,
   const Point& i_c);
 public:
-  Triangle() : Polyline(makeTriangleSegmentList({0,0}, {0,0}, {0,0})){};
+  Triangle() : Polyline(makeTriangleSegmentList({ 0, 0 }, { 0, 0 }, { 0, 0 })){};
   Triangle(const Point& i_a, const Point& i_b, const Point& i_c);
   ~Triangle(){};
   void      Draw(){ std::cout << "Triangle draw\n"; };
-  void Input(std::istream& str);
-  void Output(std::ostream& str) const;
+  void      Input(std::istream& str);
+  void      Output(std::ostream& str) const;
   double    getArea();
   Polyline* Intersect(Polyline* otherObject)
   {
@@ -117,7 +117,7 @@ class Ellipse : public Polyline
   const Point& i_a,
   const Point& i_b);
 public:
-  Ellipse(){}
+  Ellipse() : Polyline(makeEllipseSegmentList({ 0, 0 }, { 0, 0 }, { 0, 0 })){};
   Ellipse(const Point& i_center, const Point& i_a, const Point& i_b);
   ~Ellipse(){};
   void      Draw(){ std::cout << "Ellipse draw\n"; };
