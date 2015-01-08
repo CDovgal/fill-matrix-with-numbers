@@ -40,6 +40,8 @@ void Polyline::Input(std::istream& str)
 {
   std::string line;
   std::deque<double> coord_vec;
+  size_t seg_count;
+  str >> seg_count;
   std::getline(str, line);
   while (std::getline(str, line))
   {
@@ -47,7 +49,8 @@ void Polyline::Input(std::istream& str)
       break;
     coord_vec.push_back(atof(line.c_str()));
   }
-  for (unsigned i = 0; i < m_seg_list.size(); ++i)
+  m_seg_list.resize(3);
+  for (unsigned i = 0; i < seg_count; ++i)
   {
     m_seg_list.at(i).end.setX(coord_vec.at(0));
     m_seg_list.at(i).end.setY(coord_vec.at(1));
@@ -58,7 +61,7 @@ void Polyline::Input(std::istream& str)
 
 void Polyline::Output(std::ostream& str) const
 {
-  str << "Segment count: " << m_seg_list.size() << "\n";
+  str << m_seg_list.size() << "\n";
   for (unsigned i = 0; i < m_seg_list.size(); ++i)
   {
     //str << m_seg_list.at(i).center.getX();

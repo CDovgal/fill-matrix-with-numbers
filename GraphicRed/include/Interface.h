@@ -59,7 +59,7 @@ class Polyline : public Shape
 {
   std::vector<Segment> m_seg_list;
 public:
-  Polyline() : m_seg_list(){};
+  Polyline() : m_seg_list(0){};
   Polyline(const std::vector<Segment>& i_segment_list);
   virtual void      Draw(){ std::cout << "Polyline draw\n"; }
   virtual void      Input(std::istream& str);
