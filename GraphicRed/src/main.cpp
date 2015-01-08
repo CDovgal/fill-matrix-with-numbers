@@ -28,6 +28,7 @@ int main()
     instance.Output();
     std::cout << "-------------------------------------------------\n";
     instance.Input();
+    instance.Output();
     
 
   }

@@ -76,6 +76,10 @@ void Polyline::Output(std::ostream& str) const
   str << "----\n";
 }
 
+//Потом можно улучшить код, перенеся логику вычитывания/записи сегментов в struct Segment
+//[17:48 : 06] Sergey Tashkinov : А точек в class Point
+//[17:49 : 00] Sergey Tashkinov : Кроме того сейчас есть ошибка, для сегмента вводится и выводится только конец
+
 Triangle::Triangle(const Point& i_a, const Point& i_b, const Point& i_c) :
 Polyline(makeTriangleSegmentList(i_a, i_b, i_c))
 {
