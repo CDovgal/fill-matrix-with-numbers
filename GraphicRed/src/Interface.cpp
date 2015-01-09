@@ -39,46 +39,23 @@ Polyline* Polyline::Intersect(Ellipse* i_ellipse)
 void Polyline::Input(std::istream& str)
 {
   std::string line;
-  std::deque<double> coord_vec;
   size_t seg_count;
   str >> seg_count;
-  std::getline(str, line);
-  while (std::getline(str, line))
-  {
-    if (line == "----")
-      break;
-    coord_vec.push_back(atof(line.c_str()));
-  }
-  m_seg_list.resize(3);
+  m_seg_list.resize(seg_count);
   for (unsigned i = 0; i < seg_count; ++i)
   {
-    m_seg_list.at(i).end.setX(coord_vec.at(0));
-    m_seg_list.at(i).end.setY(coord_vec.at(1));
-    coord_vec.pop_front();
-    coord_vec.pop_front();
-  }//govnokod^
+    str >> m_seg_list.at(i);
+  }
 }
 
 void Polyline::Output(std::ostream& str) const
 {
-  str << m_seg_list.size() << "\n";
+  str << m_seg_list.size() << std::endl;
   for (unsigned i = 0; i < m_seg_list.size(); ++i)
   {
-    //str << m_seg_list.at(i).center.getX();
-    //str << "\n";
-    //str << m_seg_list.at(i).center.getY();
-    //str << "\n";
-    str << m_seg_list.at(i).end.getX();
-    str << "\n";
-    str << m_seg_list.at(i).end.getY();
-    str << "\n";
+    str << m_seg_list.at(i);
   }
-  str << "----\n";
 }
-
-//Потом можно улучшить код, перенеся логику вычитывания/записи сегментов в struct Segment
-//[17:48 : 06] Sergey Tashkinov : А точек в class Point
-//[17:49 : 00] Sergey Tashkinov : Кроме того сейчас есть ошибка, для сегмента вводится и выводится только конец
 
 Triangle::Triangle(const Point& i_a, const Point& i_b, const Point& i_c) :
 Polyline(makeTriangleSegmentList(i_a, i_b, i_c))
@@ -233,7 +210,7 @@ void World::Input()
         sh = new Ellipse();
       else if (line == "class Polyline")
         sh = new Polyline();
-      if (sh != nullptr)
+      if (sh != nullptr && !line.empty())
       {
         sh->Input(myfile);
         m_shapes.push_back(sh);

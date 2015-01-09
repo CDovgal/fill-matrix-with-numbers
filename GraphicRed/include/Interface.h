@@ -2,6 +2,7 @@
 #include <vector>
 #include <limits.h>
 #include <memory>
+#include <istream>
 
 
 class not_implemented : public std::exception
@@ -27,8 +28,16 @@ public:
     m_y(i_y){}
   double getX() const{ return m_x; };
   double getY() const{ return m_y; };
-  void   setX(double i_x){ m_x = i_x; };
-  void   setY(double i_y){ m_y = i_y; };
+  friend std::ostream& operator<<(std::ostream& output, const Point& i_point)
+  {
+    output << i_point.getX() << std::endl << i_point.getY() << std::endl;
+    return output;
+  }
+  friend std::istream& operator>>(std::istream& input, Point& i_point)
+  {
+    input >> i_point.m_x >> i_point.m_y;
+    return input;
+  }
 };
 
 struct Segment
@@ -39,7 +48,19 @@ struct Segment
   Segment(const Point& i_cent, const Point& i_end) :
     center(i_cent),
     end(i_end){}
-
+  friend std::ostream& operator<<(std::ostream& output, const Segment& i_segment)
+  {
+    output << i_segment.center.getX() << std::endl
+      << i_segment.center.getY() << std::endl
+      << i_segment.end.getX() << std::endl
+      << i_segment.end.getY() << std::endl;
+    return output;
+  }
+  friend std::istream& operator>>(std::istream& input, Segment& i_segment)
+  {
+    input >> i_segment.center >> i_segment.end;
+    return input;
+  }
 };
 
 class Shape
