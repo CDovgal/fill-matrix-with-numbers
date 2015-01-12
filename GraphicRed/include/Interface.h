@@ -50,10 +50,7 @@ struct Segment
     end(i_end){}
   friend std::ostream& operator<<(std::ostream& output, const Segment& i_segment)
   {
-    output << i_segment.center.getX() << std::endl
-      << i_segment.center.getY() << std::endl
-      << i_segment.end.getX() << std::endl
-      << i_segment.end.getY() << std::endl;
+    output << i_segment.center << i_segment.end;
     return output;
   }
   friend std::istream& operator>>(std::istream& input, Segment& i_segment)
