@@ -12,6 +12,15 @@
 
 Point Point::NA = { DBL_MAX, DBL_MAX };
 
+std::map<std::string, PF> io_map;
+
+void IoRegistryMap::RegisterClasses()
+{
+  io_map["class Polyline"] = &Polyline::new_polyline;
+  io_map["class Triangle"] = &Triangle::new_triangle;
+  io_map["class Ellipse"] = &Ellipse::new_ellipse;
+}
+
 Polyline::Polyline(const std::vector<Segment>& i_segment_list) :
 m_seg_list(i_segment_list)
 {
@@ -191,11 +200,19 @@ World::~World()
   clear_sh();
 }
 
+Shape* World::get_obj(std::istream& is)
+{
+  std::string name;
+  std::getline(is, name);
+  PF f = io_map[name];
+  if (f == 0) return nullptr;//throw not_implemented("no such class");
+  return f();
+}
+
 void World::Input()
 {
   clear_sh();
   Shape *sh = nullptr;
-  std::string line;
   size_t shapes_count;
   std::ifstream myfile("shapes.sd");
   if (myfile.is_open())
@@ -203,14 +220,8 @@ void World::Input()
     myfile >> shapes_count;
     for (size_t i = 0; i < shapes_count;)
     {
-      std::getline(myfile, line);
-      if (line == "class Triangle")
-        sh = new Triangle();
-      else if (line == "class Ellipse")
-        sh = new Ellipse();
-      else if (line == "class Polyline")
-        sh = new Polyline();
-      if (sh != nullptr && !line.empty())
+      sh = get_obj(myfile);
+      if (sh != nullptr)
       {
         sh->Input(myfile);
         m_shapes.push_back(sh);
