@@ -3,7 +3,7 @@
 #include <limits.h>
 #include <memory>
 #include <istream>
-
+#include <map>
 
 class not_implemented : public std::exception
 {
@@ -99,6 +99,10 @@ public:
     Polyline *poly = new Polyline(tr_ell_seg_list);
     return poly;
   }
+  static Shape* new_polyline()
+  {
+    return new Polyline();
+  }
 };
 
 class Triangle : public Polyline
@@ -126,6 +130,10 @@ public:
     std::vector<Segment> tr_tr_seg_list;
     Polyline *poly = new Polyline(tr_tr_seg_list);
     return poly;
+  }
+  static Shape* new_triangle()
+  {
+    return new Triangle();
   }
 };
 
@@ -155,6 +163,10 @@ public:
     Polyline *poly = new Polyline(el_el_seg_list);
     return poly;
   }
+  static Shape* new_ellipse()
+  {
+    return new Ellipse();
+  }
 };
 
 class World
@@ -175,6 +187,17 @@ public:
   void Output();
   void Draw(){};
   void clear_sh();
+  Shape* get_obj(std::istream& is);
+};
+
+
+typedef Shape* (*PF) (/*std::istream&*/);
+
+
+class IoRegistryMap
+{
+public:
+  void RegisterClasses();
 };
 
 
