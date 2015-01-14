@@ -176,6 +176,7 @@ class World
   ~World();
   World(const World& rhv) = delete;
   World& operator=(const World&) = delete;
+  Shape* get_obj(std::istream& is);
 public:
   static World& instance()
   {
@@ -187,7 +188,6 @@ public:
   void Output();
   void Draw(){};
   void clear_sh();
-  Shape* get_obj(std::istream& is);
 };
 
 
