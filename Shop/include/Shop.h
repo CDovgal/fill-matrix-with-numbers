@@ -7,6 +7,7 @@ class Shop
   ~Shop(){};
   Shop(const Shop&) = delete;
   Shop& operator=(const Shop&) = delete;
+  int m_startup_sum;
 public:
   static Shop& instance()
   {
@@ -17,6 +18,11 @@ public:
   {
     std::cout << "Load db" << std::endl;
   };
+  void Input();
+  void Output();
+  void set_startup_sun(int i_sum);
+  int start_menu();
+  int admin_menu();
 };
 
 
