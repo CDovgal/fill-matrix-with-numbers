@@ -1,30 +1,22 @@
 #include <iostream>
-//#include <Input.h>
 #include "Shop.h"
+
 
 int main()
 {
-  std::cout << "Flower Shop" << std::endl;
-  std::cout << "Choose your access type: " << std::endl;
-  std::cout << "1. Enter as admin." << std::endl << "2. Enter as customer." << std::endl;
-  int choise;
-  std::cin >> choise;
-  switch (choise)
+  Shop& instance = Shop::instance();
+  
+  switch (instance.start_menu())
   {
   case 1:
-    std::cout << "Entered as admin." << std::endl;
-    system("cls");
-    //admin menu
+    instance.admin_menu();
     break;
   case 2:
-    std::cout << "Entered as customer." << std::endl;
-    system("cls");
-    //customer menu
+    std::cout << "this is customer menu" << std::endl;
     break;
-  default:
-    std::cout << "You haven't choosen any type." << std::endl;
   }
-  Shop& instance = Shop::instance();
-  instance.load_db();
+  
+  std::cout << "End" << std::endl;
+  
   return 0;
 }
