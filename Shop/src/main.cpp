@@ -5,6 +5,8 @@
 int main()
 {
   Shop& instance = Shop::instance();
+  instance.Generate();
+  instance.Output();
   
   switch (instance.start_menu())
   {

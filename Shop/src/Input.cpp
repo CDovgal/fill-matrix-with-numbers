@@ -3,33 +3,36 @@
 #include <Input.h>
 #include <fstream>
 
-BaseInput::BaseInput()
+
+void BaseInput::Input(std::istream& is)
 {
   std::cout << "Base Input" << std::endl;
 }
 
-BaseOutput::BaseOutput()
+void BaseOutput::Output(std::ostream& os)
 {
   std::cout << "Base Output" << std::endl;
 }
 
-
-AliveOutput::AliveOutput()
+void AliveInput::Input(std::istream& is)
 {
-  std::ofstream aliveoutput("AliveOutput.dat");
-  if (aliveoutput.is_open())
-  {
-    aliveoutput << "Alive Output!" << std::endl;
-  }
-  aliveoutput.close();
+  BaseInput::Input(is);
 }
 
-UnaliveOutput::UnaliveOutput()
+void AliveOutput::Output(std::ostream& os)
 {
-  std::ofstream unaliveoutput("UnaliveOutput.dat");
-  if (unaliveoutput.is_open())
-  {
-    unaliveoutput << "Unalive Output!" << std::endl;
-  }
-  unaliveoutput.close();
+  BaseOutput::Output(os);
 }
+
+void UnaliveInput::Input(std::istream& is)
+{
+  BaseInput::Input(is);
+}
+
+void UnaliveOutput::Output(std::ostream& os)
+{
+  BaseOutput::Output(os);
+}
+
+
+
