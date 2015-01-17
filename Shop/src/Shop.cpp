@@ -1,5 +1,51 @@
 #include <iostream>
+#include <fstream>
 #include "Shop.h"
+
+
+void Shop::load_db()
+{
+  std::cout << "Database loaded..." << std::endl;
+}
+
+void Shop::clear_data()
+{
+  if (!m_prod_vec.empty())
+  for (unsigned i = 0; i < m_prod_vec.size(); ++i)
+    delete m_prod_vec.at(i);
+  m_prod_vec.clear();
+}
+
+Shop::Shop()
+{
+  load_db();
+}
+
+Shop::~Shop()
+{
+  clear_data();
+}
+
+void Shop::Generate()
+{
+  Alive *al = new Alive(Good("Rose", 300));
+  Alive *al2 = new Alive(Good("Astra", 200));
+  Alive *al3 = new Alive(Good("Gvozdika", 500));
+  Alive *al4 = new Alive(Good("Liliya", 100));
+  m_prod_vec.push_back(al);
+  m_prod_vec.push_back(al2);
+  m_prod_vec.push_back(al3);
+  m_prod_vec.push_back(al4);
+
+  Unalive *unal = new Unalive(Good("Rose", 300));
+  Unalive *unal2 = new Unalive(Good("Astra", 200));
+  Unalive *unal3 = new Unalive(Good("Gvozdika", 500));
+  Unalive *unal4 = new Unalive(Good("Liliya", 100));
+  m_prod_vec.push_back(unal);
+  m_prod_vec.push_back(unal2);
+  m_prod_vec.push_back(unal3);
+  m_prod_vec.push_back(unal4);
+}
 
 void Shop::Input()
 {
@@ -8,7 +54,16 @@ void Shop::Input()
 
 void Shop::Output()
 {
-  std::cout << "Output" << std::endl;
+  std::ofstream aliveoutput("AliveOutput.dat");
+  if (aliveoutput.is_open())
+  {
+    for (unsigned i = 0; i < m_prod_vec.size(); ++i)
+    {
+      aliveoutput << typeid(*m_prod_vec.at(i)).name() << std::endl;
+      m_prod_vec.at(i)->Output(aliveoutput);
+    }
+  }
+  aliveoutput.close();
 }
 
 void Shop::set_startup_sun(int i_sum)
@@ -18,7 +73,7 @@ void Shop::set_startup_sun(int i_sum)
 
 int Shop::start_menu()
 {
-  std::cout << "Flower Shop" << std::endl;
+  std::cout << "Flower Shop\n" << std::endl;
   std::cout << "Choose your access type: " << std::endl;
   std::cout << "1. Enter as admin." << std::endl << "2. Enter as customer." << std::endl;
   int choise;
@@ -44,12 +99,9 @@ int Shop::start_menu()
 
 int Shop::admin_menu()
 {
-  std::cout << "Entered as admin. . .\n\n" << std::endl;
+  std::cout << "Entered as admin. . .\n" << std::endl;
   std::cout << "1. Enter startup sum." << std::endl;
-  std::cout << "2. Load database." << std::endl;
-  std::cout << "3. Enter startup sum." << std::endl;
-  std::cout << "4. Enter startup sum." << std::endl;
-  std::cout << "5. Enter startup sum." << std::endl;
+  std::cout << "2. Show goods(is available)." << std::endl;
 
   int choise;
   std::cin >> choise;
@@ -63,9 +115,10 @@ int Shop::admin_menu()
     std::cout << m_startup_sum << std::endl;
     break;
   case 2:
-    std::cout << "Load database." << std::endl;
+    Shop::Generate();
+    std::cout << m_prod_vec.size() << std::endl;
     break;
   }
 
-  return 0;
+  return choise;
 }

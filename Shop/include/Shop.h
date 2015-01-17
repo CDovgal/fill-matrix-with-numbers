@@ -3,21 +3,22 @@
 
 class Shop
 {
-  Shop(){};
-  ~Shop(){};
+  Shop();
+  ~Shop();
   Shop(const Shop&) = delete;
   Shop& operator=(const Shop&) = delete;
+  void load_db();
   int m_startup_sum;
+  std::vector<Product*> m_prod_vec;
+  void clear_data();
 public:
   static Shop& instance()
   {
     static Shop instance;
     return instance;
   }
-  void load_db()
-  {
-    std::cout << "Load db" << std::endl;
-  };
+
+  void Generate();
   void Input();
   void Output();
   void set_startup_sun(int i_sum);
