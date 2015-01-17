@@ -1,5 +1,7 @@
 #include <iostream>
 #include "BaseFactory.h"
+#include <map>
+#include <string>
 
 class Shop
 {
@@ -11,6 +13,7 @@ class Shop
   int m_startup_sum;
   std::vector<Product*> m_prod_vec;
   void clear_data();
+  Product* get_product(std::istream& is);
 public:
   static Shop& instance()
   {
@@ -27,7 +30,13 @@ public:
 };
 
 
+typedef Product* (*PF)();
 
+class IoRegistryMap
+{
+public:
+  void RegisterClasses();
+};
 
 
 
