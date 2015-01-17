@@ -3,6 +3,14 @@
 #include "Shop.h"
 
 
+std::map<std::string, PF> io_map;
+
+void IoRegistryMap::RegisterClasses()
+{
+  io_map["class Alive"] = &Alive::new_alive;
+  io_map["class Unalive"] = &Unalive::new_unalive;
+}
+
 void Shop::load_db()
 {
   std::cout << "Database loaded..." << std::endl;
@@ -47,22 +55,54 @@ void Shop::Generate()
   m_prod_vec.push_back(unal4);
 }
 
+Product* Shop::get_product(std::istream& is)
+{
+  std::string name;
+  std::getline(is, name);
+  PF f = io_map[name];
+  if (f == 0) return nullptr;//throw not_implemented("no such class");
+  return f();
+}
+
 void Shop::Input()
 {
-  std::cout << "Input" << std::endl;
+  clear_data();
+  Product *product = nullptr;
+  size_t product_count;
+  std::ifstream input("Products.dat");
+  if (input.is_open())
+  {
+    input >> product_count;
+    for (unsigned i = 0; i < product_count;)
+    {
+      product = get_product(input);
+      if (product != nullptr)
+      {
+        product->Input(input);
+        m_prod_vec.push_back(product);
+        ++i;
+      }
+    }
+  }
+  else
+    std::cout << "Unable to open file\n";
+  input.close();
 }
 
 void Shop::Output()
 {
-  std::ofstream aliveoutput("AliveOutput.dat");
+  std::ofstream aliveoutput("Products.dat");
   if (aliveoutput.is_open())
   {
+    aliveoutput << m_prod_vec.size() << std::endl;
     for (unsigned i = 0; i < m_prod_vec.size(); ++i)
     {
       aliveoutput << typeid(*m_prod_vec.at(i)).name() << std::endl;
       m_prod_vec.at(i)->Output(aliveoutput);
     }
   }
+  else
+    std::cout << "Unable to open file\n";
   aliveoutput.close();
 }
 
@@ -115,7 +155,7 @@ int Shop::admin_menu()
     std::cout << m_startup_sum << std::endl;
     break;
   case 2:
-    Shop::Generate();
+    //Shop::Generate();
     std::cout << m_prod_vec.size() << std::endl;
     break;
   }
