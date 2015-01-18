@@ -15,11 +15,11 @@ public:
   AliveFactory(){}
   BaseInput* createInput()
   {
-    return new BaseInput();
+    return new AliveInput();
   }
   BaseOutput* createOutput()
   {
-    return new BaseOutput();
+    return new AliveOutput();
   }
 };
 
@@ -29,10 +29,10 @@ public:
   UnaliveFactory(){};
   BaseInput* createInput()
   {
-    return new BaseInput();
+    return new UnaliveInput();
   }
   BaseOutput* createOutput()
   {
-    return new BaseOutput();
+    return new UnaliveOutput();
   }
 };
