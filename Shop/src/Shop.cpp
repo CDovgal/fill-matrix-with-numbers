@@ -45,10 +45,10 @@ void Shop::Generate()
   m_prod_vec.push_back(al3);
   m_prod_vec.push_back(al4);
 
-  Unalive *unal = new Unalive(Good("Rose", 300));
-  Unalive *unal2 = new Unalive(Good("Astra", 200));
-  Unalive *unal3 = new Unalive(Good("Gvozdika", 500));
-  Unalive *unal4 = new Unalive(Good("Liliya", 100));
+  Unalive *unal = new Unalive(Good("Seed", 300));
+  Unalive *unal2 = new Unalive(Good("Gorshok", 200));
+  Unalive *unal3 = new Unalive(Good("udobrenie", 500));
+  Unalive *unal4 = new Unalive(Good("Ololo", 100));
   m_prod_vec.push_back(unal);
   m_prod_vec.push_back(unal2);
   m_prod_vec.push_back(unal3);
