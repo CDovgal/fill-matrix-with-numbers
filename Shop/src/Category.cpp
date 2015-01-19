@@ -1,6 +1,33 @@
 #include "Category.h"
 #include "Shop.h"
 
+std::ostream& operator<<(std::ostream& output, const Good& i_good)
+{
+  output << i_good.name.c_str() << std::endl << i_good.count << std::endl;
+  return output;
+}
+
+std::istream& operator>>(std::istream& input, Good& i_good)
+{
+  input >> i_good.name >> i_good.count;
+  return input;
+}
+
+Category::Category()
+{
+  bf = new AliveFactory();
+  bf->createInput();
+  bf->createOutput();
+  bf = new UnaliveFactory();
+  bf->createInput();
+  bf->createOutput();
+}
+
+Category::~Category()
+{
+  delete bf;
+}
+
 Product::Product(const std::vector<Good>& i_products) : m_products(i_products)
 {
 
@@ -18,9 +45,27 @@ void Product::Input(std::istream& is)
 
 void Product::Output(std::ostream& os)
 {
+  os << m_products.size() << std::endl;
   for (unsigned i = 0; i < m_products.size(); ++i)
     os << m_products.at(i);
 }
+
+std::vector<Good> Alive::make_alive_list(const Good& good)
+{
+  std::vector<Good> alive_vec;
+  Good alive_good = good;
+  alive_vec.push_back(alive_good);
+  return alive_vec;
+}
+
+std::vector<Good> Unalive::make_unalive_list(const Good& good)
+{
+  std::vector<Good> unalive_vec;
+  Good alive_good = good;
+  unalive_vec.push_back(alive_good);
+  return unalive_vec;
+}
+
 
 void Alive::Output(std::ostream& os)
 {
