@@ -1,7 +1,10 @@
+#pragma once
 #include <iostream>
 #include "BaseFactory.h"
+#include "Category.h"
 #include <map>
 #include <string>
+#include <vector>
 
 class Shop
 {
@@ -20,7 +23,6 @@ public:
     static Shop instance;
     return instance;
   }
-
   void Generate();
   void Input();
   void Output();

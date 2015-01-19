@@ -1,8 +1,9 @@
+#pragma once
 #include <iostream>
-#include "Category.h"
+//#include "Category.h"
 
 
-class BaseInput : public Category
+class BaseInput
 {
 public:
   BaseInput()
@@ -33,7 +34,7 @@ public:
 };
 
 
-class BaseOutput : public Category
+class BaseOutput
 {
 public:
   BaseOutput()

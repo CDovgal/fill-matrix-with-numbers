@@ -1,6 +1,8 @@
+#pragma once
 #include <iostream>
 #include <vector>
 #include <string>
+#include "Input.h"
 
 class Good
 {
@@ -25,13 +27,15 @@ class Product;
 
 class Category
 {
-  std::vector<Product*> m_product;
-  std::string m_category_name;
+  std::vector<Product*> m_prod_cont;
+  //BaseInput *baseInput;
+  //BaseOutput *baseOutput;
+  //std::string m_category_name;
 public:
   Category(){};
 };
 
-class Product : public Category
+class Product
 {
   std::vector<Good> m_products;
 public:

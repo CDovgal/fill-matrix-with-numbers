@@ -1,4 +1,5 @@
 #include "Category.h"
+#include "Shop.h"
 
 Product::Product(const std::vector<Good>& i_products) : m_products(i_products)
 {

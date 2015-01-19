@@ -4,11 +4,13 @@
 
 int main()
 {
+  IoRegistryMap io;
+  io.RegisterClasses();
   Shop& instance = Shop::instance();
   instance.Generate();
   instance.Output();
-  //instance.Input();
-  //instance.Output();
+//  instance.Input();
+ // instance.Output();
   
   switch (instance.start_menu())
   {
