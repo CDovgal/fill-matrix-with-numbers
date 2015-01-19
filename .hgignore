@@ -1,4 +1,5 @@
 syntax: glob
+MiniPrintf/bin/
 Shop/bin/
 CodingDecoding/bin/
 CorrelationCode/bin/
