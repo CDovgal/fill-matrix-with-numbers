@@ -13,27 +13,6 @@ public:
   virtual void Input(std::istream& is);
 };
 
-class AliveInput : public BaseInput
-{
-public:
-  AliveInput()
-  {
-    std::cout << "Alive Input" << std::endl;
-  };
-  void Input(std::istream& is);
-};
-
-class UnaliveInput : public BaseInput
-{
-public:
-  UnaliveInput()
-  {
-    std::cout << "Unalive Input" << std::endl;
-  };
-  void Input(std::istream& is);
-};
-
-
 class BaseOutput
 {
 public:
@@ -44,6 +23,16 @@ public:
   virtual void Output(std::ostream& os);
 };
 
+class AliveInput : public BaseInput
+{
+public:
+  AliveInput()
+  {
+    std::cout << "Alive Input" << std::endl;
+  };
+  void Input(std::istream& is);
+};
+
 class AliveOutput : public BaseOutput
 {
 public:
@@ -52,6 +41,16 @@ public:
     std::cout << "Alive Output" << std::endl;
   };
   void Output(std::ostream& os);
+};
+
+class UnaliveInput : public BaseInput
+{
+public:
+  UnaliveInput()
+  {
+    std::cout << "Unalive Input" << std::endl;
+  };
+  void Input(std::istream& is);
 };
 
 class UnaliveOutput : public BaseOutput

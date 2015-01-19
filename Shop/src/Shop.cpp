@@ -60,7 +60,7 @@ Product* Shop::get_product(std::istream& is)
   std::string name;
   std::getline(is, name);
   PF f = io_map[name];
-  if (f == 0) return nullptr;//throw not_implemented("no such class");
+  if (f == 0) return nullptr;
   return f();
 }
 
