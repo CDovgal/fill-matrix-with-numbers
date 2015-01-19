@@ -71,15 +71,15 @@ void mini_printf(char *format, ...)
   char *pch;
   char buffer[256];
   char key[] = { '%d', '%ld', '%c', '%s', '%f', '%e', '%g', '%o', '%x', '%%' };
-  char *key2 = "%";
-  pch = strpbrk(data, key2);
+  char *key2 = "37";
+  pch = strpbrk(data, key);
   while (pch != NULL)
   {
     printf("%c ", *pch);
-    pch = strpbrk(pch + 1, key2);
+    pch = strpbrk(pch + 1, key);
     ++count;
   }
-  printf("%d\n", count);
+  printf("\n%d\n", count);
 }
 
 
@@ -87,11 +87,11 @@ void mini_printf(char *format, ...)
 int main()
 {
   char *name = "World";
-  printf("Hello World!%d%d\n",2,2,2);
+  //printf("Hello World!%d%d\n",2,2,2);
 
   //macro_printf("Hello %s %d %d!\n", name, 5, 6);
 
-  mini_printf("Hello World! %d %d\n", 2.2, 3, 4);
+  mini_printf("Hello World! %d %d\n");
 
   //string_printf("Hello World! %d %d\n");
 
