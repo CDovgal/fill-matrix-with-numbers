@@ -25,6 +25,7 @@ public:
 
 class AliveInput : public BaseInput
 {
+  //Alive *alive_product;
 public:
   AliveInput()
   {
@@ -45,6 +46,7 @@ public:
 
 class UnaliveInput : public BaseInput
 {
+  //Unalive *unalive_product;
 public:
   UnaliveInput()
   {

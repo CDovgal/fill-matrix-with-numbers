@@ -20,47 +20,32 @@ class Product;
 
 class Category
 {
-  std::vector<Product*> m_prod_cont;
-  BaseFactory *bf;
-public:
   Category();
   ~Category();
-};
+  Category(const Category&) = delete;
+  Category& operator=(const Category&) = delete;
 
-class Product
-{
-  std::vector<Good> m_products;
+  std::vector<Product*> m_prod_vec;
+  BaseFactory *bf;
+  void clear_data();
+  Product* get_product(std::istream& is);
 public:
-  Product() : m_products(0){};
-  Product(const std::vector<Good>& i_products);
-  virtual void Output(std::ostream& os);
-  virtual void Input(std::istream& is);
-};
-
-class Alive : public Product
-{
-  std::vector<Good> make_alive_list(const Good& good);
-public:
-  Alive() : Product(make_alive_list({ "", 0 })){};
-  Alive(const Good& good) : Product(make_alive_list(good)){};
-  void Output(std::ostream& os);
-  void Input(std::istream& is);
-  static Product* new_alive()
+  static Category& instance()
   {
-    return new Alive();
+    static Category instance;
+    return instance;
   }
+  void Generate();
+  void Input();
+  void Output();
 };
 
-class Unalive : public Product
+
+typedef Product* (*PF)();
+
+class IoRegistryMap
 {
-  std::vector<Good> make_unalive_list(const Good& good);
 public:
-  Unalive() : Product(make_unalive_list({ "", 0 })){};
-  Unalive(const Good& good) : Product(make_unalive_list(good)){}
-  void Output(std::ostream& os);
-  void Input(std::istream& is);
-  static Product* new_unalive()
-  {
-    return new Unalive();
-  }
+  void RegisterClasses();
 };
+

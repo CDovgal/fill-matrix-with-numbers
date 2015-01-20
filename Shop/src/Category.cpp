@@ -1,5 +1,16 @@
+#include "Product.h"
 #include "Category.h"
 #include "Shop.h"
+#include <fstream>
+
+
+std::map<std::string, PF> io_map;
+
+void IoRegistryMap::RegisterClasses()
+{
+  io_map["class Alive"] = &Alive::new_alive;
+  io_map["class Unalive"] = &Unalive::new_unalive;
+}
 
 std::ostream& operator<<(std::ostream& output, const Good& i_good)
 {
@@ -15,75 +26,98 @@ std::istream& operator>>(std::istream& input, Good& i_good)
 
 Category::Category()
 {
-  bf = new AliveFactory();
+  /*bf = new AliveFactory();
   bf->createInput();
   bf->createOutput();
   bf = new UnaliveFactory();
   bf->createInput();
-  bf->createOutput();
+  bf->createOutput();*/
 }
 
 Category::~Category()
 {
-  delete bf;
+  //delete bf;
+  clear_data();
 }
 
-Product::Product(const std::vector<Good>& i_products) : m_products(i_products)
+void Category::clear_data()
 {
-
+  if (!m_prod_vec.empty())
+  for (unsigned i = 0; i < m_prod_vec.size(); ++i)
+    delete m_prod_vec.at(i);
+  m_prod_vec.clear();
 }
 
-void Product::Input(std::istream& is)
+void Category::Generate()
 {
-  std::string line;
+  Alive *al = new Alive(Good("Rose", 300));
+  Alive *al2 = new Alive(Good("Astra", 200));
+  Alive *al3 = new Alive(Good("Gvozdika", 500));
+  Alive *al4 = new Alive(Good("Liliya", 100));
+  m_prod_vec.push_back(al);
+  m_prod_vec.push_back(al2);
+  m_prod_vec.push_back(al3);
+  m_prod_vec.push_back(al4);
+
+  Unalive *unal = new Unalive(Good("Seed", 300));
+  Unalive *unal2 = new Unalive(Good("Gorshok", 200));
+  Unalive *unal3 = new Unalive(Good("udobrenie", 500));
+  Unalive *unal4 = new Unalive(Good("Ololo", 100));
+  m_prod_vec.push_back(unal);
+  m_prod_vec.push_back(unal2);
+  m_prod_vec.push_back(unal3);
+  m_prod_vec.push_back(unal4);
+}
+
+Product* Category::get_product(std::istream& is)
+{
+  std::string name;
+  std::getline(is, name);
+  PF f = io_map[name];
+  if (f == 0) return nullptr;
+  return f();
+}
+
+void Category::Input()
+{
+  clear_data();
+  Product *product = nullptr;
   size_t product_count;
-  is >> product_count;
-  m_products.resize(product_count);
-  for (unsigned i = 0; i < product_count; ++i)
-    is >> m_products.at(i);
+  std::ifstream input("Products.dat");
+  if (input.is_open())
+  {
+    input >> product_count;
+    for (unsigned i = 0; i < product_count;)
+    {
+      product = get_product(input);
+      if (product != nullptr)
+      {
+        product->Input(input);
+        m_prod_vec.push_back(product);
+        ++i;
+      }
+    }
+  }
+  else
+    std::cout << "Unable to open file\n";
+  input.close();
 }
 
-void Product::Output(std::ostream& os)
+void Category::Output()
 {
-  os << m_products.size() << std::endl;
-  for (unsigned i = 0; i < m_products.size(); ++i)
-    os << m_products.at(i);
-}
-
-std::vector<Good> Alive::make_alive_list(const Good& good)
-{
-  std::vector<Good> alive_vec;
-  Good alive_good = good;
-  alive_vec.push_back(alive_good);
-  return alive_vec;
-}
-
-std::vector<Good> Unalive::make_unalive_list(const Good& good)
-{
-  std::vector<Good> unalive_vec;
-  Good alive_good = good;
-  unalive_vec.push_back(alive_good);
-  return unalive_vec;
+  std::ofstream aliveoutput("Products.dat");
+  if (aliveoutput.is_open())
+  {
+    aliveoutput << m_prod_vec.size() << std::endl;
+    for (unsigned i = 0; i < m_prod_vec.size(); ++i)
+    {
+      aliveoutput << typeid(*m_prod_vec.at(i)).name() << std::endl;
+      m_prod_vec.at(i)->Output(aliveoutput);
+    }
+  }
+  else
+    std::cout << "Unable to open file\n";
+  aliveoutput.close();
 }
 
 
-void Alive::Output(std::ostream& os)
-{
-  Product::Output(os);
-}
-
-void Unalive::Output(std::ostream& os)
-{
-  Product::Output(os);
-}
-
-
-void Alive::Input(std::istream& is)
-{
-  Product::Input(is);
-}
-
-void Unalive::Input(std::istream& is)
-{
-  Product::Input(is);
-}
