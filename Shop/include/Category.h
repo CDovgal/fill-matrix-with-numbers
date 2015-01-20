@@ -17,7 +17,9 @@ class Category
   Category& operator=(const Category&) = delete;
 
   std::vector<Product*> m_prod_vec;
-  BaseFactory *bf;
+  BaseFactory *m_base_factory;
+  BaseInput *m_base_input;
+  BaseOutput *m_base_output;
   void clear_data();
   Product* get_product(std::istream& is);
 public:

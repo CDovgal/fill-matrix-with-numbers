@@ -16,17 +16,10 @@ void IoRegistryMap::RegisterClasses()
 
 Category::Category()
 {
-  /*bf = new AliveFactory();
-  bf->createInput();
-  bf->createOutput();
-  bf = new UnaliveFactory();
-  bf->createInput();
-  bf->createOutput();*/
 }
 
 Category::~Category()
 {
-  //delete bf;
   clear_data();
 }
 
