@@ -48,8 +48,8 @@ std::vector<Good> Alive::make_alive_list(const Good& good)
 std::vector<Good> Unalive::make_unalive_list(const Good& good)
 {
   std::vector<Good> unalive_vec;
-  Good alive_good = good;
-  unalive_vec.push_back(alive_good);
+  Good unalive_good = good;
+  unalive_vec.push_back(unalive_good);
   return unalive_vec;
 }
 
