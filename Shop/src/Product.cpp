@@ -3,6 +3,18 @@
 #include "Product.h"
 #include "Category.h"
 
+std::ostream& operator<<(std::ostream& output, const Good& i_good)
+{
+  output << i_good.name.c_str() << std::endl << i_good.count << std::endl;
+  return output;
+}
+
+std::istream& operator>>(std::istream& input, Good& i_good)
+{
+  input >> i_good.name >> i_good.count;
+  return input;
+}
+
 Product::Product(const std::vector<Good>& i_products) : m_products(i_products)
 {
 

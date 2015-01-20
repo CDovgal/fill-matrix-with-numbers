@@ -5,16 +5,7 @@
 #include "Input.h"
 #include "BaseFactory.h"
 
-class Good
-{
-  std::string name;
-  int count;
-public:
-  Good(){}
-  Good(const std::string i_name, int i_count): name(i_name), count(i_count){}
-  friend std::ostream& operator<<(std::ostream& output, const Good& i_good);
-  friend std::istream& operator>>(std::istream& input, Good& i_good);
-};
+
 
 class Product;
 
