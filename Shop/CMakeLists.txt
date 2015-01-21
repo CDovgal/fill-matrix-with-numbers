@@ -14,6 +14,8 @@ file (
 GLOB
 SRC_FILES
 src/*.c*
+INCLUDE_FILES
+include/*.h
 )
 
 add_executable(
