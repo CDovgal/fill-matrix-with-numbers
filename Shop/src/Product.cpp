@@ -20,7 +20,7 @@ Product::Product(const std::vector<Good>& i_products) : m_products(i_products)
 
 }
 
-void Product::Input(std::istream& is)
+void Product::read_from_file(std::istream& is)
 {
   std::string line;
   size_t product_count;
@@ -30,7 +30,7 @@ void Product::Input(std::istream& is)
     is >> m_products.at(i);
 }
 
-void Product::Output(std::ostream& os)
+void Product::write_to_file(std::ostream& os)
 {
   os << m_products.size() << std::endl;
   for (unsigned i = 0; i < m_products.size(); ++i)
@@ -54,23 +54,23 @@ std::vector<Good> Unalive::make_unalive_list(const Good& good)
 }
 
 
-void Alive::Output(std::ostream& os)
+void Alive::write_to_file(std::ostream& os)
 {
-  Product::Output(os);
+  Product::write_to_file(os);
 }
 
-void Unalive::Output(std::ostream& os)
+void Unalive::write_to_file(std::ostream& os)
 {
-  Product::Output(os);
+  Product::write_to_file(os);
 }
 
 
-void Alive::Input(std::istream& is)
+void Alive::read_from_file(std::istream& is)
 {
-  Product::Input(is);
+  Product::read_from_file(is);
 }
 
-void Unalive::Input(std::istream& is)
+void Unalive::read_from_file(std::istream& is)
 {
-  Product::Input(is);
+  Product::read_from_file(is);
 }

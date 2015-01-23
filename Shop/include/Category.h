@@ -29,8 +29,8 @@ public:
     return instance;
   }
   void Generate();
-  void Input();
-  void Output();
+  void read_from_file();
+  void write_to_file();
 };
 
 

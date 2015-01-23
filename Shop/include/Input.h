@@ -10,7 +10,7 @@ public:
   {
     std::cout << "Base Input" << std::endl;
   };
-  virtual void Input(std::istream& is);
+  virtual void Input();
 };
 
 class BaseOutput
@@ -20,18 +20,17 @@ public:
   {
     std::cout << "Base Output" << std::endl;
   };
-  virtual void Output(std::ostream& os);
+  virtual void Output();
 };
 
 class AliveInput : public BaseInput
 {
-  //Alive *alive_product;
 public:
   AliveInput()
   {
     std::cout << "Alive Input" << std::endl;
   };
-  void Input(std::istream& is);
+  void Input();
 };
 
 class AliveOutput : public BaseOutput
@@ -41,18 +40,17 @@ public:
   {
     std::cout << "Alive Output" << std::endl;
   };
-  void Output(std::ostream& os);
+  void Output();
 };
 
 class UnaliveInput : public BaseInput
 {
-  //Unalive *unalive_product;
 public:
   UnaliveInput()
   {
     std::cout << "Unalive Input" << std::endl;
   };
-  void Input(std::istream& is);
+  void Input();
 };
 
 class UnaliveOutput : public BaseOutput
@@ -62,6 +60,6 @@ public:
   {
     std::cout << "Unalive Output" << std::endl;
   };
-  void Output(std::ostream& os);
+  void Output();
 };
 

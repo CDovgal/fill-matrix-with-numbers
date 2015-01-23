@@ -20,8 +20,8 @@ class Product
 public:
   Product() : m_products(0){};
   Product(const std::vector<Good>& i_products);
-  virtual void Output(std::ostream& os);
-  virtual void Input(std::istream& is);
+  virtual void write_to_file(std::ostream& os);
+  virtual void read_from_file(std::istream& is);
 };
 
 class Alive : public Product
@@ -30,8 +30,8 @@ class Alive : public Product
 public:
   Alive() : Product(make_alive_list({ "", 0 })){};
   Alive(const Good& good) : Product(make_alive_list(good)){};
-  void Output(std::ostream& os);
-  void Input(std::istream& is);
+  void write_to_file(std::ostream& os);
+  void read_from_file(std::istream& is);
   static Product* new_alive()
   {
     return new Alive();
@@ -44,8 +44,8 @@ class Unalive : public Product
 public:
   Unalive() : Product(make_unalive_list({ "", 0 })){};
   Unalive(const Good& good) : Product(make_unalive_list(good)){}
-  void Output(std::ostream& os);
-  void Input(std::istream& is);
+  void write_to_file(std::ostream& os);
+  void read_from_file(std::istream& is);
   static Product* new_unalive()
   {
     return new Unalive();
