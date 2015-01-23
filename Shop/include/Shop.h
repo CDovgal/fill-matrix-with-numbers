@@ -16,6 +16,7 @@ public:
   void set_startup_sun(int i_sum);
   int start_menu();
   int admin_menu();
+  void input();
 };
 
 

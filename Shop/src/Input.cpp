@@ -4,34 +4,34 @@
 #include <fstream>
 
 
-void BaseInput::Input(std::istream& is)
+void BaseInput::Input()
 {
   std::cout << "Base Input" << std::endl;
 }
 
-void BaseOutput::Output(std::ostream& os)
+void BaseOutput::Output()
 {
   std::cout << "Base Output" << std::endl;
 }
 
-void AliveInput::Input(std::istream& is)
+void AliveInput::Input()
 {
-  BaseInput::Input(is);
+  BaseInput::Input();
 }
 
-void AliveOutput::Output(std::ostream& os)
+void AliveOutput::Output()
 {
-  BaseOutput::Output(os);
+  BaseOutput::Output();
 }
 
-void UnaliveInput::Input(std::istream& is)
+void UnaliveInput::Input()
 {
-  BaseInput::Input(is);
+  BaseInput::Input();
 }
 
-void UnaliveOutput::Output(std::ostream& os)
+void UnaliveOutput::Output()
 {
-  BaseOutput::Output(os);
+  BaseOutput::Output();
 }
 
 

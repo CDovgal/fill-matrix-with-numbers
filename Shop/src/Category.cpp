@@ -61,7 +61,7 @@ Product* Category::get_product(std::istream& is)
   return f();
 }
 
-void Category::Input()
+void Category::read_from_file()
 {
   clear_data();
   Product *product = nullptr;
@@ -75,7 +75,7 @@ void Category::Input()
       product = get_product(input);
       if (product != nullptr)
       {
-        product->Input(input);
+        product->read_from_file(input);
         m_prod_vec.push_back(product);
         ++i;
       }
@@ -86,7 +86,7 @@ void Category::Input()
   input.close();
 }
 
-void Category::Output()
+void Category::write_to_file()
 {
   std::ofstream aliveoutput("Products.dat");
   if (aliveoutput.is_open())
@@ -95,7 +95,7 @@ void Category::Output()
     for (unsigned i = 0; i < m_prod_vec.size(); ++i)
     {
       aliveoutput << typeid(*m_prod_vec.at(i)).name() << std::endl;
-      m_prod_vec.at(i)->Output(aliveoutput);
+      m_prod_vec.at(i)->write_to_file(aliveoutput);
     }
   }
   else

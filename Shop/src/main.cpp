@@ -10,9 +10,9 @@ int main()
   io.RegisterClasses();
   Category& instance = Category::instance();
   instance.Generate();
-  instance.Output();
-  instance.Input();
-  instance.Output();
+  instance.write_to_file();
+  instance.read_from_file();
+  instance.write_to_file();
   
   switch (sh.start_menu())
   {

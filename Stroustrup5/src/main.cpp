@@ -170,11 +170,11 @@ int main()
 
   start = std::clock();
 
-  /*for (std::vector<int>::const_iterator cit = i_vec.begin(); cit != i_vec.end(); ++cit)
-    std::cout << *cit << std::endl;*/
+  for (std::vector<int>::const_iterator cit = i_vec.begin(); cit != i_vec.end(); ++cit)
+    std::cout << *cit << std::endl;
 
-  for (unsigned i = 0; i < i_vec.size(); ++i)
-  std::cout << i_vec.at(i) << std::endl;
+  /*for (unsigned i = 0; i < i_vec.size(); ++i)
+  std::cout << i_vec.at(i) << std::endl;*/
 
   duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
 
