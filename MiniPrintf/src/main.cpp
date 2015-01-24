@@ -65,6 +65,34 @@ void macro_printf(const char *format, ...)
   va_end(args);
 }
 
+void mini_printf(const char* pStr, ...)
+{
+  const char** ppS = &pStr;
+  void* pV = ppS + 1;
+  int i = 0;
+  while (pStr[i] != 0)
+  {
+    if (pStr[i] == '%')
+    {
+      switch (pStr[++i])
+      {
+      case 'd':
+      {
+                int* pInt = (int*)pV;
+                std::cout << *pInt;
+                pV = pInt + 1;
+                break;
+      }
+      case 'f':
+
+        break;
+      }
+    }
+    else
+      std::cout << pStr[i];
+  }
+}
+
 
 int main()
 {
@@ -74,7 +102,7 @@ int main()
   char *name = "World";
   macro_printf("Hello %s %d %d %d %d!\n", name, 5, 6, 8, 7);
 
-  
+  mini_printf("Hello %d %d", 2, 2);
 
   //mini_printf("Hello World! %d %d\n");
 
