@@ -1,4 +1,7 @@
 syntax: glob
+Exceptions/bin/
+Jan_24_CLient/bin/
+TestLib/bin/
 Goldbah/bin/
 Stroustrup5_11/bin/
 MiniPrintf/bin/
