@@ -97,7 +97,7 @@ int main()
   /*char *name = "World";
   macro_printf("Hello %s %d %d %d %d!\n", name, 5, 6, 8, 7);*/
 
-  mini_printf("Hello %s", "ololo");
+  mini_printf("Hello %s %d %d %f", "ololo", 2, 2, 2.2);
 
   return 0;
 }
