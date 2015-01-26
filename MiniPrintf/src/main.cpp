@@ -3,44 +3,7 @@
 #include <stdarg.h>
 #include <cstdarg>
 #include <stdio.h>
-#include <algorithm>
-#include <vector>
-
-
-
-void mini_printf(char *format, ...)
-{
-  char *data = format;
-  int count = 0;
-  char *pch;
-  char buffer[256];
-  char key[] = { '%d', '%ld', '%c', '%s', '%f', '%e', '%g', '%o', '%x', '%%' };
-  char *key2 = "37";
-  pch = strpbrk(data, key);
-  while (pch != NULL)
-  {
-    printf("%c ", *pch);
-    pch = strpbrk(pch + 1, key);
-    ++count;
-  }
-  printf("\n%d\n", count);
-}
-
-
-void error(int severity, ...)
-{
-  va_list arg_list;
-  va_start(arg_list, severity);
-  for (;;)
-  {
-    char* p = va_arg(arg_list, char*);
-    if (p == 0) break;
-    std::cerr << p << ' ';
-  }
-  va_end(arg_list);
-  std::cerr << '\n';
-  if (severity) exit(severity);
-}
+#include <string>
 
 /*
 %d	print an int argument in decimal
@@ -76,35 +39,65 @@ void mini_printf(const char* pStr, ...)
     {
       switch (pStr[++i])
       {
+      case 'ld':
+      {
+                 long int* pLInt = (long int*)pV;
+                 std::cout << *pLInt;
+                 pV = pLInt + 1;
+                 ++i;
+                 break;
+      }
       case 'd':
       {
                 int* pInt = (int*)pV;
                 std::cout << *pInt;
                 pV = pInt + 1;
+                ++i;
+                break;
+      }
+      case 'c':
+      {
+                 char* pChar = (char*)pV;
+                 std::cout << *pChar;
+                 pV = pChar + 1;
+                 ++i;
+                 break;
+      }
+      case 's': // not working
+      {
+                char* pString = (char*)pV;
+                std::cout << *pString;
+                pV = pString + 1;
+                ++i;
                 break;
       }
       case 'f':
-
+      {
+                double* pDbl = (double*)pV;
+                std::cout << *pDbl;
+                pV = pDbl + 1;
+                ++i;
+                break;
+      }
         break;
       }
     }
     else
+    {
       std::cout << pStr[i];
+      ++i;
+    }
   }
+  std::cout << std::endl;
 }
 
 
 int main()
 {
-  const char* Null_cp = 0;
-  error(0, "ehh", "fdsafa", "dsadada", Null_cp);
+  /*char *name = "World";
+  macro_printf("Hello %s %d %d %d %d!\n", name, 5, 6, 8, 7);*/
 
-  char *name = "World";
-  macro_printf("Hello %s %d %d %d %d!\n", name, 5, 6, 8, 7);
-
-  mini_printf("Hello %d %d", 2, 2);
-
-  //mini_printf("Hello World! %d %d\n");
+  mini_printf("Hello %d %d %s", 2, 2, "ololo");
 
   return 0;
 }
