@@ -24,7 +24,6 @@ void Shop::set_startup_sun(int i_sum)
 
 void Shop::input()
 {
-  BaseFactory *bf = nullptr;
   system("cls");
   int choise;
   std::cout << "1. Add alive good." << std::endl;
@@ -33,16 +32,31 @@ void Shop::input()
   switch (choise)
   {
   case 1:
-    bf = new AliveFactory();
-    bf->createInput()->Input();
+    std::cout << "Alive input" << std::endl;
     break;
   case 2:
-    bf = new UnaliveFactory();
-    bf->createInput()->Input();
+    std::cout << "Unalive input" << std::endl;
     break;
   }
-  
-  delete bf;
+}
+
+
+void Shop::output()
+{
+  system("cls");
+  int choise;
+  std::cout << "1. Show alive goods." << std::endl;
+  std::cout << "2. Show unalive goods." << std::endl;
+  std::cin >> choise;
+  switch (choise)
+  {
+  case 1:
+    std::cout << "Alive data output" << std::endl;
+    break;
+  case 2:
+    std::cout << "Unalive data output" << std::endl;
+    break;
+  }
 }
 
 int Shop::start_menu()
@@ -90,7 +104,7 @@ int Shop::admin_menu()
     std::cout << m_startup_sum << std::endl;
     break;
   case 2:
-    //std::cout << m_prod_vec.size() << std::endl;
+    Shop::output();
     break;
   case 3:
     Shop::input();

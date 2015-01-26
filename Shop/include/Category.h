@@ -15,11 +15,8 @@ class Category
   ~Category();
   Category(const Category&) = delete;
   Category& operator=(const Category&) = delete;
-
   std::vector<Product*> m_prod_vec;
   BaseFactory *m_base_factory;
-  BaseInput *m_base_input;
-  BaseOutput *m_base_output;
   void clear_data();
   Product* get_product(std::istream& is);
 public:
@@ -29,6 +26,8 @@ public:
     return instance;
   }
   void Generate();
+  void Input();
+  void Output();
   void read_from_file();
   void write_to_file();
 };

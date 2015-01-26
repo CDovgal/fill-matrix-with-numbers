@@ -6,8 +6,6 @@
 int main()
 {
   Shop sh;
-  IoRegistryMap io;
-  io.RegisterClasses();
   Category& instance = Category::instance();
   instance.Generate();
   instance.write_to_file();

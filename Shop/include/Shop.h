@@ -17,6 +17,7 @@ public:
   int start_menu();
   int admin_menu();
   void input();
+  void output();
 };
 
 

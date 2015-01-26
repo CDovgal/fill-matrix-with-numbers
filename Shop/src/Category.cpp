@@ -16,6 +16,8 @@ void IoRegistryMap::RegisterClasses()
 
 Category::Category()
 {
+  IoRegistryMap io;
+  io.RegisterClasses();
 }
 
 Category::~Category()
@@ -101,6 +103,16 @@ void Category::write_to_file()
   else
     std::cout << "Unable to open file\n";
   aliveoutput.close();
+}
+
+void Category::Input()
+{
+  //m_base_factory = new 
+}
+
+void Category::Output()
+{
+
 }
 
 
