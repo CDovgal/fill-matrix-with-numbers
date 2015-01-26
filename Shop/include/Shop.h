@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOP_H
+#define SHOP_H
+
 #include <iostream>
 #include <map>
 #include <string>
@@ -20,6 +22,7 @@ public:
   void output();
 };
 
+#endif //SHOP_H
 
 
 
