@@ -1,6 +1,8 @@
-#pragma once
+#ifndef BASEFACTORY_H
+#define BASEFACTORY_H
+
 #include <iostream>
-#include <Input.h>
+#include "BaseIO.h"
 
 class BaseFactory
 {
@@ -10,5 +12,5 @@ public:
   virtual BaseOutput* createOutput() = 0;
 };
 
-
+#endif //BASEFACTORY_H
 

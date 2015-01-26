@@ -1,4 +1,5 @@
 #include "AliveFactory.h"
+#include "AliveIO.h"
 
 BaseInput* AliveFactory::createInput()
 {

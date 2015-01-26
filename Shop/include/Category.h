@@ -1,8 +1,10 @@
-#pragma once
+#ifndef CATEGORY_H
+#define CATEGORY_H
+
 #include <iostream>
 #include <vector>
 #include <string>
-#include "Input.h"
+#include "BaseIO.h"
 #include "BaseFactory.h"
 
 
@@ -41,3 +43,4 @@ public:
   void RegisterClasses();
 };
 
+#endif //CATEGORY_H

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PRODUCT_H
+#define PRODUCT_H
+
 #include <iostream>
 #include <vector>
 //#include "Category.h"
@@ -51,3 +53,6 @@ public:
     return new Unalive();
   }
 };
+
+
+#endif //PRODUCT_H

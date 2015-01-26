@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UNALIVEFACTORY_H
+#define UNALIVEFACTORY_H
 
 #include "BaseFactory.h"
 
@@ -9,3 +10,5 @@ public:
   BaseInput* createInput();
   BaseOutput* createOutput();
 };
+
+#endif //UNALIVEFACTORY_H

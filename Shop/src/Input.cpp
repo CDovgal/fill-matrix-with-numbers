@@ -1,9 +1,9 @@
-#pragma once
 #include <iostream>
-#include <Input.h>
 #include <fstream>
 #include <string>
-
+#include "BaseIO.h"
+#include "AliveIO.h"
+#include "UnaliveIO.h"
 
 void BaseInput::Input()
 {
