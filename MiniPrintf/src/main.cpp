@@ -63,9 +63,9 @@ void mini_printf(const char* pStr, ...)
                  ++i;
                  break;
       }
-      case 's': // not working
+      case 's':
       {
-                char* pString = (char*)pV;
+                char** pString = (char**)pV;
                 std::cout << *pString;
                 pV = pString + 1;
                 ++i;
@@ -97,7 +97,7 @@ int main()
   /*char *name = "World";
   macro_printf("Hello %s %d %d %d %d!\n", name, 5, 6, 8, 7);*/
 
-  mini_printf("Hello %d %d %s", 2, 2, "ololo");
+  mini_printf("Hello %s", "ololo");
 
   return 0;
 }
