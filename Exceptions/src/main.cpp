@@ -3,10 +3,10 @@
 
 class Exception
 {
-  char* m_pText;
+  const char* m_pText;
   Exception *m_pPrev;
 public:
-  Exception(const char* p_text, const Exception *p_Prev = 0);
+  Exception(const char* p_text, const Exception *p_Prev = 0) : m_pText(p_text){};
   virtual void Show()
   {
     if (m_pPrev != nullptr)
@@ -17,10 +17,10 @@ public:
 
 class Child_Exception : public Exception
 {
-  char* m_pText;
+  const char* m_pText;
   Child_Exception* m_chPrev;
 public:
-  Child_Exception(const char* p_text, const Exception *m_chPrev = 0);
+  Child_Exception(const char* p_text, const Exception *m_chPrev = 0) : Exception(p_text), m_pText(p_text){};
   virtual void Show()
   {
     if (m_chPrev != nullptr)
@@ -31,10 +31,10 @@ public:
 
 class GrandChild_Exception : public Child_Exception
 {
-  char* m_pText;
+  const char* m_pText;
   GrandChild_Exception* m_gchPrev;
 public:
-  GrandChild_Exception(const char* p_text, const Exception *m_chPrev = 0);
+  GrandChild_Exception(const char* p_text, const Exception *m_chPrev = 0) : Child_Exception(p_text), m_pText(p_text){};
   virtual void Show()
   {
     if (m_gchPrev != nullptr)
@@ -59,6 +59,33 @@ public:
 
 int main()
 {
+  int a;
+  std::cin >> a;
+  try{
+    try{
+      try
+      {
+        Exception *pEx = new Exception("Main Exception");
+        if (a == 0) throw pEx;
+      }
+      catch (Exception* pEx)
+      {
+        std::cout << "Main Exception catched" << std::endl;
+        Child_Exception *pNewChEx = new Child_Exception("Child Exception", pEx);
+        throw pNewChEx;
+      }
+    }
+    catch (Child_Exception *pNewChEx)
+    {
+      std::cout << "Child Exception catched" << std::endl;
+      GrandChild_Exception *GrNewChEx = new GrandChild_Exception("GrandChild Exeption", pNewChEx);
+      throw GrNewChEx;
+    }
+  }
+  catch (GrandChild_Exception* grch)
+  {
+    std::cout << "GrandChild Exception catched" << std::endl;
+  }
   /*int b;
   std::cin >> b;*/
   //try
