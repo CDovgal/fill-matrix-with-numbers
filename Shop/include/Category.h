@@ -6,6 +6,7 @@
 #include <string>
 #include "BaseIO.h"
 #include "BaseFactory.h"
+#include "AliveFactory.h"
 
 class Product;
 

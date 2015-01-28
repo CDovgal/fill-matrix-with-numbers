@@ -6,12 +6,7 @@
 int main()
 {
   Shop sh;
-  Category& instance = Category::instance();
-  instance.Generate();
-  instance.write_to_file();
-  instance.read_from_file();
-  instance.write_to_file();
-  
+
   switch (sh.start_menu())
   {
   case 1:

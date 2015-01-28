@@ -107,7 +107,8 @@ void Category::write_to_file()
 
 void Category::Input()
 {
-  //m_base_factory = new 
+  m_base_factory = new AliveFactory();
+  m_base_factory->createInput()->Input();
 }
 
 void Category::Output()
