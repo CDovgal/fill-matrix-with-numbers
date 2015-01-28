@@ -13,6 +13,12 @@ bool isSimple(int i_numb)
   }
 }
 
+int v()
+{
+  int m = 0;
+  return m++;
+}
+
 int main()
 {
   int n;
@@ -26,5 +32,10 @@ int main()
       break;
     }
   }
+  std::cout << 7 / 9 * 9 << std::endl;
+  std::cout << v() << std::endl;
+  int a = 5;
+  int b = 10;
+  std::cout << (a>b?a:b) << std::endl;
   return 0;
 }
