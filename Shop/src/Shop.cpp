@@ -2,6 +2,9 @@
 #include <fstream>
 #include "Shop.h"
 #include "BaseFactory.h"
+#include "Category.h"
+
+Category& instance = Category::instance();
 
 void Shop::load_db()
 {
@@ -10,6 +13,10 @@ void Shop::load_db()
 
 Shop::Shop()
 {
+  instance.Generate();
+  //instance.write_to_file();
+  //instance.read_from_file();
+  //instance.write_to_file();
   load_db();
 }
 
@@ -24,6 +31,7 @@ void Shop::set_startup_sun(int i_sum)
 
 void Shop::input()
 {
+  
   system("cls");
   int choise;
   std::cout << "1. Add alive good." << std::endl;
@@ -33,6 +41,7 @@ void Shop::input()
   {
   case 1:
     std::cout << "Alive input" << std::endl;
+    instance.Input();
     break;
   case 2:
     std::cout << "Unalive input" << std::endl;

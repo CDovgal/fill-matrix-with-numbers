@@ -1,16 +1,30 @@
 #include <iostream>
 
+bool isSimple(int i_numb)
+{
+  for (int i = 2; i < i_numb - 1; ++i)
+  {
+    if (i_numb % i == 0)
+    {
+      return false;
+    }
+    else
+      return true;
+  }
+}
+
 int main()
 {
-  for (int i = 2; i < 25; ++i)
+  int n;
+  std::cin >> n;
+  for (int i = 1; i < n - 1; ++i)
   {
-    //std::cin >> number;
-    if (i % 2 > 0)
-      std::cout << i << " Simple number." << std::endl;
-    else
-      std::cout << i << " Not simple." << std::endl;
-    /*if (number == 0)
-      break;*/
+    int j = n - i;
+    if (isSimple(j) && isSimple(i))
+    {
+      std::cout << i << "+" << j << std::endl;
+      break;
+    }
   }
   return 0;
 }
