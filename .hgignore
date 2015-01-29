@@ -1,4 +1,6 @@
 syntax: glob
+
+Interview/bin/
 Exceptions/bin/
 Jan_24_CLient/bin/
 TestLib/bin/
