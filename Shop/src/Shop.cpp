@@ -72,7 +72,9 @@ int Shop::start_menu()
 {
   std::cout << "Flower Shop\n" << std::endl;
   std::cout << "Choose your access type: " << std::endl;
-  std::cout << "1. Enter as admin." << std::endl << "2. Enter as customer." << std::endl;
+  std::cout << "1. Enter as admin." << std::endl;
+  std::cout << "2. Enter as customer." << std::endl;
+  std::cout << "3. Exit." << std::endl;
   int choise;
   std::cin >> choise;
   switch (choise)
@@ -87,6 +89,9 @@ int Shop::start_menu()
     system("cls");
     //customer menu
     break;
+    case 3:
+      std::cout << "Exiting program..." << std::endl;
+      break;
   default:
     std::cout << "You've not choosen any type." << std::endl;
   }

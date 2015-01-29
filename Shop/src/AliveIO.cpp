@@ -12,6 +12,7 @@ void AliveInput::Input()
   std::cin >> amount;
   std::cout << "Alive good added..." << std::endl;
   //BaseInput::Input();
+  
 }
 
 void AliveOutput::Output()
