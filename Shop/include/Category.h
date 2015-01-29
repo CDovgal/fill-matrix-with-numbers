@@ -31,6 +31,10 @@ public:
   void Output();
   void read_from_file();
   void write_to_file();
+  void add_product(Product* i_product)
+  {
+    m_prod_vec.push_back(i_product);
+  }
 };
 
 

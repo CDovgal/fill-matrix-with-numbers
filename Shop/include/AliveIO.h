@@ -2,11 +2,12 @@
 #define ALIVEIO_H
 #include "BaseIO.h"
 #include "AliveProduct.h"
+#include "Category.h"
 
 class AliveInput : public BaseInput
 {
   Alive *m_alive_product;
-  Product* m_product;
+  Category* m_category;
 public:
   AliveInput()
   {

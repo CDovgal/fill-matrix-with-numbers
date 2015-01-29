@@ -12,7 +12,7 @@ void AliveInput::Input()
   std::cin >> amount;
   std::cout << "Alive good added..." << std::endl;
   //BaseInput::Input();
-  
+  //m_alive_product = new Alive(Good(name, amount));
 }
 
 void AliveOutput::Output()

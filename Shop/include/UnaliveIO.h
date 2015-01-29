@@ -2,9 +2,11 @@
 #define UNALIVEIO_H
 
 #include "BaseIO.h"
+#include "UnaliveProduct.h"
 
 class UnaliveInput : public BaseInput
 {
+  Unalive *m_unalive_product;
 public:
   UnaliveInput()
   {
