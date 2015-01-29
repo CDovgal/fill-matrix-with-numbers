@@ -15,9 +15,6 @@ int main()
   case 2:
     std::cout << "this is customer menu" << std::endl;
     break;
-  }
-  
-  std::cout << "End" << std::endl;
-  
+  }  
   return 0;
 }

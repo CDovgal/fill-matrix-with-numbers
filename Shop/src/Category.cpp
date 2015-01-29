@@ -1,4 +1,6 @@
 #include "Product.h"
+#include "AliveProduct.h"
+#include "UnaliveProduct.h"
 #include "Category.h"
 #include "Shop.h"
 #include <fstream>
@@ -11,8 +13,6 @@ void IoRegistryMap::RegisterClasses()
   io_map["class Alive"] = &Alive::new_alive;
   io_map["class Unalive"] = &Unalive::new_unalive;
 }
-
-
 
 Category::Category()
 {
