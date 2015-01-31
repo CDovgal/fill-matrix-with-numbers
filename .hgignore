@@ -1,5 +1,8 @@
 syntax: glob
 
+ResourceInClass/bin/
+Shop_Lib/bin/
+Shop_Client/bin/
 Interview/bin/
 Exceptions/bin/
 Jan_24_CLient/bin/
