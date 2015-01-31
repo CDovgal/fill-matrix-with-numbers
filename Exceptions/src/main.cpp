@@ -4,23 +4,35 @@
 class Exception
 {
   const char* m_pText;
+protected:
   Exception *m_pPrev;
 public:
-  Exception(const char* p_text, const Exception *p_Prev = 0) : m_pText(p_text){};
+  Exception(const char* p_text, const Exception *p_Prev = 0) : m_pText(p_text){ std::cout << "Main exception constructor" << std::endl; };
+  virtual ~Exception()
+  {
+    if (m_pPrev != nullptr)
+      delete m_pPrev;
+  }
   virtual void Show()
   {
     if (m_pPrev != nullptr)
       m_pPrev->Show();
     std::cout << m_pText << " ";
   }
+
 };
 
 class Child_Exception : public Exception
 {
   const char* m_pText;
+protected:
   Child_Exception* m_chPrev;
 public:
-  Child_Exception(const char* p_text, const Exception *m_chPrev = 0) : Exception(p_text), m_pText(p_text){};
+  Child_Exception(const char* p_text, const Exception *m_chPrev = 0) : Exception(p_text), m_pText(p_text){ std::cout << "Child exception constructor" << std::endl; };
+  ~Child_Exception()
+  {
+
+  }
   virtual void Show()
   {
     if (m_chPrev != nullptr)
@@ -34,7 +46,11 @@ class GrandChild_Exception : public Child_Exception
   const char* m_pText;
   GrandChild_Exception* m_gchPrev;
 public:
-  GrandChild_Exception(const char* p_text, const Exception *m_chPrev = 0) : Child_Exception(p_text), m_pText(p_text){};
+  GrandChild_Exception(const char* p_text, const Exception *m_chPrev = 0) : Child_Exception(p_text), m_pText(p_text){ std::cout << "Grand exception constructor" << std::endl; };
+  ~GrandChild_Exception()
+  {
+
+  }
   virtual void Show()
   {
     if (m_gchPrev != nullptr)
