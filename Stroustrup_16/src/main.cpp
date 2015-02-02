@@ -43,7 +43,7 @@ int main()
   fruits.push_back("kivifruit");
   fruits.push_back("pear");
   fruits.push_back("starfruit");
-  fruits.push_back("grape");
+  fruits.push_back("grape");;
   fruits.push_back("avocado");
   fruits.push_back("orange");
   fruits.push_back("lemon");
@@ -53,13 +53,6 @@ int main()
   citrus.push_back("lemon");
 
   
-
-  std::vector<std::string>::iterator citrus_iter = citrus.begin();
-  for (std::vector<std::string>::iterator fruit_iter = fruits.begin(); fruit_iter != fruits.end(); ++fruit_iter)
-  {
-    
-  }
-
   /*for (unsigned i = 0; i < fruits.size(); ++i)
   {
   if (fruits.at(i).at(0) == 'a')
