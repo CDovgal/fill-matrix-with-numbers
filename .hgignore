@@ -1,5 +1,7 @@
 syntax: glob
 
+WinApi2/bin/
+Stroustrup_16/bin/
 ResourceInClass/bin/
 Shop_Lib/bin/
 Shop_Client/bin/
