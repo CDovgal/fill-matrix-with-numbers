@@ -191,37 +191,37 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 {
   int wmId, wmEvent;
   static HWND hDriveCombo, hList, hEdit;
-  
+
   UNREFERENCED_PARAMETER(lParam);
   switch (message)
   {
 
   case WM_INITDIALOG:
   {
-      hDriveCombo = GetDlgItem(hDlg, IDC_COMBO_ADDDRIVE);
-      hList = GetDlgItem(hDlg, IDC_LIST1);
-      hEdit = GetDlgItem(hDlg, IDC_PATHEDIT);
-      wchar_t s_buffer[200];
-      int i_id = 0, i = 0;
-      GetLogicalDriveStrings(200, s_buffer);
-      wchar_t *p_Tok = s_buffer, *pDrive = s_buffer;
-      
-      while (*p_Tok != 0)
-      {
-        if (wcscmp(L"D:\\", p_Tok) == 0)
-        {
-          i_id = i;
-          pDrive = p_Tok;
-        }
-        ++i;
-        SendMessage(hDriveCombo, CB_ADDSTRING, 0, (LPARAM)p_Tok);
-        //SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)p_Tok);
-        p_Tok += 4;
-      }
-      SendMessage(hDriveCombo, CB_SETCURSEL, i_id, (LPARAM)p_Tok);
-      SetWindowText(hEdit, pDrive);
-      ShowDirContent(pDrive, hList);
-      return (INT_PTR)TRUE;
+                      hDriveCombo = GetDlgItem(hDlg, IDC_COMBO_ADDDRIVE);
+                      hList = GetDlgItem(hDlg, IDC_LIST1);
+                      hEdit = GetDlgItem(hDlg, IDC_PATHEDIT);
+                      wchar_t s_buffer[200];
+                      int i_id = 0, i = 0;
+                      GetLogicalDriveStrings(200, s_buffer);
+                      wchar_t *p_Tok = s_buffer, *pDrive = s_buffer;
+
+                      while (*p_Tok != 0)
+                      {
+                        if (wcscmp(L"D:\\", p_Tok) == 0)
+                        {
+                          i_id = i;
+                          pDrive = p_Tok;
+                        }
+                        ++i;
+                        SendMessage(hDriveCombo, CB_ADDSTRING, 0, (LPARAM)p_Tok);
+                        //SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)p_Tok);
+                        p_Tok += 4;
+                      }
+                      SendMessage(hDriveCombo, CB_SETCURSEL, i_id, (LPARAM)p_Tok);
+                      SetWindowText(hEdit, pDrive);
+                      ShowDirContent(pDrive, hList);
+                      return (INT_PTR)TRUE;
   }
 
   case WM_COMMAND:
@@ -237,13 +237,13 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       {
       case CBN_SELCHANGE:
       {
-        i_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
-        if (i_id != CB_ERR)
-        {
-          SendMessage(hList, LB_RESETCONTENT, 0, 0);
-          SendMessage(hDriveCombo, CB_GETLBTEXT, i_id, (LPARAM)s_buffer_drive);
-          ShowDirContent(s_buffer_drive, hList);
-        }
+                          i_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
+                          if (i_id != CB_ERR)
+                          {
+                            SendMessage(hList, LB_RESETCONTENT, 0, 0);
+                            SendMessage(hDriveCombo, CB_GETLBTEXT, i_id, (LPARAM)s_buffer_drive);
+                            ShowDirContent(s_buffer_drive, hList);
+                          }
       }
         break;
       }
