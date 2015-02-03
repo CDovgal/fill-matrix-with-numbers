@@ -12,6 +12,8 @@ public:
   explicit Vector(size_t n);
   T& operator[](size_t n);
   size_t size();
+  T* first();
+  T* next();
 };
 
 template <class T>
@@ -32,6 +34,18 @@ Vector<T>::Vector(size_t n)
   m_vec = new T(n);
 }
 
+template <class T> 
+T* Vector<T>::first()
+{
+  return m_vec[0];
+}
+
+template <class T>
+T* Vector<T>::next()
+{
+  return m_vec[0];
+}
+
 template <class T>
 T& Vector<T>::operator[](size_t n)
 {
@@ -44,13 +58,16 @@ size_t Vector<T>::size()
 {
   int count = 0;
   Vector_Itor<T> v(*this);
-  for (auto iter = v.first(); iter; iter = v.next())
+  for (v = m_vec.first(); v; v = m_vec.next())
   {
     ++count;
   }
   return count;
 }
 
+std::vector<int> vec;
+
+std::vector<int>::iterator iter = vec.begin();
 
 template <class T>
 Vector_Itor<T>::Vector_Itor(Vector<T>& vv) : v(vv), index(0)
