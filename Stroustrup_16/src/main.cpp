@@ -3,11 +3,12 @@
 #include <string>
 #include <algorithm>
 #include <iterator>
+#include "Vector.h"
 
 
 int main()
 {
-  std::vector<char> alphabet;
+  /*std::vector<char> alphabet;
   for (int i = 65; i < 91; ++i)
     alphabet.push_back(i);
 
@@ -23,7 +24,7 @@ int main()
     std::cout << *rcit;
   std::cout << std::endl;
 
-  std::vector<std::string> fruits;
+  std::vector<std::string> fruits;*/
   /*std::string fruit;
   for (int i = 0; i < 6; ++i)
   {
@@ -38,7 +39,7 @@ int main()
   std::cout << fruits.at(i) << " ";
   std::cout << std::endl;
   std::cout << fruits.size() << std::endl;*/
-  fruits.push_back("peach");
+  /*fruits.push_back("peach");
   fruits.push_back("apple");
   fruits.push_back("kivifruit");
   fruits.push_back("pear");
@@ -52,7 +53,14 @@ int main()
   citrus.push_back("orange");
   citrus.push_back("lemon");
 
-  
+  for (unsigned i = 0; i < citrus.size(); ++i)
+  {
+    for (unsigned j = 0; j < fruits.size(); ++j)
+    {
+      if (citrus.at(i) == fruits.at(j))
+        fruits.erase(fruits.begin()+j);
+    }
+  }*/
   /*for (unsigned i = 0; i < fruits.size(); ++i)
   {
   if (fruits.at(i).at(0) == 'a')
@@ -65,11 +73,13 @@ int main()
     if (fruits.at(i).at(0) == 'a')
       fruits.erase(fruits.begin() + i);
   }*/
-  for (unsigned i = 0; i < fruits.size(); ++i)
+  /*for (unsigned i = 0; i < fruits.size(); ++i)
   {
     std::cout << fruits.at(i) << std::endl;
-  }
+  }*/
 
+  Vector<int> vec(5);
+  std::cout << vec.size() << std::endl;
 
 
 
