@@ -1,5 +1,6 @@
 #include <iostream>
 #include <assert.h>
+#include <memory>
 
 template <typename T>
 class List
@@ -9,10 +10,10 @@ class List
     T m_key;
     Node();
     Node(T i_a);
+    ~Node(){}
     Node* m_pPrev;
     Node* m_pNext;
   } *m_pHead;
-  //int m_nCount;???
   Node* lastNode()
   {
     for (auto iter = m_pHead; iter != nullptr; iter = iter->m_pNext)
@@ -24,12 +25,14 @@ class List
   };
   Node* endNode()
   {
+    if (m_pHead)
     for (auto iter = m_pHead;; iter = iter->m_pNext)
     {
       if (iter->m_pNext == nullptr)
         return iter->m_pNext;
     }
-    return nullptr;
+    else
+      return nullptr;
   };
   void make_head(Node* i_pNewhead);
   void erase_node(Node* i_node);
@@ -83,7 +86,7 @@ public:
     }
     iterator* operator->() const
     {
-    return this;
+      return this;
     }
     bool operator==(const iterator& rhv)
     {
@@ -171,7 +174,6 @@ void List<T>::clear()
     else
       delete to_delete;
   }
-  //delete temp;
   delete m_pHead;
 }
 
@@ -218,16 +220,17 @@ void List<T>::erase_node(Node* i_node)
 template <typename T>
 void List<T>::push_back(T i_key)
 {
-  Node *temp = new Node(i_key);
+  Node *to_add = new Node(i_key);
 
   if (is_empty())
-    make_head(temp);
+    make_head(to_add);
   else
   {
     Node* last = lastNode();
-    last->m_pNext = temp;
-    temp->m_pPrev = last;
+    last->m_pNext = to_add;
+    to_add->m_pPrev = last;
   }
+
 }
 
 template <typename T>
