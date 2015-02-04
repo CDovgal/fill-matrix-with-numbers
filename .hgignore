@@ -1,5 +1,6 @@
 syntax: glob
 
+Linked_List/bin/
 WinApi2/bin/
 Stroustrup_16/bin/
 ResourceInClass/bin/

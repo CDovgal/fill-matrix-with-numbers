@@ -10,10 +10,12 @@ class Vector
   T* m_vec;
 public:
   explicit Vector(size_t n);
+  Vector();
   T& operator[](size_t n);
   size_t size();
   T* first();
   T* next();
+  void push_back(T i_key);
 };
 
 template <class T>
@@ -29,12 +31,24 @@ public:
 
 
 template <class T>
-Vector<T>::Vector(size_t n)
+Vector<T>::Vector(size_t n) : m_vec(new T(n))
 {
-  m_vec = new T(n);
+  //m_vec = new T(n);
 }
 
-template <class T> 
+template <class T>
+Vector<T>::Vector()
+{
+
+}
+
+template <class T>
+void Vector<T>::push_back(T i_key)
+{
+
+}
+
+template <class T>
 T* Vector<T>::first()
 {
   return m_vec[0];
@@ -49,7 +63,8 @@ T* Vector<T>::next()
 template <class T>
 T& Vector<T>::operator[](size_t n)
 {
-  return m_vec[n];
+  if (m_vec)
+    return m_vec[n];
 }
 
 
@@ -57,8 +72,7 @@ template <class T>
 size_t Vector<T>::size()
 {
   int count = 0;
-  Vector_Itor<T> v(*this);
-  for (v = m_vec.first(); v; v = m_vec.next())
+  for (T* iter = m_vec.first(); iter; iter = m_vec.next())
   {
     ++count;
   }
