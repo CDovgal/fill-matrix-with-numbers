@@ -284,11 +284,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       break;
     case IDM_SAVEFILE:
       result = SaveFileDialog(hWnd, L"Image.png", L"Save an Image.");
-      //SaveFile(hdc);
+      SaveFile(hdc);
       break;
     case IDM_OPENFILE:
       result = OpenFileDialog(hWnd, szFileName, L"Open an image.");
-      //LoadFile(hdc);
+      LoadFile(hdc);
       break;
     case IDM_EXIT:
       DestroyWindow(hWnd);
