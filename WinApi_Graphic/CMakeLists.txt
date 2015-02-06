@@ -14,7 +14,6 @@ INCLUDE_FILES
 include/*.h
 RESOURCE_FILES
 rc/*.*
-#rc/*.ico
 )
 
 # resources

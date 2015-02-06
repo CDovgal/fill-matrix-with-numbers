@@ -198,36 +198,37 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 
   case WM_INITDIALOG:
   {
-                      hDriveCombo = GetDlgItem(hDlg, IDC_COMBO_ADDDRIVE);
-                      hList = GetDlgItem(hDlg, IDC_LIST1);
-                      hEdit = GetDlgItem(hDlg, IDC_PATHEDIT);
-                      wchar_t s_buffer[200];
-                      int i_id = 0, i = 0;
-                      GetLogicalDriveStrings(200, s_buffer);
-                      wchar_t *p_Tok = s_buffer, *pDrive = s_buffer;
+      hDriveCombo = GetDlgItem(hDlg, IDC_COMBO_ADDDRIVE);
+      hList = GetDlgItem(hDlg, IDC_LIST1);
+      hEdit = GetDlgItem(hDlg, IDC_PATHEDIT);
+      wchar_t s_buffer[200];
+      int i_id = 0, i = 0;
+      GetLogicalDriveStrings(200, s_buffer);
+      wchar_t *p_Tok = s_buffer, *pDrive = s_buffer;
 
-                      while (*p_Tok != 0)
-                      {
-                        if (wcscmp(L"D:\\", p_Tok) == 0)
-                        {
-                          i_id = i;
-                          pDrive = p_Tok;
-                        }
-                        ++i;
-                        SendMessage(hDriveCombo, CB_ADDSTRING, 0, (LPARAM)p_Tok);
-                        //SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)p_Tok);
-                        p_Tok += 4;
-                      }
-                      SendMessage(hDriveCombo, CB_SETCURSEL, i_id, (LPARAM)p_Tok);
-                      SetWindowText(hEdit, pDrive);
-                      ShowDirContent(pDrive, hList);
-                      return (INT_PTR)TRUE;
+      while (*p_Tok != 0)
+      {
+        if (wcscmp(L"D:\\", p_Tok) == 0)
+        {
+          i_id = i;
+          pDrive = p_Tok;
+        }
+        ++i;
+        SendMessage(hDriveCombo, CB_ADDSTRING, 0, (LPARAM)p_Tok);
+        //SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)p_Tok);
+        p_Tok += 4;
+      }
+      SendMessage(hDriveCombo, CB_SETCURSEL, i_id, (LPARAM)p_Tok);
+      SetWindowText(hEdit, pDrive);
+      ShowDirContent(pDrive, hList);
+      return (INT_PTR)TRUE;
   }
 
   case WM_COMMAND:
     wmId = LOWORD(wParam);
     wmEvent = HIWORD(wParam);
     wchar_t s_buffer_drive[10], s_out[100];
+    wchar_t s_path[50];
     int i_id = 0;
     // Parse the menu selections:
     switch (wmId)
@@ -237,14 +238,27 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       {
       case CBN_SELCHANGE:
       {
-                          i_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
-                          if (i_id != CB_ERR)
-                          {
-                            SendMessage(hList, LB_RESETCONTENT, 0, 0);
-                            SendMessage(hDriveCombo, CB_GETLBTEXT, i_id, (LPARAM)s_buffer_drive);
-                            ShowDirContent(s_buffer_drive, hList);
-                          }
+         i_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
+         if (i_id != CB_ERR)
+         {
+           SendMessage(hList, LB_RESETCONTENT, 0, 0);
+           SendMessage(hDriveCombo, CB_GETLBTEXT, i_id, (LPARAM)s_buffer_drive);
+           SetWindowText(hEdit, s_buffer_drive);
+           ShowDirContent(s_buffer_drive, hList);
+         }
       }
+        break;
+      }
+      break;
+    case IDC_LIST1:
+      switch (wmEvent)
+      {
+      case LBN_SELCHANGE:
+        wchar_t s_cursel[50];
+        int lb_cur_id = SendMessage(hList, LB_GETCURSEL, 0, 0);
+        SendMessage(hList, LB_GETTEXT, lb_cur_id, (LPARAM)(LPSTR)s_cursel);
+        
+        //SetWindowText(hEdit, (LPCWSTR)result);
         break;
       }
       break;
@@ -253,7 +267,10 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       EndDialog(hDlg, LOWORD(wParam));
       return (INT_PTR)TRUE;
     case IDC_BUTTON_GO:
-      MessageBox(hDlg, L"Go go go", L"Button go", MB_OK);
+      GetWindowText(hEdit, s_path, 1024);
+      SendMessage(hList, LB_RESETCONTENT, 0, 0);
+      ShowDirContent(s_path, hList);
+      //MessageBox(hDlg, L"Path is not specified", L"Warning", MB_OK);
       break;
     }
   }
