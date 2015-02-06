@@ -6,6 +6,8 @@
 #include <Winspool.h>
 #include <vector>
 #include <CommDlg.h>
+#include <iostream>
+#include <fstream>
 
 //#include <gdiplus.h>
 //using namespace Gdiplus;
@@ -19,7 +21,7 @@ TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];
 TCHAR szChild1[MAX_LOADSTRING];
 TCHAR szChild2[MAX_LOADSTRING];
-TCHAR szFileName[500] = L"\0";
+TCHAR szFileName[500] = L"default";
 
 enum DrawKind
 {
@@ -51,13 +53,8 @@ struct Image_Object
 };
 
 static DrawKind DrawShape;
-static OPENFILENAME ofn;
+//static OPENFILENAME ofn = {0};
 static std::vector<Image_Object> object_container;
-
-
-
-
-
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -66,12 +63,9 @@ ATOM				MyChildRegisterClass2(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 BOOL OpenFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName);
 BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName);
-BOOL LoadFile(/*const Image_Object& i_o*/HDC dc);
-BOOL SaveFile(/*const Image_Object& i_o*/HDC dc);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK	WndChildProcLeft(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK	WndChildProcRight(HWND, UINT, WPARAM, LPARAM);
-//VOID Save_File(HDC hdc);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
@@ -115,6 +109,13 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
   return (int)msg.wParam;
 }
 
+void WriteToFile(const char* error)
+{
+  std::ofstream file;
+  file.open("Errors.txt");
+  file << error;
+  file.close();
+}
 
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
@@ -193,36 +194,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
   return TRUE;
 }
 
-BOOL SaveFile(/*const Image_Object& i_o*/HDC dc)
-{
-  HANDLE hFile;
-  DWORD dwBytesWritten;
-  hFile = CreateFile(L"Image.png", FILE_APPEND_DATA, 0, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-  if (hFile == INVALID_HANDLE_VALUE)
-  {
-    return false;
-  }
-  WriteFile(hFile, LPCVOID(dc), sizeof(dc), &dwBytesWritten, NULL);
-  CloseHandle(hFile);
-  return 0;
-}
-
-BOOL LoadFile(/*const Image_Object& i_o*/HDC dc)
-{
-  HANDLE hFile;
-  DWORD dwBytesWritten;
-  hFile = CreateFile(L"Image.png", GENERIC_READ, 0, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-  if (hFile == INVALID_HANDLE_VALUE)
-  {
-    return false;
-  }
-  ReadFile(hFile, LPVOID(dc), sizeof(dc), &dwBytesWritten, NULL);
-  CloseHandle(hFile);
-  return 0;
-}
-
 BOOL OpenFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName)
 {
+  OPENFILENAME ofn = { 0 };
   ofn.lStructSize = sizeof(OPENFILENAME);
   ofn.hInstance = GetModuleHandle(NULL);
   ofn.lpstrCustomFilter = NULL;
@@ -232,14 +206,17 @@ BOOL OpenFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName)
   ofn.lpstrFile = pFileName;
   ofn.lpstrFileTitle = NULL;
   ofn.lpstrTitle = pTitleName;
+  ofn.nMaxFile = MAX_PATH;
   ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
-  ofn.lpstrFilter = TEXT("Bitmap Files (*.bmp)\0*.bmp\0\0");
+  ofn.lpstrInitialDir = L"D:\\Projects\\WinApi_Graphic\\bin\\WinApi_Graphic\\WinApi_Graphic";
+  ofn.lpstrFilter = L"PNG Files(*.png)\0*.png\0" L"JPG Files(*.jpg)\0*.jpg\0" L"BMP Files(*.bmp)\0*.bmp\0\0";
 
   return GetOpenFileName(&ofn);
 }
 
 BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName)
 {
+  OPENFILENAME ofn = { 0 };
   ofn.lStructSize = sizeof(OPENFILENAME);
   ofn.hInstance = GetModuleHandle(NULL);
   ofn.lpstrCustomFilter = NULL;
@@ -249,17 +226,19 @@ BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName)
   ofn.lpstrFile = pFileName;
   ofn.lpstrFileTitle = NULL;
   ofn.lpstrTitle = pTitleName;
+  ofn.nMaxFile = MAX_PATH;
   ofn.Flags = OFN_EXPLORER | OFN_OVERWRITEPROMPT;
-  ofn.lpstrFilter = TEXT("Bitmap Files (*.bmp)\0*.bmp\0\0");
+  ofn.lpstrInitialDir = L"D:\\Projects\\WinApi_Graphic\\bin\\WinApi_Graphic\\WinApi_Graphic";
+  ofn.lpstrFilter = L"PNG Files(*.png)\0*.png\0" L"JPG Files(*.jpg)\0*.jpg\0" L"BMP Files(*.bmp)\0*.bmp\0\0";
 
   return GetSaveFileName(&ofn);
 }
-static HDC hdc;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   int wmId, wmEvent;
   static PAINTSTRUCT ps;
-  //static HDC hdc;
+  static HDC hdc;
   //DWORD id;
   static BOOL result;
   int nShift = 80;
@@ -283,12 +262,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
       break;
     case IDM_SAVEFILE:
-      result = SaveFileDialog(hWnd, L"Image.png", L"Save an Image.");
-      SaveFile(hdc);
+      result = SaveFileDialog(hWnd, L"default.png", L"Save an Image");
+      if (!result)
+      {
+        MessageBox(NULL, L"Cannot save file", L"Error", MB_OK);
+      }
       break;
     case IDM_OPENFILE:
-      result = OpenFileDialog(hWnd, szFileName, L"Open an image.");
-      LoadFile(hdc);
+      result = OpenFileDialog(hWnd, szFileName, L"Open an image");
+      if (!result)
+      {
+        MessageBox(NULL, L"Cannot open file", L"Error", MB_OK);
+      }
       break;
     case IDM_EXIT:
       DestroyWindow(hWnd);
@@ -302,9 +287,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case IDM_REGION:
       DestroyWindow(hWnd);
       break;
-      /*case IDC_GOBTN:
-      MessageBox(NULL, L"GOBTN PRESSED", L"MSGBOX", MB_OK);
-      break;*/
     default:
       return DefWindowProc(hWnd, message, wParam, lParam);
     }
@@ -339,10 +321,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 LRESULT CALLBACK WndChildProcLeft(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-  int wmId, wmEvent;
+  //int wmId, wmEvent;
   PAINTSTRUCT ps;
-  //HDC hdc;
-  int nShift = 80;
+  HDC hdc;
   RECT rc;
   GetClientRect(hWnd, &rc);
 
@@ -356,7 +337,7 @@ LRESULT CALLBACK WndChildProcLeft(HWND hWnd, UINT message, WPARAM wParam, LPARAM
       //int r = rand() % 255, g = rand() % 255, b = rand() % 255;
       x = LOWORD(lParam);
       y = HIWORD(lParam);
-      
+
       HPEN hPen = CreatePen(PS_SOLID, 1, RGB(rand() % 255, rand() % 255, rand() % 255));
       HBRUSH hOldBrush, hBrush = CreateSolidBrush(RGB(rand() % 255, rand() % 255, rand() % 255));
       HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
@@ -392,7 +373,7 @@ LRESULT CALLBACK WndChildProcLeft(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
 LRESULT CALLBACK WndChildProcRight(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-  int wmId, wmEvent;
+  //int wmId, wmEvent;
   PAINTSTRUCT ps;
   HDC hdc;
   int nShift = 80;
