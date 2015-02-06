@@ -66,6 +66,8 @@ ATOM				MyChildRegisterClass2(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 BOOL OpenFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName);
 BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName);
+BOOL LoadFile(/*const Image_Object& i_o*/HDC dc);
+BOOL SaveFile(/*const Image_Object& i_o*/HDC dc);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK	WndChildProcLeft(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK	WndChildProcRight(HWND, UINT, WPARAM, LPARAM);
