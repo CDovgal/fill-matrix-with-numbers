@@ -3,6 +3,9 @@
 
 #include "stdafx.h"
 #include "WinApi2.h"
+#include <wchar.h>
+#include <fstream>
+#include <iostream>
 
 #define MAX_LOADSTRING 100
 
@@ -116,6 +119,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
   return TRUE;
 }
 
+template<typename T>
+void WriteToFile(T error)
+{
+  std::ofstream file;
+  file.open("Errors.txt");
+  file << error;
+  file.close();
+}
+
+
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
@@ -201,9 +214,9 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       hDriveCombo = GetDlgItem(hDlg, IDC_COMBO_ADDDRIVE);
       hList = GetDlgItem(hDlg, IDC_LIST1);
       hEdit = GetDlgItem(hDlg, IDC_PATHEDIT);
-      wchar_t s_buffer[200];
+      wchar_t s_buffer[100];
       int i_id = 0, i = 0;
-      GetLogicalDriveStrings(200, s_buffer);
+      GetLogicalDriveStrings(100, s_buffer);
       wchar_t *p_Tok = s_buffer, *pDrive = s_buffer;
 
       while (*p_Tok != 0)
@@ -222,13 +235,12 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       SetWindowText(hEdit, pDrive);
       ShowDirContent(pDrive, hList);
       return (INT_PTR)TRUE;
+      break;
   }
-
   case WM_COMMAND:
     wmId = LOWORD(wParam);
     wmEvent = HIWORD(wParam);
-    wchar_t s_buffer_drive[10], s_out[100];
-    wchar_t s_path[50];
+    wchar_t s_buffer_drive[10];// , s_out[100];
     int i_id = 0;
     // Parse the menu selections:
     switch (wmId)
@@ -238,14 +250,14 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       {
       case CBN_SELCHANGE:
       {
-         i_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
-         if (i_id != CB_ERR)
-         {
-           SendMessage(hList, LB_RESETCONTENT, 0, 0);
-           SendMessage(hDriveCombo, CB_GETLBTEXT, i_id, (LPARAM)s_buffer_drive);
-           SetWindowText(hEdit, s_buffer_drive);
-           ShowDirContent(s_buffer_drive, hList);
-         }
+          i_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
+          if (i_id != CB_ERR)
+          {
+            SendMessage(hList, LB_RESETCONTENT, 0, 0);
+            SendMessage(hDriveCombo, CB_GETLBTEXT, i_id, (LPARAM)s_buffer_drive);
+            SetWindowText(hEdit, s_buffer_drive);
+            ShowDirContent(s_buffer_drive, hList);
+          }
       }
         break;
       }
@@ -254,11 +266,22 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       switch (wmEvent)
       {
       case LBN_SELCHANGE:
-        wchar_t s_cursel[50];
+        wchar_t s_cursel[50], s_drive[10], whole_path[MAX_PATH];
+        int cb_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
+        if (cb_id != CB_ERR)
+        {
+          SendMessage(hDriveCombo, CB_GETLBTEXT, cb_id, (LPARAM)s_drive);
+        }
         int lb_cur_id = SendMessage(hList, LB_GETCURSEL, 0, 0);
-        SendMessage(hList, LB_GETTEXT, lb_cur_id, (LPARAM)(LPSTR)s_cursel);
-        
-        //SetWindowText(hEdit, (LPCWSTR)result);
+        if (lb_cur_id != LB_ERR)
+        {
+          SendMessage(hList, LB_GETTEXT, lb_cur_id, (LPARAM)(LPSTR)s_cursel);
+        }
+        wcscpy_s(whole_path, wcslen(s_drive) + 1, s_drive);
+        wcscat_s(whole_path, sizeof(whole_path) + 1, s_cursel);
+        //wchar_t slash[] = L"\\0";
+        //wcscat_s(whole_path, 3, slash);
+        SetWindowText(hEdit, whole_path);
         break;
       }
       break;
@@ -267,7 +290,9 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       EndDialog(hDlg, LOWORD(wParam));
       return (INT_PTR)TRUE;
     case IDC_BUTTON_GO:
-      GetWindowText(hEdit, s_path, 1024);
+      wchar_t s_path[MAX_PATH];
+      GetWindowText(hEdit, s_path, MAX_PATH);
+      //strcpy_s(show_by_path, sizeof(show_by_path), s_path);
       SendMessage(hList, LB_RESETCONTENT, 0, 0);
       ShowDirContent(s_path, hList);
       //MessageBox(hDlg, L"Path is not specified", L"Warning", MB_OK);
@@ -295,3 +320,8 @@ void ShowDirContent(wchar_t* pDrive, HWND hList)
     FindClose(hFile);
   }
 }
+
+//wchar_t GetCurrentDrive()
+//{
+//
+//}
