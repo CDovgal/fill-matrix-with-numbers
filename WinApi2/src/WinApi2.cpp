@@ -204,17 +204,23 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 {
   int wmId, wmEvent;
   static HWND hDriveCombo, hList, hEdit;
+  static wchar_t s_buffer[100], 
+    s_buffer_drive[10], 
+    s_cursel[50], 
+    s_drive[10], 
+    whole_path[MAX_PATH];
+  wchar_t slash[] = L"\\";
 
   UNREFERENCED_PARAMETER(lParam);
   switch (message)
   {
-
+  
   case WM_INITDIALOG:
   {
       hDriveCombo = GetDlgItem(hDlg, IDC_COMBO_ADDDRIVE);
       hList = GetDlgItem(hDlg, IDC_LIST1);
       hEdit = GetDlgItem(hDlg, IDC_PATHEDIT);
-      wchar_t s_buffer[100];
+      //wchar_t s_buffer[100];
       int i_id = 0, i = 0;
       GetLogicalDriveStrings(100, s_buffer);
       wchar_t *p_Tok = s_buffer, *pDrive = s_buffer;
@@ -234,13 +240,14 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       SendMessage(hDriveCombo, CB_SETCURSEL, i_id, (LPARAM)p_Tok);
       SetWindowText(hEdit, pDrive);
       ShowDirContent(pDrive, hList);
+      //wcscpy_s(whole_path, wcslen(pDrive) + 1, pDrive);
       return (INT_PTR)TRUE;
       break;
   }
   case WM_COMMAND:
     wmId = LOWORD(wParam);
     wmEvent = HIWORD(wParam);
-    wchar_t s_buffer_drive[10];// , s_out[100];
+    //wchar_t s_buffer_drive[10];// , s_out[100];
     int i_id = 0;
     // Parse the menu selections:
     switch (wmId)
@@ -256,6 +263,7 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
             SendMessage(hList, LB_RESETCONTENT, 0, 0);
             SendMessage(hDriveCombo, CB_GETLBTEXT, i_id, (LPARAM)s_buffer_drive);
             SetWindowText(hEdit, s_buffer_drive);
+            wcscat_s(whole_path, sizeof(whole_path)+1, s_buffer_drive);
             ShowDirContent(s_buffer_drive, hList);
           }
       }
@@ -265,22 +273,26 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     case IDC_LIST1:
       switch (wmEvent)
       {
+        int cb_id, lb_cur_id;
       case LBN_SELCHANGE:
-        wchar_t s_cursel[50], s_drive[10], whole_path[MAX_PATH];
-        int cb_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
+        //wchar_t s_cursel[50], s_drive[10], whole_path[MAX_PATH];
+        cb_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
         if (cb_id != CB_ERR)
         {
           SendMessage(hDriveCombo, CB_GETLBTEXT, cb_id, (LPARAM)s_drive);
         }
-        int lb_cur_id = SendMessage(hList, LB_GETCURSEL, 0, 0);
+        lb_cur_id = SendMessage(hList, LB_GETCURSEL, 0, 0);
         if (lb_cur_id != LB_ERR)
         {
           SendMessage(hList, LB_GETTEXT, lb_cur_id, (LPARAM)(LPSTR)s_cursel);
         }
         wcscpy_s(whole_path, wcslen(s_drive) + 1, s_drive);
         wcscat_s(whole_path, sizeof(whole_path) + 1, s_cursel);
-        //wchar_t slash[] = L"\\0";
-        //wcscat_s(whole_path, 3, slash);
+        wcscat_s(whole_path, sizeof(whole_path), slash);
+        SetWindowText(hEdit, whole_path);
+        break;
+      case LBN_KILLFOCUS:
+        //MessageBox(hDlg, L"Focus Killed", L"Warning", MB_OK);
         SetWindowText(hEdit, whole_path);
         break;
       }
