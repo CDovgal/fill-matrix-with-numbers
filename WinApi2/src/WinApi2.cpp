@@ -198,8 +198,9 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     s_cursel[50],
     s_drive[10],
     whole_path[MAX_PATH],
-    test_path[MAX_PATH];
+    temp[MAX_PATH];
   wchar_t slash[] = L"\\";
+  //static wchar_t *prev;
 
   UNREFERENCED_PARAMETER(lParam);
   switch (message)
@@ -229,7 +230,7 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       }
       SendMessage(hDriveCombo, CB_SETCURSEL, i_id, (LPARAM)p_Tok);
       SetWindowText(hEdit, pDrive);
-      //wcscpy_s(whole_path, wcslen(pDrive) + 1, pDrive);
+      wcscpy_s(temp, wcslen(pDrive) + 1, pDrive);
       ShowDirContent(pDrive, hList);
       return (INT_PTR)TRUE;
       break;
@@ -262,7 +263,9 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       {
         int cb_id, lb_cur_id;
         wchar_t drive[10];
+        
       case LBN_SELCHANGE: 
+        static wchar_t *prev;
         cb_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
         if (cb_id != CB_ERR)
         {
@@ -275,9 +278,10 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
         }  
         wcscpy_s(whole_path, wcslen(drive)+1, drive);
         wcscat_s(whole_path, sizeof(whole_path), s_cursel);
+        
         wcscat_s(whole_path, sizeof(whole_path), slash);
         SetWindowText(hEdit, whole_path);
-        break;
+        
       }
       break;
     case IDOK:
@@ -285,6 +289,11 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       EndDialog(hDlg, LOWORD(wParam));
       return (INT_PTR)TRUE;
     case IDC_BUTTON_GO:
+      //
+      wcscat_s(temp, sizeof(temp), s_cursel);
+      wcscat_s(temp, sizeof(temp), slash);
+      MessageBox(NULL, temp, L"Warning", MB_OK);
+      //
       wchar_t s_path[MAX_PATH];
       GetWindowText(hEdit, s_path, MAX_PATH);
       SendMessage(hList, LB_RESETCONTENT, 0, 0);
