@@ -128,17 +128,6 @@ void WriteToFile(T error)
   file.close();
 }
 
-
-//
-//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  PURPOSE:  Processes messages for the main window.
-//
-//  WM_COMMAND	- process the application menu
-//  WM_PAINT	- Paint the main window
-//  WM_DESTROY	- post a quit message and return
-//
-//
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   int wmId, wmEvent;
@@ -204,17 +193,18 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 {
   int wmId, wmEvent;
   static HWND hDriveCombo, hList, hEdit;
-  static wchar_t s_buffer[100], 
-    s_buffer_drive[10], 
-    s_cursel[50], 
-    s_drive[10], 
-    whole_path[MAX_PATH];
+  static wchar_t s_buffer[100],
+    s_buffer_drive[10],
+    s_cursel[50],
+    s_drive[10],
+    whole_path[MAX_PATH],
+    test_path[MAX_PATH];
   wchar_t slash[] = L"\\";
 
   UNREFERENCED_PARAMETER(lParam);
   switch (message)
   {
-  
+
   case WM_INITDIALOG:
   {
       hDriveCombo = GetDlgItem(hDlg, IDC_COMBO_ADDDRIVE);
@@ -239,17 +229,15 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       }
       SendMessage(hDriveCombo, CB_SETCURSEL, i_id, (LPARAM)p_Tok);
       SetWindowText(hEdit, pDrive);
-      ShowDirContent(pDrive, hList);
       //wcscpy_s(whole_path, wcslen(pDrive) + 1, pDrive);
+      ShowDirContent(pDrive, hList);
       return (INT_PTR)TRUE;
       break;
   }
   case WM_COMMAND:
     wmId = LOWORD(wParam);
     wmEvent = HIWORD(wParam);
-    //wchar_t s_buffer_drive[10];// , s_out[100];
     int i_id = 0;
-    // Parse the menu selections:
     switch (wmId)
     {
     case IDC_COMBO_ADDDRIVE:
@@ -263,7 +251,6 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
             SendMessage(hList, LB_RESETCONTENT, 0, 0);
             SendMessage(hDriveCombo, CB_GETLBTEXT, i_id, (LPARAM)s_buffer_drive);
             SetWindowText(hEdit, s_buffer_drive);
-            wcscat_s(whole_path, sizeof(whole_path)+1, s_buffer_drive);
             ShowDirContent(s_buffer_drive, hList);
           }
       }
@@ -274,25 +261,21 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       switch (wmEvent)
       {
         int cb_id, lb_cur_id;
-      case LBN_SELCHANGE:
-        //wchar_t s_cursel[50], s_drive[10], whole_path[MAX_PATH];
+        wchar_t drive[10];
+      case LBN_SELCHANGE: 
         cb_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
         if (cb_id != CB_ERR)
         {
-          SendMessage(hDriveCombo, CB_GETLBTEXT, cb_id, (LPARAM)s_drive);
+          SendMessage(hDriveCombo, CB_GETLBTEXT, cb_id, (LPARAM)drive);
         }
         lb_cur_id = SendMessage(hList, LB_GETCURSEL, 0, 0);
         if (lb_cur_id != LB_ERR)
         {
-          SendMessage(hList, LB_GETTEXT, lb_cur_id, (LPARAM)(LPSTR)s_cursel);
-        }
-        wcscpy_s(whole_path, wcslen(s_drive) + 1, s_drive);
-        wcscat_s(whole_path, sizeof(whole_path) + 1, s_cursel);
+          SendMessage(hList, LB_GETTEXT, lb_cur_id, (LPARAM)s_cursel);
+        }  
+        wcscpy_s(whole_path, wcslen(drive)+1, drive);
+        wcscat_s(whole_path, sizeof(whole_path), s_cursel);
         wcscat_s(whole_path, sizeof(whole_path), slash);
-        SetWindowText(hEdit, whole_path);
-        break;
-      case LBN_KILLFOCUS:
-        //MessageBox(hDlg, L"Focus Killed", L"Warning", MB_OK);
         SetWindowText(hEdit, whole_path);
         break;
       }
@@ -304,10 +287,8 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     case IDC_BUTTON_GO:
       wchar_t s_path[MAX_PATH];
       GetWindowText(hEdit, s_path, MAX_PATH);
-      //strcpy_s(show_by_path, sizeof(show_by_path), s_path);
       SendMessage(hList, LB_RESETCONTENT, 0, 0);
       ShowDirContent(s_path, hList);
-      //MessageBox(hDlg, L"Path is not specified", L"Warning", MB_OK);
       break;
     }
   }
@@ -332,6 +313,8 @@ void ShowDirContent(wchar_t* pDrive, HWND hList)
     FindClose(hFile);
   }
 }
+
+
 
 //wchar_t GetCurrentDrive()
 //{
