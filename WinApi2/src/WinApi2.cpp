@@ -12,7 +12,8 @@
 // Global Variables:
 HINSTANCE hInst;								// current instance
 TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
-TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
+TCHAR szWindowClass[MAX_LOADSTRING];
+// the main window class name
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -197,9 +198,9 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     s_cursel[50],
     s_drive[10],
     whole_path[MAX_PATH],
-    path_for_selection[100];
+    prev[MAX_PATH];
   wchar_t slash[] = L"\\";
-  //static wchar_t *prev;
+  
 
   UNREFERENCED_PARAMETER(lParam);
   switch (message)
@@ -276,6 +277,9 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
         if (lb_cur_id != LB_ERR)
         {
           SendMessage(hList, LB_GETTEXT, lb_cur_id, (LPARAM)s_cursel);
+          //wchar_t *check = s_cursel;
+          //if (*check == L'..' || *check == L'...')
+          //  wcscpy_s(prev, wcslen(whole_path)+1, whole_path);
           wcscat_s(whole_path, sizeof(whole_path), s_cursel);
           wcscat_s(whole_path, sizeof(whole_path), slash);
           SetWindowText(hEdit, whole_path);
@@ -290,6 +294,9 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
           wchar_t *dbl = current;
           if (wcscmp(L"..", dbl))
           {
+            SendMessage(hList, LB_RESETCONTENT, 0, 0);
+            SetWindowText(hEdit, prev);
+            ShowDirContent(prev, hList);
             MessageBox(NULL, L"Dot pressed", L"Notification", MB_OK);
           }
 
@@ -308,6 +315,7 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
           }
         }
         break;
+      
       }
       break;
     case IDOK:
@@ -317,6 +325,7 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     case IDC_BUTTON_GO:
       wchar_t s_path[MAX_PATH];
       GetWindowText(hEdit, s_path, MAX_PATH);
+      //wcscpy_s(prev, wcslen(s_path) + 1, s_path);
       SendMessage(hList, LB_RESETCONTENT, 0, 0);
       ShowDirContent(s_path, hList);
       break;
