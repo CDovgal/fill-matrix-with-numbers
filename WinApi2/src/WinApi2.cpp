@@ -233,6 +233,26 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     wchar_t s_buffer_drive[10];
     switch (wmId)
     {
+    case IDC_RADIO_DELETE_EXCEPT:
+      switch (wmEvent)
+      {
+      }
+      break;
+    case IDC_RADIO_DELETE_ALLTHIS:
+      switch (wmEvent)
+      {
+      }
+      break;
+    case IDC_BUTTON_DELETE:
+      switch (wmEvent)
+      {
+      }
+      break;
+    case IDC_EDIT_EXTENSIONS:
+      switch (wmEvent)
+      {
+      }
+      break;
     case IDC_COMBO_ADDDRIVE:
       switch (wmEvent)
       {
