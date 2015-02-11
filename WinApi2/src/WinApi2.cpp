@@ -6,6 +6,7 @@
 #include <wchar.h>
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 #define MAX_LOADSTRING 100
 
@@ -13,6 +14,8 @@
 HINSTANCE hInst;								// current instance
 TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
 TCHAR szWindowClass[MAX_LOADSTRING];
+
+
 // the main window class name
 
 // Forward declarations of functions included in this code module:
@@ -22,7 +25,7 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	FileDlgProc(HWND, UINT, WPARAM, LPARAM);
 
-void ShowDirContent(wchar_t* pDrive, HWND hList);
+void ShowDirContent(const wchar_t* pDrive, HWND hList);
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
   _In_opt_ HINSTANCE hPrevInstance,
@@ -120,15 +123,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
   return TRUE;
 }
 
-template<typename T>
-void WriteToFile(T error)
-{
-  std::ofstream file;
-  file.open("Errors.txt");
-  file << error;
-  file.close();
-}
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   int wmId, wmEvent;
@@ -194,14 +188,10 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 {
   int wmId, wmEvent;
   static HWND hDriveCombo, hList, hEdit;
-  static wchar_t
-    s_cursel[50],
-    s_drive[10],
-    whole_path[MAX_PATH],
-    prev[MAX_PATH];
   wchar_t slash[] = L"\\";
+  static std::wstring dynamic_path;
+  static std::vector<std::wstring> dirs;
   
-
   UNREFERENCED_PARAMETER(lParam);
   switch (message)
   {
@@ -213,6 +203,7 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       hEdit = GetDlgItem(hDlg, IDC_PATHEDIT);
       wchar_t s_buffer[100];
       int i_id = 0, i = 0;
+
       GetLogicalDriveStrings(100, s_buffer);
       wchar_t *p_Tok = s_buffer, *pDrive = s_buffer;
 
@@ -229,9 +220,8 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
         p_Tok += 4;
       }
       SendMessage(hDriveCombo, CB_SETCURSEL, i_id, (LPARAM)p_Tok);
-      wchar_t *temp_drive = pDrive;
-      wcscpy_s(whole_path, wcslen(temp_drive) + 1, temp_drive);
-      SetWindowText(hEdit, whole_path);
+      dynamic_path.append(pDrive);
+      SetWindowText(hEdit, dynamic_path.c_str());
       ShowDirContent(pDrive, hList);
       return (INT_PTR)TRUE;
       break;
@@ -253,10 +243,11 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
           {
             SendMessage(hList, LB_RESETCONTENT, 0, 0);
             SendMessage(hDriveCombo, CB_GETLBTEXT, i_id, (LPARAM)s_buffer_drive);
-            wchar_t *temp_drive = s_buffer_drive;
-            wcscpy_s(whole_path, wcslen(temp_drive) + 1, temp_drive);
-            SetWindowText(hEdit, s_buffer_drive);
-            ShowDirContent(s_buffer_drive, hList);
+            dynamic_path.clear();
+            dirs.clear();
+            dynamic_path.append(s_buffer_drive);
+            SetWindowText(hEdit, dynamic_path.c_str());
+            ShowDirContent(dynamic_path.c_str(), hList);
           }
       }
         break;
@@ -265,25 +256,7 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     case IDC_LIST1:
       switch (wmEvent)
       {
-        int cb_id, lb_cur_id;
-        //wchar_t drive[10];
       case LBN_SELCHANGE:
-        /*cb_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
-        if (cb_id != CB_ERR)
-        {
-        SendMessage(hDriveCombo, CB_GETLBTEXT, cb_id, (LPARAM)drive);
-        }*/
-        lb_cur_id = SendMessage(hList, LB_GETCURSEL, 0, 0);
-        if (lb_cur_id != LB_ERR)
-        {
-          SendMessage(hList, LB_GETTEXT, lb_cur_id, (LPARAM)s_cursel);
-          //wchar_t *check = s_cursel;
-          //if (*check == L'..' || *check == L'...')
-          //  wcscpy_s(prev, wcslen(whole_path)+1, whole_path);
-          wcscat_s(whole_path, sizeof(whole_path), s_cursel);
-          wcscat_s(whole_path, sizeof(whole_path), slash);
-          SetWindowText(hEdit, whole_path);
-        }
         break;
       case LBN_DBLCLK:
         int lb_cur = SendMessage(hList, LB_GETCURSEL, 0, 0);
@@ -291,31 +264,45 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
         if (lb_cur != LB_ERR)
         {
           SendMessage(hList, LB_GETTEXT, lb_cur, (LPARAM)current);
-          wchar_t *dbl = current;
-          if (wcscmp(L"..", dbl))
+          if (wcscmp(L".", current) == 0)
           {
+            std::wstring::size_type found = dynamic_path.rfind(dirs.back());
+            if (found != std::wstring::npos)
+            {
+              dynamic_path.erase(found);
+              dirs.pop_back();
+            }
             SendMessage(hList, LB_RESETCONTENT, 0, 0);
-            SetWindowText(hEdit, prev);
-            ShowDirContent(prev, hList);
-            MessageBox(NULL, L"Dot pressed", L"Notification", MB_OK);
+            SetWindowText(hEdit, dynamic_path.c_str());
+            ShowDirContent(dynamic_path.c_str(), hList);
           }
-
-          else if (wcscmp(L"...", dbl))
+          else if (wcscmp(L"..", current) == 0)
           {
-            wchar_t root_drive[10];
             int cb_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
             if (cb_id != CB_ERR)
             {
-              SendMessage(hDriveCombo, CB_GETLBTEXT, cb_id, (LPARAM)root_drive);
+              wchar_t drive[10];
+              SendMessage(hDriveCombo, CB_GETLBTEXT, cb_id, (LPARAM)drive);
+              SetWindowText(hEdit, drive);
               SendMessage(hList, LB_RESETCONTENT, 0, 0);
-              SetWindowText(hEdit, root_drive);
-              ShowDirContent(root_drive, hList);
+              ShowDirContent(drive, hList);
+              dirs.clear();
+              dynamic_path.clear();
+              dynamic_path.append(drive);
             }
-            MessageBox(NULL, L"Double dot pressed", L"Notification", MB_OK);
           }
+          else
+          {
+            dynamic_path.append(current);
+            dynamic_path.append(slash);
+            dirs.push_back(current);
+            SendMessage(hList, LB_RESETCONTENT, 0, 0);
+            SetWindowText(hEdit, dynamic_path.c_str());
+            ShowDirContent(dynamic_path.c_str(), hList);
+          }
+          
         }
         break;
-      
       }
       break;
     case IDOK:
@@ -325,9 +312,17 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     case IDC_BUTTON_GO:
       wchar_t s_path[MAX_PATH];
       GetWindowText(hEdit, s_path, MAX_PATH);
-      //wcscpy_s(prev, wcslen(s_path) + 1, s_path);
+      dynamic_path.clear();
+      dynamic_path.append(s_path);
       SendMessage(hList, LB_RESETCONTENT, 0, 0);
       ShowDirContent(s_path, hList);
+      wchar_t *context = NULL;
+      wchar_t *token = wcstok_s(s_path, L"\\", &context);
+      while (token)
+      {
+        dirs.push_back(token);
+        token = wcstok_s(NULL, L"\\", &context);
+      }
       break;
     }
   }
@@ -335,7 +330,7 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 }
 
 
-void ShowDirContent(wchar_t* pDrive, HWND hList)
+void ShowDirContent(const wchar_t* pDrive, HWND hList)
 {
   wchar_t sOut[100];
   wsprintf(sOut, L"%s*.*", pDrive);
@@ -355,7 +350,5 @@ void ShowDirContent(wchar_t* pDrive, HWND hList)
 
 
 
-//wchar_t GetCurrentDrive()
-//{
-//
-//}
+
+
