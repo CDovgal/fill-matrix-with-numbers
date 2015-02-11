@@ -19,6 +19,11 @@
 #define IDC_COMBO_ADDDRIVE              1001
 #define IDC_BUTTON_GO                   1002
 #define IDC_LIST1                       1003
+#define IDC_DELETE_LABLE                1004
+#define IDC_RADIO_DELETE_EXCEPT         1005
+#define IDC_RADIO_DELETE_ALLTHIS        1006
+#define IDC_EDIT_EXTENSIONS             1007
+#define IDC_BUTTON_DELETE               1008
 #define ID_FILE_OPEN                    32771
 #define IDC_STATIC                      -1
 
