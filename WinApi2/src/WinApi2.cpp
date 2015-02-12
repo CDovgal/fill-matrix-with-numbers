@@ -245,7 +245,7 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       break;
     case IDC_BUTTON_DELETE:
       wchar_t s_buffer[50];
-      GetWindowText(hEditExtens, s_buffer, 50);
+      //GetWindowText(hEditExtens, s_buffer, 50);
       wchar_t current[50];
       count = SendMessage(hList, LB_GETCOUNT, 0, 0);
       if (SendMessage(hRadioBtnAllExc, BM_GETCHECK, 0, 0))
@@ -257,10 +257,10 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
         for (int i = 0; i < count; ++i)
         {
           SendMessage(hList, LB_GETTEXT, i, (LPARAM)current);
+          GetWindowText(hEditExtens, s_buffer, 50);
           wchar_t *extension = PathFindExtension(current);
           wchar_t *context = NULL;
-          wchar_t *temp = s_buffer;
-          wchar_t *token = wcstok_s(temp, L",", &context);
+          wchar_t *token = wcstok_s(s_buffer, L",", &context);
           while (token)
           {
             if (wcscmp(token, extension) == 0)
