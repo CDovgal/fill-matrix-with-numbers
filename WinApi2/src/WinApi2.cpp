@@ -7,6 +7,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <Shlwapi.h>
 
 #define MAX_LOADSTRING 100
 
@@ -26,6 +27,7 @@ INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	FileDlgProc(HWND, UINT, WPARAM, LPARAM);
 
 void ShowDirContent(const wchar_t* pDrive, HWND hList);
+void SetDrive(HWND hDriveCombo, const wchar_t* drive);
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
   _In_opt_ HINSTANCE hPrevInstance,
@@ -187,8 +189,9 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
   int wmId, wmEvent;
-  static HWND hDriveCombo, hList, hEdit;
+  static HWND hDriveCombo, hList, hEdit, hEditExtens, hRadioBtnAllThis, hRadioBtnAllExc;
   wchar_t slash[] = L"\\";
+  int count = 0;
   static std::wstring dynamic_path;
   static std::vector<std::wstring> dirs;
   
@@ -201,15 +204,19 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       hDriveCombo = GetDlgItem(hDlg, IDC_COMBO_ADDDRIVE);
       hList = GetDlgItem(hDlg, IDC_LIST1);
       hEdit = GetDlgItem(hDlg, IDC_PATHEDIT);
+      hRadioBtnAllThis = GetDlgItem(hDlg, IDC_RADIO_DELETE_ALLTHIS);
+      hRadioBtnAllExc = GetDlgItem(hDlg, IDC_RADIO_DELETE_EXCEPT);
+      hEditExtens = GetDlgItem(hDlg, IDC_EDIT_EXTENSIONS);
       wchar_t s_buffer[100];
       int i_id = 0, i = 0;
 
+      SendMessage(hRadioBtnAllExc, BM_SETCHECK, BST_CHECKED, 0);
       GetLogicalDriveStrings(100, s_buffer);
       wchar_t *p_Tok = s_buffer, *pDrive = s_buffer;
 
       while (*p_Tok != 0)
       {
-        if (wcscmp(L"D:\\", p_Tok) == 0)
+        if (wcscmp(L"C:\\", p_Tok) == 0)
         {
           i_id = i;
           pDrive = p_Tok;
@@ -229,35 +236,56 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
   case WM_COMMAND:
     wmId = LOWORD(wParam);
     wmEvent = HIWORD(wParam);
-    int i_id = 0;
     wchar_t s_buffer_drive[10];
     switch (wmId)
     {
     case IDC_RADIO_DELETE_EXCEPT:
-      switch (wmEvent)
-      {
-      }
       break;
     case IDC_RADIO_DELETE_ALLTHIS:
-      switch (wmEvent)
-      {
-      }
       break;
     case IDC_BUTTON_DELETE:
-      switch (wmEvent)
+      wchar_t s_buffer[50];
+      GetWindowText(hEditExtens, s_buffer, 50);
+      wchar_t current[50];
+      count = SendMessage(hList, LB_GETCOUNT, 0, 0);
+      if (SendMessage(hRadioBtnAllExc, BM_GETCHECK, 0, 0))
       {
+        for (int i = 0; i < count; ++i)
+        {
+          SendMessage(hList, LB_GETTEXT, i, (LPARAM)current); 
+          wchar_t *extension = PathFindExtension(current);
+          wchar_t *context = NULL;
+          wchar_t *token = wcstok_s(s_buffer, L",", &context);
+          while (token)
+          {
+            if (wcscmp(token, extension) == 0)
+            {
+              const wchar_t *current_path = dynamic_path.c_str();
+              wchar_t path_to_delete[100];
+              wcscpy_s(path_to_delete, wcslen(current_path)+1, current_path);
+              wcscat_s(path_to_delete, sizeof(current), current);
+              if (DeleteFile(path_to_delete))
+                MessageBox(NULL, L"File deleted.", L"Information", MB_OK);
+              else
+                MessageBox(NULL, L"File(s) deleted.", L"Information", MB_OK);
+            }
+            token = wcstok_s(NULL, L"\\", &context);
+          }
+        }
+      }
+      else if (SendMessage(hRadioBtnAllThis, BM_GETCHECK, 0, 0))
+      {
+        MessageBox(NULL, L"All this deleted.", L"Notification", MB_OK);
       }
       break;
     case IDC_EDIT_EXTENSIONS:
-      switch (wmEvent)
-      {
-      }
       break;
     case IDC_COMBO_ADDDRIVE:
       switch (wmEvent)
       {
       case CBN_SELCHANGE:
       {
+          int i_id = 0;
           i_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
           if (i_id != CB_ERR)
           {
@@ -349,6 +377,11 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
   return (INT_PTR)FALSE;
 }
 
+
+void SetDrive(HWND hDriveCombo, const wchar_t* drive)
+{
+  
+}
 
 void ShowDirContent(const wchar_t* pDrive, HWND hList)
 {

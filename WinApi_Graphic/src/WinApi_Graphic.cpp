@@ -109,14 +109,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
   return (int)msg.wParam;
 }
 
-void WriteToFile(const char* error)
-{
-  std::ofstream file;
-  file.open("Errors.txt");
-  file << error;
-  file.close();
-}
-
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
   WNDCLASSEX wcex;
@@ -209,7 +201,7 @@ BOOL OpenFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName)
   ofn.nMaxFile = MAX_PATH;
   ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
   ofn.lpstrInitialDir = L"D:\\Projects\\WinApi_Graphic\\bin\\WinApi_Graphic\\WinApi_Graphic";
-  ofn.lpstrFilter = L"PNG Files(*.png)\0*.png\0" L"JPG Files(*.jpg)\0*.jpg\0" L"BMP Files(*.bmp)\0*.bmp\0\0";
+  ofn.lpstrFilter = L"Image data files v1(*.idf1)\0*.idf1\0" L"Image data files v2(*.idf2)\0*.idf2\0" L"Image data files v3(*.idf3)\0*.idf3\0\0";
 
   return GetOpenFileName(&ofn);
 }
@@ -229,7 +221,7 @@ BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName)
   ofn.nMaxFile = MAX_PATH;
   ofn.Flags = OFN_EXPLORER | OFN_OVERWRITEPROMPT;
   ofn.lpstrInitialDir = L"D:\\Projects\\WinApi_Graphic\\bin\\WinApi_Graphic\\WinApi_Graphic";
-  ofn.lpstrFilter = L"PNG Files(*.png)\0*.png\0" L"JPG Files(*.jpg)\0*.jpg\0" L"BMP Files(*.bmp)\0*.bmp\0\0";
+  ofn.lpstrFilter = L"Image data files v1(*.idf1)\0*.idf1\0" L"Image data files v2(*.idf2)\0*.idf2\0" L"Image data files v3(*.bmp)\0*.idf3\0\0";
 
   return GetSaveFileName(&ofn);
 }
