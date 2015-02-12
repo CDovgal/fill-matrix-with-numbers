@@ -250,33 +250,37 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       count = SendMessage(hList, LB_GETCOUNT, 0, 0);
       if (SendMessage(hRadioBtnAllExc, BM_GETCHECK, 0, 0))
       {
+        MessageBox(NULL, L"All this deleted.", L"Notification", MB_OK);
+      }
+      else if (SendMessage(hRadioBtnAllThis, BM_GETCHECK, 0, 0))
+      {
         for (int i = 0; i < count; ++i)
         {
-          SendMessage(hList, LB_GETTEXT, i, (LPARAM)current); 
+          SendMessage(hList, LB_GETTEXT, i, (LPARAM)current);
           wchar_t *extension = PathFindExtension(current);
           wchar_t *context = NULL;
-          wchar_t *token = wcstok_s(s_buffer, L",", &context);
+          wchar_t *temp = s_buffer;
+          wchar_t *token = wcstok_s(temp, L",", &context);
           while (token)
           {
             if (wcscmp(token, extension) == 0)
             {
               const wchar_t *current_path = dynamic_path.c_str();
               wchar_t path_to_delete[100];
-              wcscpy_s(path_to_delete, wcslen(current_path)+1, current_path);
+              wcscpy_s(path_to_delete, wcslen(current_path) + 1, current_path);
               wcscat_s(path_to_delete, sizeof(current), current);
-              if (DeleteFile(path_to_delete))
-                MessageBox(NULL, L"File deleted.", L"Information", MB_OK);
-              else
-                MessageBox(NULL, L"File(s) deleted.", L"Information", MB_OK);
+              BOOL delete_result = DeleteFile(path_to_delete);
+              if (!delete_result)
+              {
+                MessageBox(NULL, L"File haven't been deleted.", path_to_delete, MB_OK);
+              }
             }
-            token = wcstok_s(NULL, L"\\", &context);
+            token = wcstok_s(NULL, L",", &context);
           }
         }
       }
-      else if (SendMessage(hRadioBtnAllThis, BM_GETCHECK, 0, 0))
-      {
-        MessageBox(NULL, L"All this deleted.", L"Notification", MB_OK);
-      }
+      SendMessage(hList, LB_RESETCONTENT, 0, 0);
+      ShowDirContent(dynamic_path.c_str(), hList);
       break;
     case IDC_EDIT_EXTENSIONS:
       break;
