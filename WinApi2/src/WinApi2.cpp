@@ -27,7 +27,16 @@ INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	FileDlgProc(HWND, UINT, WPARAM, LPARAM);
 
 void ShowDirContent(const wchar_t* pDrive, HWND hList);
-void SetDrive(HWND hDriveCombo, const wchar_t* drive);
+BOOL DeleteFromDir(const std::wstring& path, const wchar_t *current);
+BOOL DeleteAllExceptThis(HWND hList, HWND hEditEx, const std::wstring& dyn_path);
+BOOL DeleteAllThis(HWND hList, HWND hEditEx, const std::wstring& dyn_path);
+void ReloadDrive(HWND hCB, HWND hList, HWND hPathEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs);
+void LoadDrives(HWND hCB, HWND hList, HWND hPathEdit, std::wstring& dyn_path);
+void GoDirUp(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs);
+void GoRoot(HWND hCB, HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs);
+void GoToNextDir(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs, const wchar_t *cur_dir);
+void GoToPath(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs);
+BOOL IsFolder(const wchar_t *current);
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
   _In_opt_ HINSTANCE hPrevInstance,
@@ -190,7 +199,6 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 {
   int wmId, wmEvent;
   static HWND hDriveCombo, hList, hEdit, hEditExtens, hRadioBtnAllThis, hRadioBtnAllExc;
-  wchar_t slash[] = L"\\";
   int count = 0;
   static std::wstring dynamic_path;
   static std::vector<std::wstring> dirs;
@@ -207,100 +215,38 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       hRadioBtnAllThis = GetDlgItem(hDlg, IDC_RADIO_DELETE_ALLTHIS);
       hRadioBtnAllExc = GetDlgItem(hDlg, IDC_RADIO_DELETE_EXCEPT);
       hEditExtens = GetDlgItem(hDlg, IDC_EDIT_EXTENSIONS);
-      wchar_t s_buffer[100];
-      int i_id = 0, i = 0;
 
       SendMessage(hRadioBtnAllExc, BM_SETCHECK, BST_CHECKED, 0);
-      GetLogicalDriveStrings(100, s_buffer);
-      wchar_t *p_Tok = s_buffer, *pDrive = s_buffer;
 
-      while (*p_Tok != 0)
-      {
-        if (wcscmp(L"C:\\", p_Tok) == 0)
-        {
-          i_id = i;
-          pDrive = p_Tok;
-        }
-        ++i;
-        SendMessage(hDriveCombo, CB_ADDSTRING, 0, (LPARAM)p_Tok);
-        //SendMessage(hList, LB_ADDSTRING, 0, (LPARAM)p_Tok);
-        p_Tok += 4;
-      }
-      SendMessage(hDriveCombo, CB_SETCURSEL, i_id, (LPARAM)p_Tok);
-      dynamic_path.append(pDrive);
-      SetWindowText(hEdit, dynamic_path.c_str());
-      ShowDirContent(pDrive, hList);
+      LoadDrives(hDriveCombo, hList, hEdit, dynamic_path);
+      
       return (INT_PTR)TRUE;
       break;
   }
   case WM_COMMAND:
     wmId = LOWORD(wParam);
     wmEvent = HIWORD(wParam);
-    wchar_t s_buffer_drive[10];
+    
     switch (wmId)
     {
-    case IDC_RADIO_DELETE_EXCEPT:
-      break;
-    case IDC_RADIO_DELETE_ALLTHIS:
-      break;
     case IDC_BUTTON_DELETE:
-      wchar_t s_buffer[50];
-      //GetWindowText(hEditExtens, s_buffer, 50);
-      wchar_t current[50];
-      count = SendMessage(hList, LB_GETCOUNT, 0, 0);
       if (SendMessage(hRadioBtnAllExc, BM_GETCHECK, 0, 0))
       {
-        MessageBox(NULL, L"All this deleted.", L"Notification", MB_OK);
+        DeleteAllExceptThis(hList, hEditExtens, dynamic_path);
       }
       else if (SendMessage(hRadioBtnAllThis, BM_GETCHECK, 0, 0))
       {
-        for (int i = 0; i < count; ++i)
-        {
-          SendMessage(hList, LB_GETTEXT, i, (LPARAM)current);
-          GetWindowText(hEditExtens, s_buffer, 50);
-          wchar_t *extension = PathFindExtension(current);
-          wchar_t *context = NULL;
-          wchar_t *token = wcstok_s(s_buffer, L",", &context);
-          while (token)
-          {
-            if (wcscmp(token, extension) == 0)
-            {
-              const wchar_t *current_path = dynamic_path.c_str();
-              wchar_t path_to_delete[100];
-              wcscpy_s(path_to_delete, wcslen(current_path) + 1, current_path);
-              wcscat_s(path_to_delete, sizeof(current), current);
-              BOOL delete_result = DeleteFile(path_to_delete);
-              if (!delete_result)
-              {
-                MessageBox(NULL, L"File haven't been deleted.", path_to_delete, MB_OK);
-              }
-            }
-            token = wcstok_s(NULL, L",", &context);
-          }
-        }
+        DeleteAllThis(hList, hEditExtens, dynamic_path);
       }
       SendMessage(hList, LB_RESETCONTENT, 0, 0);
       ShowDirContent(dynamic_path.c_str(), hList);
-      break;
-    case IDC_EDIT_EXTENSIONS:
       break;
     case IDC_COMBO_ADDDRIVE:
       switch (wmEvent)
       {
       case CBN_SELCHANGE:
       {
-          int i_id = 0;
-          i_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
-          if (i_id != CB_ERR)
-          {
-            SendMessage(hList, LB_RESETCONTENT, 0, 0);
-            SendMessage(hDriveCombo, CB_GETLBTEXT, i_id, (LPARAM)s_buffer_drive);
-            dynamic_path.clear();
-            dirs.clear();
-            dynamic_path.append(s_buffer_drive);
-            SetWindowText(hEdit, dynamic_path.c_str());
-            ShowDirContent(dynamic_path.c_str(), hList);
-          }
+        ReloadDrive(hDriveCombo, hList, hEdit, dynamic_path, dirs);
       }
         break;
       }
@@ -308,8 +254,6 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
     case IDC_LIST1:
       switch (wmEvent)
       {
-      case LBN_SELCHANGE:
-        break;
       case LBN_DBLCLK:
         int lb_cur = SendMessage(hList, LB_GETCURSEL, 0, 0);
         wchar_t current[50];
@@ -318,41 +262,20 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
           SendMessage(hList, LB_GETTEXT, lb_cur, (LPARAM)current);
           if (wcscmp(L".", current) == 0)
           {
-            std::wstring::size_type found = dynamic_path.rfind(dirs.back());
-            if (found != std::wstring::npos)
-            {
-              dynamic_path.erase(found);
-              dirs.pop_back();
-            }
-            SendMessage(hList, LB_RESETCONTENT, 0, 0);
-            SetWindowText(hEdit, dynamic_path.c_str());
-            ShowDirContent(dynamic_path.c_str(), hList);
+            GoDirUp(hList, hEdit, dynamic_path, dirs);
           }
           else if (wcscmp(L"..", current) == 0)
           {
-            int cb_id = SendMessage(hDriveCombo, CB_GETCURSEL, 0, 0);
-            if (cb_id != CB_ERR)
-            {
-              wchar_t drive[10];
-              SendMessage(hDriveCombo, CB_GETLBTEXT, cb_id, (LPARAM)drive);
-              SetWindowText(hEdit, drive);
-              SendMessage(hList, LB_RESETCONTENT, 0, 0);
-              ShowDirContent(drive, hList);
-              dirs.clear();
-              dynamic_path.clear();
-              dynamic_path.append(drive);
-            }
+            GoRoot(hDriveCombo, hList, hEdit, dynamic_path, dirs);
+          }
+          else if (!IsFolder(current))
+          {
+            MessageBox(NULL, current, L"File not supported", MB_OK | MB_ICONSTOP);
           }
           else
           {
-            dynamic_path.append(current);
-            dynamic_path.append(slash);
-            dirs.push_back(current);
-            SendMessage(hList, LB_RESETCONTENT, 0, 0);
-            SetWindowText(hEdit, dynamic_path.c_str());
-            ShowDirContent(dynamic_path.c_str(), hList);
-          }
-          
+            GoToNextDir(hList, hEdit, dynamic_path, dirs, current);
+          } 
         }
         break;
       }
@@ -362,19 +285,7 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
       EndDialog(hDlg, LOWORD(wParam));
       return (INT_PTR)TRUE;
     case IDC_BUTTON_GO:
-      wchar_t s_path[MAX_PATH];
-      GetWindowText(hEdit, s_path, MAX_PATH);
-      dynamic_path.clear();
-      dynamic_path.append(s_path);
-      SendMessage(hList, LB_RESETCONTENT, 0, 0);
-      ShowDirContent(s_path, hList);
-      wchar_t *context = NULL;
-      wchar_t *token = wcstok_s(s_path, L"\\", &context);
-      while (token)
-      {
-        dirs.push_back(token);
-        token = wcstok_s(NULL, L"\\", &context);
-      }
+      GoToPath(hList, hEdit, dynamic_path, dirs);
       break;
     }
   }
@@ -382,9 +293,193 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 }
 
 
-void SetDrive(HWND hDriveCombo, const wchar_t* drive)
+BOOL IsFolder(const wchar_t *current)
 {
-  
+  std::wstring cur_dir(current);
+  std::wstring::size_type found = cur_dir.rfind(L".");
+  //DWORD dwAttrib = GetFileAttributes(szPath);
+  if (found != std::wstring::npos)
+  {
+    return false;
+  }
+  else
+    return true;
+}
+
+void GoToNextDir(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs, const wchar_t *cur_dir)
+{
+  wchar_t slash[] = L"\\";
+  dyn_path.append(cur_dir);
+  dyn_path.append(slash);
+  dirs.push_back(cur_dir);
+  SendMessage(hList, LB_RESETCONTENT, 0, 0);
+  SetWindowText(hEdit, dyn_path.c_str());
+  ShowDirContent(dyn_path.c_str(), hList);
+}
+
+
+void GoToPath(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs)
+{
+  wchar_t s_path[MAX_PATH];
+  GetWindowText(hEdit, s_path, MAX_PATH);
+  dyn_path.clear();
+  dyn_path.append(s_path);
+  SendMessage(hList, LB_RESETCONTENT, 0, 0);
+  ShowDirContent(s_path, hList);
+  wchar_t *context = NULL;
+  wchar_t *token = wcstok_s(s_path, L"\\", &context);
+  while (token)
+  {
+    dirs.push_back(token);
+    token = wcstok_s(NULL, L"\\", &context);
+  }
+}
+
+void GoDirUp(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs)
+{
+  std::wstring::size_type found = dyn_path.rfind(dirs.back());
+  if (found != std::wstring::npos)
+  {
+    dyn_path.erase(found);
+    dirs.pop_back();
+  }
+  SendMessage(hList, LB_RESETCONTENT, 0, 0);
+  SetWindowText(hEdit, dyn_path.c_str());
+  ShowDirContent(dyn_path.c_str(), hList);
+}
+
+void GoRoot(HWND hCB, HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs)
+{
+  int cb_id = SendMessage(hCB, CB_GETCURSEL, 0, 0);
+  if (cb_id != CB_ERR)
+  {
+    wchar_t drive[10];
+    SendMessage(hCB, CB_GETLBTEXT, cb_id, (LPARAM)drive);
+    SetWindowText(hEdit, drive);
+    SendMessage(hList, LB_RESETCONTENT, 0, 0);
+    ShowDirContent(drive, hList);
+    dirs.clear();
+    dyn_path.clear();
+    dyn_path.append(drive);
+  }
+}
+
+void ReloadDrive(HWND hCB, HWND hList, HWND hPathEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs)
+{
+  wchar_t s_buffer_drive[10];
+  int i_id = 0;
+  i_id = SendMessage(hCB, CB_GETCURSEL, 0, 0);
+  if (i_id != CB_ERR)
+  {
+    SendMessage(hList, LB_RESETCONTENT, 0, 0);
+    SendMessage(hCB, CB_GETLBTEXT, i_id, (LPARAM)s_buffer_drive);
+    dyn_path.clear();
+    dirs.clear();
+    dyn_path.append(s_buffer_drive);
+    SetWindowText(hPathEdit, dyn_path.c_str());
+    ShowDirContent(dyn_path.c_str(), hList);
+  }
+}
+
+
+BOOL DeleteFromDir(const std::wstring& path, const wchar_t *current)
+{
+  const wchar_t *current_path = path.c_str();
+  static wchar_t path_to_delete[MAX_PATH];
+  wcscpy_s(path_to_delete, wcslen(current_path) + 1, current_path);
+  wcscat_s(path_to_delete, sizeof(path_to_delete), current);
+  return DeleteFile(path_to_delete);
+}
+
+BOOL DeleteAllExceptThis(HWND hList, HWND hEditEx, const std::wstring& dyn_path)
+{
+  BOOL status;
+  wchar_t s_buffer[50];
+  wchar_t current[50];
+  int count = SendMessage(hList, LB_GETCOUNT, 0, 0);
+  for (int i = 0; i < count; ++i)
+  {
+    count = SendMessage(hList, LB_GETCOUNT, 0, 0);
+    SendMessage(hList, LB_GETTEXT, i, (LPARAM)current);
+    GetWindowText(hEditEx, s_buffer, 50);
+    wchar_t *extension = PathFindExtension(current);
+    wchar_t *context = NULL;
+    BOOL is_equal;
+    wchar_t *token = wcstok_s(s_buffer, L", ", &context);
+    while (token)
+    {
+      if (wcscmp(token, extension) != 0)
+      {
+        token = wcstok_s(NULL, L", ", &context);
+        is_equal = FALSE;
+      }
+      else
+      {
+        is_equal = TRUE;
+        break;
+      }
+    }
+    if (!is_equal)
+    {
+      status = DeleteFromDir(dyn_path, current);
+    }
+  }
+  return status;
+}
+BOOL DeleteAllThis(HWND hList, HWND hEditEx, const std::wstring& dyn_path)
+{
+  BOOL status;
+  wchar_t s_buffer[50];
+  wchar_t current[50];
+  int count = SendMessage(hList, LB_GETCOUNT, 0, 0);
+  for (int i = 0; i < count; ++i)
+  {
+    count = SendMessage(hList, LB_GETCOUNT, 0, 0);
+    SendMessage(hList, LB_GETTEXT, i, (LPARAM)current);
+    GetWindowText(hEditEx, s_buffer, 50);
+    wchar_t *extension = PathFindExtension(current);
+    wchar_t *context = NULL;
+    wchar_t *token = wcstok_s(s_buffer, L", ", &context);
+    while (token)
+    {
+      if (wcscmp(token, extension) == 0)
+      {
+        if (!DeleteFromDir(dyn_path, current))
+        {
+          status = FALSE;
+          MessageBox(NULL, current, L"File haven't been deleted.", MB_OK);
+        }
+      }
+      token = wcstok_s(NULL, L", ", &context);
+    }
+  }
+  return status;
+}
+
+
+void LoadDrives(HWND hCB, HWND hList, HWND hPathEdit, std::wstring& dyn_path)
+{
+  wchar_t s_buffer[100];
+  int i_id = 0, i = 0;
+
+  GetLogicalDriveStrings(100, s_buffer);
+  wchar_t *p_Tok = s_buffer, *pDrive = s_buffer;
+
+  while (*p_Tok != 0)
+  {
+    if (wcscmp(L"C:\\", p_Tok) == 0)
+    {
+      i_id = i;
+      pDrive = p_Tok;
+    }
+    ++i;
+    SendMessage(hCB, CB_ADDSTRING, 0, (LPARAM)p_Tok);
+    p_Tok += 4;
+  }
+  SendMessage(hCB, CB_SETCURSEL, i_id, (LPARAM)p_Tok);
+  dyn_path.append(pDrive);
+  SetWindowText(hPathEdit, dyn_path.c_str());
+  ShowDirContent(pDrive, hList);
 }
 
 void ShowDirContent(const wchar_t* pDrive, HWND hList)
