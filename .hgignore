@@ -1,5 +1,7 @@
 syntax: glob
 
+consolemain/bin/
+Tree/bin/
 WinApi_Graphic/bin/
 Linked_List/bin/
 WinApi2/bin/
