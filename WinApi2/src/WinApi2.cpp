@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <Shlwapi.h>
+#include <sstream>
 
 #define MAX_LOADSTRING 100
 
@@ -36,7 +37,7 @@ void GoDirUp(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::ws
 void GoRoot(HWND hCB, HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs);
 void GoToNextDir(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs, const wchar_t *cur_dir);
 void GoToPath(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs);
-BOOL IsFolder(const wchar_t *current);
+BOOL IsFolder(const std::wstring& current);
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
   _In_opt_ HINSTANCE hPrevInstance,
@@ -260,6 +261,10 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
         if (lb_cur != LB_ERR)
         {
           SendMessage(hList, LB_GETTEXT, lb_cur, (LPARAM)current);
+          std::wstring cur_sel(current);
+          std::wstring whole_path(dynamic_path);
+          whole_path.append(cur_sel);
+          wchar_t *extension = PathFindExtension(current);
           if (wcscmp(L".", current) == 0)
           {
             GoDirUp(hList, hEdit, dynamic_path, dirs);
@@ -268,7 +273,11 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
           {
             GoRoot(hDriveCombo, hList, hEdit, dynamic_path, dirs);
           }
-          else if (!IsFolder(current))
+          else if (wcscmp(extension, L".idf1") == 0 || wcscmp(extension, L".idf2") == 0 || wcscmp(extension, L".idf3") == 0)
+          {
+            MessageBox(NULL, current, L"Image Data File", MB_OK | MB_ICONINFORMATION);
+          }
+          else if (!IsFolder(whole_path))
           {
             MessageBox(NULL, current, L"File not supported", MB_OK | MB_ICONSTOP);
           }
@@ -293,17 +302,13 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 }
 
 
-BOOL IsFolder(const wchar_t *current)
+BOOL IsFolder(const std::wstring& current)
 {
-  std::wstring cur_dir(current);
-  std::wstring::size_type found = cur_dir.rfind(L".");
-  //DWORD dwAttrib = GetFileAttributes(szPath);
-  if (found != std::wstring::npos)
-  {
-    return false;
-  }
-  else
+  DWORD file_attributes = GetFileAttributes(current.c_str()); 
+  if (file_attributes == FILE_ATTRIBUTE_DIRECTORY)
     return true;
+  else
+    return false;
 }
 
 void GoToNextDir(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs, const wchar_t *cur_dir)

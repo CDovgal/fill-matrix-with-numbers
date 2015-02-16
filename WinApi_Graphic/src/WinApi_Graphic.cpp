@@ -9,9 +9,6 @@
 #include <iostream>
 #include <fstream>
 
-//#include <gdiplus.h>
-//using namespace Gdiplus;
-//#pragma comment (lib,"Gdiplus.lib")
 
 #define MAX_LOADSTRING 100
 
@@ -22,18 +19,13 @@ TCHAR szWindowClass[MAX_LOADSTRING];
 TCHAR szChild1[MAX_LOADSTRING];
 TCHAR szChild2[MAX_LOADSTRING];
 TCHAR szFileName[500] = L"default";
+BOOL resized = FALSE;
+void RedrawWindow(HWND hWND, HDC hDc);
 
 enum DrawKind
 {
   RECTANGLE,
   ELLIPSE
-};
-
-enum Color
-{
-  R,
-  G,
-  B
 };
 
 enum Shape_type
@@ -42,31 +34,64 @@ enum Shape_type
   Ell
 };
 
+struct Color
+{
+  COLORREF m_pen_color,
+  m_brush_color;
+  Color(COLORREF pen_color, COLORREF brush_color) :
+    m_pen_color(pen_color),
+    m_brush_color(brush_color){}
+};
+
+struct Shape_size
+{
+  int left,
+  top,
+  right,
+  bottom;
+  Shape_size(int i_left, int i_top, int i_right, int i_bottom): 
+    left(i_left), 
+    top(i_top), 
+    right(i_right), 
+    bottom(i_bottom){}
+};
+
+struct Shape_coords
+{
+  int x, y;
+  Shape_coords(int i_x, int i_y) :
+    x(i_x),
+    y(i_y){}
+};
+
 struct Image_Object
 {
-  int x;
-  int y;
+  Shape_size size;
+  Shape_coords coords;
   Color color;
   Shape_type type;
-  //int rgb_color[3];
-  Image_Object(int i_x, int i_y, const Color& i_color, const Shape_type& i_type) : x(i_x), y(i_y), color(i_color), type(i_type){}
+  Image_Object(const Shape_size& i_size, const Shape_coords& i_coords, const Color& i_color, const Shape_type& i_type) : 
+    size(i_size),
+    coords(i_coords),
+    color(i_color), 
+    type(i_type){}
 };
 
 static DrawKind DrawShape;
-//static OPENFILENAME ofn = {0};
 static std::vector<Image_Object> object_container;
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
 ATOM				MyChildRegisterClass1(HINSTANCE hInstance);
-ATOM				MyChildRegisterClass2(HINSTANCE hInstance);
+//ATOM				MyChildRegisterClass2(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
 BOOL OpenFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName);
 BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK	WndChildProcLeft(HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK	WndChildProcRight(HWND, UINT, WPARAM, LPARAM);
+//LRESULT CALLBACK	WndChildProcRight(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
+
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
   _In_opt_ HINSTANCE hPrevInstance,
@@ -86,7 +111,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
   LoadString(hInstance, IDC_WINAPI, szWindowClass, MAX_LOADSTRING);
   MyRegisterClass(hInstance);
   MyChildRegisterClass1(hInstance);
-  MyChildRegisterClass2(hInstance);
+  //MyChildRegisterClass2(hInstance);
 
   // Perform application initialization:
   if (!InitInstance(hInstance, nCmdShow))
@@ -149,23 +174,23 @@ ATOM MyChildRegisterClass1(HINSTANCE hInstance)
 }
 
 
-ATOM MyChildRegisterClass2(HINSTANCE hInstance)
-{
-  WNDCLASSEX wcex = { 0 };
-
-  wcex.cbSize = sizeof(WNDCLASSEX);
-
-  wcex.style = CS_HREDRAW | CS_VREDRAW;
-  wcex.lpfnWndProc = WndChildProcRight;
-  wcex.cbClsExtra = 0; // YOU SHALL NOT WATCH!!!!!!
-  wcex.cbWndExtra = 0;
-  wcex.hInstance = hInstance;
-  wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-  wcex.hbrBackground = CreateSolidBrush(RGB(248, 248, 255));//(HBRUSH)(COLOR_WINDOW + 1);
-  wcex.lpszClassName = L"Child2";
-
-  return RegisterClassEx(&wcex);
-}
+//ATOM MyChildRegisterClass2(HINSTANCE hInstance)
+//{
+//  WNDCLASSEX wcex = { 0 };
+//
+//  wcex.cbSize = sizeof(WNDCLASSEX);
+//
+//  wcex.style = CS_HREDRAW | CS_VREDRAW;
+//  wcex.lpfnWndProc = WndChildProcRight;
+//  wcex.cbClsExtra = 0; // YOU SHALL NOT WATCH!!!!!!
+//  wcex.cbWndExtra = 0;
+//  wcex.hInstance = hInstance;
+//  wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+//  wcex.hbrBackground = CreateSolidBrush(RGB(248, 248, 255));//(HBRUSH)(COLOR_WINDOW + 1);
+//  wcex.lpszClassName = L"Child2";
+//
+//  return RegisterClassEx(&wcex);
+//}
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
@@ -229,11 +254,9 @@ BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   int wmId, wmEvent;
-  static PAINTSTRUCT ps;
-  static HDC hdc;
-  //DWORD id;
-  static BOOL result;
-  int nShift = 80;
+  PAINTSTRUCT ps;
+  HDC hdc;
+  BOOL result;
   int x, y;
 
   switch (message)
@@ -241,8 +264,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   case WM_CREATE:
     RECT rc;
     GetClientRect(hWnd, &rc);
-    CreateWindow(L"Child1", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 10, 10, rc.right / 2, rc.bottom - 10, hWnd, (HMENU)IDC_PANEL, hInst, NULL);
-    CreateWindow(L"Child2", L"", WS_CHILDWINDOW | WS_VISIBLE | WS_BORDER, rc.right / 2 + 10, 10, rc.right / 2 - 10, rc.bottom - 10, hWnd, (HMENU)IDC_PANEL2, hInst, NULL);
+    CreateWindow(L"Child1", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, rc.right, rc.bottom, hWnd, (HMENU)IDC_PANEL, hInst, NULL);
+    //CreateWindow(L"Child2", L"", WS_CHILDWINDOW | WS_VISIBLE | WS_BORDER, rc.right / 2 + 10, 10, rc.right / 2 - 10, rc.bottom - 10, hWnd, (HMENU)IDC_PANEL2, hInst, NULL);
     break;
   case WM_COMMAND:
     wmId = LOWORD(wParam);
@@ -283,23 +306,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       return DefWindowProc(hWnd, message, wParam, lParam);
     }
     break;
-  case WM_LBUTTONDOWN:
-    /*id = MessageBox(NULL, L"L_BUTTON PRESSED", L"PRESS OK", MB_ABORTRETRYIGNORE);
-    if (id == IDRETRY)
-    MessageBox(hWnd, L"RETRY", L"PRESS OK", MB_OK);*/
-    hdc = GetDC(hWnd);
-    x = LOWORD(lParam);
-    y = HIWORD(lParam);
-    //Rectangle(hdc, x - nShift, y - nShift, x + nShift, y + nShift);
-    // ololo woorking...
-    ReleaseDC(hWnd, hdc);
+  case WM_SIZE:
+  {
+    resized = TRUE;
+  }
     break;
-
   case WM_PAINT:
-    hdc = BeginPaint(hWnd, &ps);
-    //Rectangle(hdc, 20, 20, 120, 120);
-    // TODO: Add any drawing code here...
-    EndPaint(hWnd, &ps);
+  {       
+     hdc = BeginPaint(hWnd, &ps);
+     // TODO: Add any drawing code here...
+     EndPaint(hWnd, &ps);
+  }
     break;
   case WM_DESTROY:
     PostQuitMessage(0);
@@ -318,15 +335,13 @@ LRESULT CALLBACK WndChildProcLeft(HWND hWnd, UINT message, WPARAM wParam, LPARAM
   HDC hdc;
   RECT rc;
   GetClientRect(hWnd, &rc);
+  int x, y;
 
   switch (message)
   {
   case WM_MOUSEMOVE:
     if (wParam & MK_LBUTTON){
       hdc = GetDC(hWnd);
-      int x, y;
-      //int left, top, right, bottom;
-      //int r = rand() % 255, g = rand() % 255, b = rand() % 255;
       x = LOWORD(lParam);
       y = HIWORD(lParam);
 
@@ -337,11 +352,26 @@ LRESULT CALLBACK WndChildProcLeft(HWND hWnd, UINT message, WPARAM wParam, LPARAM
       switch (DrawShape)
       {
       case RECTANGLE:
-        //left = x - rand() % 250, top = x - rand() % 250, right = x - rand() % 250, bottom = x - rand() % 250;
-        Rectangle(hdc, x - rand() % 250, y - rand() % 250, x - rand() % 250, y - rand() % 250);
+      {
+        Rectangle(hdc, x + 100, y + 100, x - 50, y - 50);
+        Shape_coords coords(x, y);
+        Shape_size size((x + 100), (y + 100), (x - 50), (y - 50));
+        Color color(GetDCPenColor(hdc), GetDCBrushColor(hdc));
+        Shape_type type = Rect;
+        Image_Object object(size, coords, color, type);
+        object_container.push_back(object);
+      }
         break;
       case ELLIPSE:
-        Ellipse(hdc, x - rand() % 250, y - rand() % 250, x - rand() % 250, y - rand() % 250);
+      {
+        Ellipse(hdc, x + 100, y + 100, x - 50, y - 50);
+        Shape_coords coords(x, y);
+        Shape_size size((x + 100), (y + 100), (x - 50), (y - 50));
+        Color color(GetDCPenColor(hdc), GetDCBrushColor(hdc));
+        Shape_type type = Ell;
+        Image_Object object(size, coords, color, type);
+        object_container.push_back(object);
+      }
         break;
       }
       SelectObject(hdc, hOldPen);
@@ -352,6 +382,7 @@ LRESULT CALLBACK WndChildProcLeft(HWND hWnd, UINT message, WPARAM wParam, LPARAM
     break;
   case WM_PAINT:
     hdc = BeginPaint(hWnd, &ps);
+    RedrawWindow(hWnd, hdc);
     EndPaint(hWnd, &ps);
     break;
   case WM_DESTROY:
@@ -363,54 +394,57 @@ LRESULT CALLBACK WndChildProcLeft(HWND hWnd, UINT message, WPARAM wParam, LPARAM
   return 0;
 }
 
-LRESULT CALLBACK WndChildProcRight(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-  //int wmId, wmEvent;
-  PAINTSTRUCT ps;
-  HDC hdc;
-  int nShift = 80;
-  RECT rc;
-  GetClientRect(hWnd, &rc);
-
-  switch (message)
-  {
-  case WM_MOUSEMOVE:
-    if (wParam & MK_LBUTTON){
-      hdc = GetDC(hWnd);
-      int x, y;
-      x = LOWORD(lParam);
-      y = HIWORD(lParam);
-      HPEN hPen = CreatePen(PS_SOLID, 1, RGB(rand() % 255, rand() % 255, rand() % 255));
-      HBRUSH hOldBrush, hBrush = CreateSolidBrush(RGB(rand() % 255, rand() % 255, rand() % 255));
-      HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
-      hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
-      switch (DrawShape)
-      {
-      case RECTANGLE:
-        Ellipse(hdc, x - rand() % 250, y - rand() % 250, x - rand() % 250, y - rand() % 250);
-        break;
-      case ELLIPSE:
-        Rectangle(hdc, x - rand() % 250, y - rand() % 250, x - rand() % 250, y - rand() % 250);
-        break;
-      }
-      SelectObject(hdc, hOldPen);
-      SelectObject(hdc, hOldBrush);
-      DeleteObject(hPen);
-      ReleaseDC(hWnd, hdc);
-    }
-    break;
-  case WM_PAINT:
-    hdc = BeginPaint(hWnd, &ps);
-    EndPaint(hWnd, &ps);
-    break;
-  case WM_DESTROY:
-    PostQuitMessage(0);
-    break;
-  default:
-    return DefWindowProc(hWnd, message, wParam, lParam);
-  }
-  return 0;
-}
+//LRESULT CALLBACK WndChildProcRight(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+//{
+//  //int wmId, wmEvent;
+//  PAINTSTRUCT ps;
+//  HDC hdc;
+//  int nShift = 80;
+//  RECT rc;
+//  GetClientRect(hWnd, &rc);
+//
+//  switch (message)
+//  {
+//  case WM_MOUSEMOVE:
+//    if (wParam & MK_LBUTTON){
+//      hdc = GetDC(hWnd);
+//      int x, y;
+//      x = LOWORD(lParam);
+//      y = HIWORD(lParam);
+//      HPEN hPen = CreatePen(PS_SOLID, 1, RGB(rand() % 255, rand() % 255, rand() % 255));
+//      HBRUSH hOldBrush, hBrush = CreateSolidBrush(RGB(rand() % 255, rand() % 255, rand() % 255));
+//      HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
+//      hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+//      switch (DrawShape)
+//      {
+//      case RECTANGLE:
+//        //Ellipse(hdc, x - rand() % 250, y - rand() % 250, x - rand() % 250, y - rand() % 250);
+//        Ellipse(hdc, x + 100, y + 100, x - 50, y - 50);
+//        break;
+//      case ELLIPSE:
+//        //Rectangle(hdc, x - rand() % 250, y - rand() % 250, x - rand() % 250, y - rand() % 250);
+//        Rectangle(hdc, x+100, y+100, x-50, y-50);
+//        break;
+//      }
+//      SelectObject(hdc, hOldPen);
+//      SelectObject(hdc, hOldBrush);
+//      DeleteObject(hPen);
+//      ReleaseDC(hWnd, hdc);
+//    }
+//    break;
+//  case WM_PAINT:
+//    hdc = BeginPaint(hWnd, &ps);
+//    RedrawWindow(hWnd, hdc);
+//    EndPaint(hWnd, &ps);
+//    break;
+//  case WM_DESTROY:
+//    PostQuitMessage(0);
+//    break;
+//  default:
+//    return DefWindowProc(hWnd, message, wParam, lParam);
+//  }
+//  return 0;
+//}
 
 // Message handler for about box.
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -430,4 +464,29 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     break;
   }
   return (INT_PTR)FALSE;
+}
+
+
+void RedrawWindow(HWND hWND, HDC hDC)
+{
+  hDC = GetDC(hWND);
+  //HPEN hPen;
+  //HBRUSH hOldBrush, hBrush;
+  //HPEN hOldPen;
+  for (unsigned i = 0; i < object_container.size(); ++i)
+  {
+    HPEN hPen = CreatePen(PS_SOLID, 1, object_container.at(i).color.m_pen_color);
+    HBRUSH hOldBrush, hBrush = CreateSolidBrush(object_container.at(i).color.m_brush_color);
+    HPEN hOldPen = (HPEN)SelectObject(hDC, hPen);
+    hOldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+    SelectObject(hDC, hOldPen);
+    SelectObject(hDC, hOldBrush);
+    if (object_container.at(i).type == Rect)
+      Rectangle(hDC, object_container.at(i).size.left, object_container.at(i).size.top, object_container.at(i).size.right, object_container.at(i).size.bottom);
+    else
+      Ellipse(hDC, object_container.at(i).size.left, object_container.at(i).size.top, object_container.at(i).size.right, object_container.at(i).size.bottom);
+    
+    DeleteObject(hPen);
+  }
+  ReleaseDC(hWND, hDC);
 }
