@@ -1,5 +1,7 @@
 syntax: glob
 
+StrOutFromProc/bin/
+RunOtherApp/bin/
 consolemain/bin/
 Tree/bin/
 WinApi_Graphic/bin/
