@@ -9,6 +9,7 @@
 #include <vector>
 #include <Shlwapi.h>
 #include <sstream>
+#include <shellapi.h>
 
 #define MAX_LOADSTRING 100
 
@@ -38,6 +39,7 @@ void GoRoot(HWND hCB, HWND hList, HWND hEdit, std::wstring& dyn_path, std::vecto
 void GoToNextDir(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs, const wchar_t *cur_dir);
 void GoToPath(HWND hList, HWND hEdit, std::wstring& dyn_path, std::vector<std::wstring>& dirs);
 BOOL IsFolder(const std::wstring& current);
+void OpenImage(const wchar_t *filename);
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
   _In_opt_ HINSTANCE hPrevInstance,
@@ -275,7 +277,11 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
           }
           else if (wcscmp(extension, L".idf1") == 0 || wcscmp(extension, L".idf2") == 0 || wcscmp(extension, L".idf3") == 0)
           {
-            MessageBox(NULL, current, L"Image Data File", MB_OK | MB_ICONINFORMATION);
+            wchar_t w_path[MAX_PATH];
+            wcscpy_s(w_path, wcslen(dynamic_path.c_str())+1, dynamic_path.c_str());
+            wcscat_s(w_path, sizeof(w_path), current);
+            OpenImage(w_path);
+            //MessageBox(NULL, current, L"Image Data File", MB_OK | MB_ICONINFORMATION);
           }
           else if (!IsFolder(whole_path))
           {
@@ -301,6 +307,38 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
   return (INT_PTR)FALSE;
 }
 
+
+void OpenImage(const wchar_t *filename)
+{
+  STARTUPINFO si;
+  PROCESS_INFORMATION pi;
+
+  /*GetStartupInfo(&si);
+  if (!CreateProcess(L"D:\\Projects\\WinApi_Graphic\\bin\\WinApi_Graphic\\Debug\\WinApi_Graphic.exe",
+    NULL,
+    NULL,
+    NULL,
+    FALSE,
+    0,
+    NULL,
+    NULL,
+    &si,
+    &pi))
+  {
+    MessageBox(NULL, L"Couldnt open image.", L"Error", MB_OK | MB_ICONERROR);
+  }*/
+
+  if ((UINT)ShellExecute(
+    GetDesktopWindow(),
+    L"open",
+    L"D:\\qwerty.txt",
+    NULL,
+    NULL,
+    SW_SHOWNORMAL) <= 32) 
+  {
+    MessageBox(NULL, L"Executable file error.", L"Error", MB_OK | MB_ICONERROR);
+  }
+}
 
 BOOL IsFolder(const std::wstring& current)
 {
