@@ -157,6 +157,14 @@ BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName)
   return GetSaveFileName(&ofn);
 }
 
+void write_to(wchar_t *name)
+{
+  std::ofstream myf;
+  myf.open("cmd_args.txt");
+  myf << name;
+  myf.close();
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   int wmId, wmEvent;
@@ -165,11 +173,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   PAINTSTRUCT ps;
   static COLORREF penColor = RGB(0, 0, 0), brushColor = RGB(255, 255, 255);
   int x, y;
-  
   switch (message)
   {
   case WM_CREATE:
     SetWindowText(hWnd, szWindowTitle);
+    
     break;
   case WM_COMMAND:
     wmId = LOWORD(wParam);
