@@ -329,14 +329,40 @@ void OpenImage(const wchar_t *filename)
   }*/
 
   if ((UINT)ShellExecute(
-    GetDesktopWindow(),
-    L"open",
-    L"D:\\qwerty.txt",
+    NULL,
+    L"edit",
+    filename,
     NULL,
     NULL,
     SW_SHOWNORMAL) <= 32) 
   {
     MessageBox(NULL, L"Executable file error.", L"Error", MB_OK | MB_ICONERROR);
+    /*Case SE_ERR_FNF
+      msg = "File not found"
+      Case SE_ERR_PNF
+      msg = "Path not found"
+      Case SE_ERR_ACCESSDENIED
+      msg = "Access denied"
+      Case SE_ERR_OOM
+      msg = "Out of memory"
+      Case SE_ERR_DLLNOTFOUND
+      msg = "DLL not found"
+      Case SE_ERR_SHARE
+      msg = "A sharing violation occurred"
+      Case SE_ERR_ASSOCINCOMPLETE
+      msg = "Incomplete or invalid file association"
+      Case SE_ERR_DDETIMEOUT
+      msg = "DDE Time out"
+      Case SE_ERR_DDEFAIL
+      msg = "DDE transaction failed"
+      Case SE_ERR_DDEBUSY
+      msg = "DDE busy"
+      Case SE_ERR_NOASSOC
+      msg = "No association for file extension"
+      Case ERROR_BAD_FORMAT
+      msg = "Invalid EXE file or error in EXE image"
+      Case Else
+      msg = "Unknown error"*/
   }
 }
 
