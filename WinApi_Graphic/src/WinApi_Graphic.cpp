@@ -20,54 +20,12 @@ TCHAR szWindowClass[MAX_LOADSTRING];
 TCHAR szChild1[MAX_LOADSTRING];
 TCHAR szChild2[MAX_LOADSTRING];
 TCHAR szFileName[MAX_PATH];
-void RedrawImage(HDC hdc);
-
-
+TCHAR szWindowTitle[MAX_LOADSTRING] = L" - Draw++";
+TCHAR szVersionExtension[MAX_LOADSTRING] = L".idf1";
+static std::wstring newTitleStr;
 
 static DrawKind DrawShape;
 static std::vector<Image_Object> object_container;
-
-void SaveImage(wchar_t *filename)
-{
-  std::ofstream myfile;
-  myfile.open(filename);
-  if (myfile.is_open())
-  {
-    myfile << object_container.size() << std::endl;
-    for (unsigned i = 0; i < object_container.size(); ++i)
-    {
-      myfile << object_container.at(i);
-    }
-  }
-  else
-    std::cout << "Unable to open file\n";
-  myfile.close();
-}
-
-void LoadImageFrom(const wchar_t *filename)
-{
-  Image_Object obj;
-  size_t shapes_count;
-  std::ifstream myfile(filename);
-  if (myfile.is_open())
-  {
-    myfile >> shapes_count;
-    object_container.resize(shapes_count);
-    for (size_t i = 0; i < shapes_count;)
-    {
-      myfile >> obj;
-      object_container.push_back(obj);
-      ++i;
-    }
-  }
-  else
-    std::cout << "Unable to open file\n";
-  myfile.close();
-}
-
-
-
-
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -76,6 +34,9 @@ BOOL OpenFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName);
 BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
+void RedrawImage(HDC hdc);
+void LoadImageFrom(const wchar_t *filename);
+void SaveImage(wchar_t *filename);
 
 
 int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
@@ -193,22 +154,22 @@ BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName)
   ofn.Flags = OFN_EXPLORER | OFN_OVERWRITEPROMPT;
   ofn.lpstrInitialDir = L"D:\\Projects\\WinApi_Graphic\\bin\\WinApi_Graphic\\WinApi_Graphic";
   ofn.lpstrFilter = L"Image data files v1(*.idf1)\0*.idf1\0" L"Image data files v2(*.idf2)\0*.idf2\0" L"Image data files v3(*.bmp)\0*.idf3\0\0";
-  SaveImage(pFileName);
   return GetSaveFileName(&ofn);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   int wmId, wmEvent;
-  HDC hdc;
+  static HDC hdc;
   BOOL result;
   PAINTSTRUCT ps;
-  
+  static COLORREF penColor = RGB(0, 0, 0), brushColor = RGB(255, 255, 255);
   int x, y;
   
   switch (message)
   {
   case WM_CREATE:
+    SetWindowText(hWnd, szWindowTitle);
     break;
   case WM_COMMAND:
     wmId = LOWORD(wParam);
@@ -220,13 +181,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
       break;
     case IDM_SAVEFILE:
+      newTitleStr.clear();
       result = SaveFileDialog(hWnd, szFileName, L"Save an Image");
       if (!result)
       {
         MessageBox(NULL, L"Cannot save file", L"Error", MB_OK);
       }
+      SaveImage(szFileName);
+      newTitleStr.append(szFileName);
+      newTitleStr.append(szWindowTitle);
+      SetWindowText(hWnd, newTitleStr.c_str());
       break;
     case IDM_OPENFILE:
+      newTitleStr.clear();
       RECT rc;
       GetClientRect(hWnd, &rc);
       result = OpenFileDialog(hWnd, szFileName, L"Open an image");
@@ -235,10 +202,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         MessageBox(NULL, L"Cannot open file", L"Error", MB_OK);
       }
       LoadImageFrom(szFileName);
+      newTitleStr.append(szFileName);
+      newTitleStr.append(szWindowTitle);
       InvalidateRect(hWnd, &rc, TRUE);
       hdc = GetDC(hWnd);
       RedrawImage(hdc);
       ReleaseDC(hWnd, hdc);
+      SetWindowText(hWnd, newTitleStr.c_str());
       break;
     case IDM_EXIT:
       DestroyWindow(hWnd);
@@ -249,6 +219,48 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case IDM_ELLIPSE:
       DrawShape = ELLIPSE;
       break;
+    case ID_BRUSHCOLOR_BLACK:
+      brushColor = RGB(0, 0, 0);
+      break;
+    case ID_BRUSHCOLOR_WHITE:
+      brushColor = RGB(255, 255, 255);
+      break;
+    case ID_BRUSHCOLOR_RED:
+      brushColor = RGB(255, 0, 0);
+      break;
+    case ID_BRUSHCOLOR_GREEN:
+      brushColor = RGB(0, 255, 0);
+      break;
+    case ID_BRUSHCOLOR_BLUE:
+      brushColor = RGB(0, 0, 255);
+      break;
+    case ID_BRUSHCOLOR_YELLOW:
+      brushColor = RGB(255, 255, 0);
+      break;
+    case ID_BRUSHCOLOR_ORANGE:
+      brushColor = RGB(255, 128, 0);
+      break;
+    case ID_PENCOLOR_BLACK:
+      penColor = RGB(0, 0, 0);
+      break;
+    case ID_PENCOLOR_WHITE:
+      penColor = RGB(255, 255, 255);
+      break;
+    case ID_PENCOLOR_RED:
+      penColor = RGB(255, 0, 0);
+      break;
+    case ID_PENCOLOR_GREEN:
+      penColor = RGB(0, 255, 0);
+      break;
+    case ID_PENCOLOR_BLUE:
+      penColor = RGB(0, 0, 255);
+      break;
+    case ID_PENCOLOR_YELLOW:
+      penColor = RGB(255, 255, 0);
+      break;
+    case ID_PENCOLOR_ORANGE:
+      penColor = RGB(255, 128, 0);
+      break;
     case IDM_REGION:
       DestroyWindow(hWnd);
       break;
@@ -256,16 +268,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       return DefWindowProc(hWnd, message, wParam, lParam);
     }
     break;
-    case WM_MOUSEMOVE:
+  case WM_MOUSEMOVE:
     if (wParam & MK_LBUTTON){
       hdc = GetDC(hWnd);
       x = LOWORD(lParam);
       y = HIWORD(lParam);
-      //int p_r = rand() % 255;
-      const COLORREF penColorRed = RGB(255, 0, 0);
-      const COLORREF brushColorGreen = RGB(0, 255, 128);
-      HPEN hPen = CreatePen(PS_SOLID, 1, penColorRed);
-      HBRUSH hOldBrush, hBrush = CreateSolidBrush(brushColorGreen);
+      HPEN hPen = CreatePen(PS_SOLID, 1, penColor);
+      HBRUSH hOldBrush, hBrush = CreateSolidBrush(brushColor);
       HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
       hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
       switch (DrawShape)
@@ -275,7 +284,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         Rectangle(hdc, x + 100, y + 100, x - 50, y - 50);
         Shape_coords coords(x, y);
         Shape_size size((x + 100), (y + 100), (x - 50), (y - 50));
-        Color color(GetDCPenColor(hdc), GetDCBrushColor(hdc));
+        Color color(penColor, brushColor);
         DrawKind type = RECTANGLE;
         Image_Object object(size, coords, color, type);
         object_container.push_back(object);
@@ -286,7 +295,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         Ellipse(hdc, x + 100, y + 100, x - 50, y - 50);
         Shape_coords coords(x, y);
         Shape_size size((x + 100), (y + 100), (x - 50), (y - 50));
-        Color color(GetDCPenColor(hdc), GetDCBrushColor(hdc));
+        Color color(penColor, brushColor);
         DrawKind type = ELLIPSE;
         Image_Object object(size, coords, color, type);
         object_container.push_back(object);
@@ -300,7 +309,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     break;
   case WM_SIZE:
-    //InvalidateRect(hWnd, 0, TRUE);
     break;
   case WM_PAINT:
      hdc = BeginPaint(hWnd, &ps);
@@ -356,4 +364,42 @@ void RedrawImage(HDC hdc)
     SelectObject(hdc, hOldBrush);
     DeleteObject(hPen);
   }
+}
+
+void SaveImage(wchar_t *filename)
+{
+  std::ofstream myfile;
+  myfile.open(filename, std::ios::binary);
+  if (myfile.is_open())
+  {
+    myfile << object_container.size() << std::endl;
+    for (unsigned i = 0; i < object_container.size(); ++i)
+    {
+      myfile << object_container.at(i);
+    }
+  }
+  else
+    std::cout << "Unable to open file\n";
+  myfile.close();
+}
+
+void LoadImageFrom(const wchar_t *filename)
+{
+  Image_Object obj;
+  size_t shapes_count;
+  std::ifstream myfile(filename);
+  if (myfile.is_open())
+  {
+    myfile >> shapes_count;
+    object_container.resize(shapes_count);
+    for (size_t i = 0; i < shapes_count;)
+    {
+      myfile >> obj;
+      object_container.push_back(obj);
+      ++i;
+    }
+  }
+  else
+    std::cout << "Unable to open file\n";
+  myfile.close();
 }
