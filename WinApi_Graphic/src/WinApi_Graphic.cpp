@@ -10,6 +10,7 @@
 #include <fstream>
 #include <Shlwapi.h>
 #include "Image_Data.h"
+#include <shellapi.h>
 
 #define MAX_LOADSTRING 100
 
@@ -173,11 +174,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   PAINTSTRUCT ps;
   static COLORREF penColor = RGB(0, 0, 0), brushColor = RGB(255, 255, 255);
   int x, y;
+  wchar_t *cmd_data;
   switch (message)
   {
   case WM_CREATE:
     SetWindowText(hWnd, szWindowTitle);
-    
+    LPWSTR *szArgList;
+    int argCount;
+    szArgList = CommandLineToArgvW(GetCommandLine(), &argCount);
+    if (szArgList == NULL)
+    {
+      MessageBox(NULL, L"Unable to parse command line", L"Error", MB_OK);
+      return 10;
+    }
+    LoadImageFrom(szArgList[1]);
+    LocalFree(szArgList);   
+    hdc = GetDC(hWnd);
+    RedrawImage(hdc);
+    ReleaseDC(hWnd, hdc);
     break;
   case WM_COMMAND:
     wmId = LOWORD(wParam);

@@ -310,24 +310,6 @@ INT_PTR CALLBACK FileDlgProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPar
 
 void OpenImage(const wchar_t *filename)
 {
-  STARTUPINFO si;
-  PROCESS_INFORMATION pi;
-
-  /*GetStartupInfo(&si);
-  if (!CreateProcess(L"D:\\Projects\\WinApi_Graphic\\bin\\WinApi_Graphic\\Debug\\WinApi_Graphic.exe",
-    NULL,
-    NULL,
-    NULL,
-    FALSE,
-    0,
-    NULL,
-    NULL,
-    &si,
-    &pi))
-  {
-    MessageBox(NULL, L"Couldnt open image.", L"Error", MB_OK | MB_ICONERROR);
-  }*/
-
   if ((UINT)ShellExecute(
     NULL,
     L"edit",
