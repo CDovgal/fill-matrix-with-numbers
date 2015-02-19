@@ -92,7 +92,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
   wcex.hInstance = hInstance;
   wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINAPI));
   wcex.hCursor = LoadCursor(NULL, IDC_CROSS);
-  wcex.hbrBackground = CreateSolidBrush(RGB(54, 143, 234));//(HBRUSH)(COLOR_WINDOW + 1);
+  wcex.hbrBackground = CreateSolidBrush(RGB(192, 192, 192));//(HBRUSH)(COLOR_WINDOW + 1);
   wcex.lpszMenuName = MAKEINTRESOURCE(IDC_WINAPI);
   wcex.lpszClassName = szWindowClass;
   wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -158,40 +158,36 @@ BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName)
   return GetSaveFileName(&ofn);
 }
 
-void write_to(wchar_t *name)
-{
-  std::ofstream myf;
-  myf.open("cmd_args.txt");
-  myf << name;
-  myf.close();
-}
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   int wmId, wmEvent;
   static HDC hdc;
   BOOL result;
-  PAINTSTRUCT ps;
+  static PAINTSTRUCT ps;
   static COLORREF penColor = RGB(0, 0, 0), brushColor = RGB(255, 255, 255);
-  int x, y;
-  wchar_t *cmd_data;
+  static RECT rc;
+  GetClientRect(hWnd, &rc);
+
   switch (message)
   {
   case WM_CREATE:
+    newTitleStr.clear();
     SetWindowText(hWnd, szWindowTitle);
     LPWSTR *szArgList;
     int argCount;
     szArgList = CommandLineToArgvW(GetCommandLine(), &argCount);
-    if (szArgList == NULL)
+    SetWindowText(hWnd, szWindowTitle);
+    if (argCount > 1)
     {
-      MessageBox(NULL, L"Unable to parse command line", L"Error", MB_OK);
-      return 10;
+      LoadImageFrom(szArgList[1]);
+      newTitleStr.append(szArgList[1]);
+      newTitleStr.append(szWindowTitle);
+      SetWindowText(hWnd, newTitleStr.c_str());
+      hdc = GetDC(hWnd);
+      RedrawImage(hdc);
+      ReleaseDC(hWnd, hdc);
+      LocalFree(szArgList);
     }
-    LoadImageFrom(szArgList[1]);
-    LocalFree(szArgList);   
-    hdc = GetDC(hWnd);
-    RedrawImage(hdc);
-    ReleaseDC(hWnd, hdc);
     break;
   case WM_COMMAND:
     wmId = LOWORD(wParam);
@@ -216,8 +212,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       break;
     case IDM_OPENFILE:
       newTitleStr.clear();
-      RECT rc;
-      GetClientRect(hWnd, &rc);
+      object_container.clear();
+      
       result = OpenFileDialog(hWnd, szFileName, L"Open an image");
       if (!result)
       {
@@ -293,9 +289,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   case WM_MOUSEMOVE:
     if (wParam & MK_LBUTTON){
       hdc = GetDC(hWnd);
+      int x, y;
       x = LOWORD(lParam);
       y = HIWORD(lParam);
+
       HPEN hPen = CreatePen(PS_SOLID, 1, penColor);
+      hPen = CreatePen(PS_SOLID, 1, penColor);
       HBRUSH hOldBrush, hBrush = CreateSolidBrush(brushColor);
       HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
       hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
@@ -331,11 +330,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     break;
   case WM_SIZE:
+  
+    hdc = GetDC(hWnd);
+    RedrawImage(hdc);
+    ReleaseDC(hWnd, hdc);
+    break;
+  case WM_MOVE:
+
     break;
   case WM_PAINT:
-     hdc = BeginPaint(hWnd, &ps);
-     RedrawImage(hdc);
-     EndPaint(hWnd, &ps);
+    InvalidateRect(hWnd, &rc, TRUE);
+    hdc = BeginPaint(hWnd, &ps);
+    RedrawImage(hdc);
+    EndPaint(hWnd, &ps);
     break;
   case WM_DESTROY:
     PostQuitMessage(0);
@@ -413,7 +420,6 @@ void LoadImageFrom(const wchar_t *filename)
   if (myfile.is_open())
   {
     myfile >> shapes_count;
-    object_container.resize(shapes_count);
     for (size_t i = 0; i < shapes_count;)
     {
       myfile >> obj;
