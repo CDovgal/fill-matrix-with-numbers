@@ -21,6 +21,7 @@ public:
   void insert(T i_value);
   void pop(T i_value);
   void Show();
+  bool is_empty() const;
 };
 
 template <typename T>
@@ -39,6 +40,12 @@ template <typename T>
 Tree<T>::Node::~Node()
 {
 
+}
+
+template <typename T>
+bool Tree<T>::is_empty() const
+{
+  return m_pRoot == nullptr;
 }
 
 template <typename T>
