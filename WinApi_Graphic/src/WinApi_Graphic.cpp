@@ -35,7 +35,9 @@ BOOL OpenFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName);
 BOOL SaveFileDialog(HWND hwnd, LPTSTR pFileName, LPTSTR pTitleName);
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
-void RedrawImage(HDC hdc);
+void DrawRectangle(HDC hdc, const Image_Object& i_object);
+void DrawEllipse(HDC hdc, const Image_Object& i_object);
+void RedrawImage(HWND hwnd, HDC hdc);
 void LoadImageFrom(const wchar_t *filename);
 void SaveImage(wchar_t *filename);
 
@@ -165,6 +167,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   BOOL result;
   static PAINTSTRUCT ps;
   static COLORREF penColor = RGB(0, 0, 0), brushColor = RGB(255, 255, 255);
+
+  HPEN hPen = CreatePen(PS_SOLID, 1, penColor);;
+  HBRUSH hOldBrush, hBrush = CreateSolidBrush(brushColor);;
+  HPEN hOldPen;
+  
   static RECT rc;
   GetClientRect(hWnd, &rc);
 
@@ -184,7 +191,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       newTitleStr.append(szWindowTitle);
       SetWindowText(hWnd, newTitleStr.c_str());
       hdc = GetDC(hWnd);
-      RedrawImage(hdc);
+      RedrawImage(hWnd, hdc);
       ReleaseDC(hWnd, hdc);
       LocalFree(szArgList);
     }
@@ -224,7 +231,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       newTitleStr.append(szWindowTitle);
       InvalidateRect(hWnd, &rc, TRUE);
       hdc = GetDC(hWnd);
-      RedrawImage(hdc);
+      RedrawImage(hWnd, hdc);
       ReleaseDC(hWnd, hdc);
       SetWindowText(hWnd, newTitleStr.c_str());
       break;
@@ -293,10 +300,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       x = LOWORD(lParam);
       y = HIWORD(lParam);
 
-      HPEN hPen = CreatePen(PS_SOLID, 1, penColor);
-      hPen = CreatePen(PS_SOLID, 1, penColor);
-      HBRUSH hOldBrush, hBrush = CreateSolidBrush(brushColor);
-      HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
+      
+      hOldPen = (HPEN)SelectObject(hdc, hPen);
       hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
       switch (DrawShape)
       {
@@ -307,7 +312,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         Shape_size size((x + 100), (y + 100), (x - 50), (y - 50));
         Color color(penColor, brushColor);
         DrawKind type = RECTANGLE;
-        Image_Object object(size, coords, color, type);
+        Image_Object object(size, coords, color, type);  
         object_container.push_back(object);
       }
         break;
@@ -325,26 +330,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       }
       SelectObject(hdc, hOldPen);
       SelectObject(hdc, hOldBrush);
-      DeleteObject(hPen);
+      //DeleteObject(hPen);
       ReleaseDC(hWnd, hdc);
     }
-    break;
-  case WM_SIZE:
-  
-    hdc = GetDC(hWnd);
-    RedrawImage(hdc);
-    ReleaseDC(hWnd, hdc);
-    break;
-  case WM_MOVE:
-
     break;
   case WM_PAINT:
     InvalidateRect(hWnd, &rc, TRUE);
     hdc = BeginPaint(hWnd, &ps);
-    RedrawImage(hdc);
+    RedrawImage(hWnd, hdc);
     EndPaint(hWnd, &ps);
     break;
   case WM_DESTROY:
+    DeleteObject(hPen);
     PostQuitMessage(0);
     break;
   default:
@@ -374,25 +371,50 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
   return (INT_PTR)FALSE;
 }
 
-
-void RedrawImage(HDC hdc)
+void DrawRectangle(HDC hdc, const Image_Object& i_object)
 {
+  HPEN hPen = CreatePen(PS_SOLID, 1, i_object.color.m_pen_color);
+  HBRUSH hOldBrush, hBrush = CreateSolidBrush(i_object.color.m_brush_color);
+  HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
+  hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+
+  Rectangle(hdc, i_object.size.left, i_object.size.top, i_object.size.right, i_object.size.bottom);
+
+  SelectObject(hdc, hOldPen);
+  SelectObject(hdc, hOldBrush);
+  DeleteObject(hPen);
+}
+
+void DrawEllipse(HDC hdc, const Image_Object& i_object)
+{
+  HPEN hPen = CreatePen(PS_SOLID, 1, i_object.color.m_pen_color);
+  HBRUSH hOldBrush, hBrush = CreateSolidBrush(i_object.color.m_brush_color);
+  HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
+  hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+
+  Ellipse(hdc, i_object.size.left, i_object.size.top, i_object.size.right, i_object.size.bottom);
+
+  SelectObject(hdc, hOldPen);
+  SelectObject(hdc, hOldBrush);
+  DeleteObject(hPen);
+}
+
+void RedrawImage(HWND hwnd, HDC hdc)
+{
+  hdc = GetDC(hwnd);
   for (unsigned i = 0; i < object_container.size(); ++i)
   {
-    HPEN hPen = CreatePen(PS_SOLID, 1, object_container.at(i).color.m_pen_color);
-    HBRUSH hOldBrush, hBrush = CreateSolidBrush(object_container.at(i).color.m_brush_color);
-    HPEN hOldPen = (HPEN)SelectObject(hdc, hPen);
-    hOldBrush = (HBRUSH)SelectObject(hdc, hBrush);
-    
-    if (object_container.at(i).type == RECTANGLE)
-      Rectangle(hdc, object_container.at(i).size.left, object_container.at(i).size.top, object_container.at(i).size.right, object_container.at(i).size.bottom);
-    else if (object_container.at(i).type == ELLIPSE)
-      Ellipse(hdc, object_container.at(i).size.left, object_container.at(i).size.top, object_container.at(i).size.right, object_container.at(i).size.bottom);
-    
-    SelectObject(hdc, hOldPen);
-    SelectObject(hdc, hOldBrush);
-    DeleteObject(hPen);
+    switch (object_container.at(i).type)
+    {
+    case RECTANGLE:
+      DrawRectangle(hdc, object_container.at(i));
+      break;
+    case ELLIPSE:
+      DrawEllipse(hdc, object_container.at(i));
+      break;
+    } 
   }
+  ReleaseDC(hwnd, hdc);
 }
 
 void SaveImage(wchar_t *filename)
