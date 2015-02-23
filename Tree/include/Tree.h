@@ -22,6 +22,7 @@ public:
   void pop(T i_value);
   void Show();
   bool is_empty() const;
+  void clear();
 };
 
 template <typename T>
@@ -42,11 +43,7 @@ Tree<T>::Node::~Node()
 
 }
 
-template <typename T>
-bool Tree<T>::is_empty() const
-{
-  return m_pRoot == nullptr;
-}
+
 
 template <typename T>
 Tree<T>::Tree() : m_pRoot(nullptr)
@@ -61,16 +58,36 @@ Tree<T>::~Tree()
 
 }
 
+
+template <typename T>
+bool Tree<T>::is_empty() const
+{
+  return m_pRoot == nullptr;
+}
+
+template <typename T>
+void Tree<T>::clear()
+{
+  if (is_empty())
+    return;
+  /*while (!is_empty())
+  {
+    Node* to_delete = m_pRoot;
+    if (m_pRoot)
+      m_pRoot
+  }*/
+}
+
 template <typename T>
 void Tree<T>::insert(Node* i_node, T i_value)
 {
-
+  Node *to_add = new Node(i_value);
 }
 
 template <typename T>
 void Tree<T>::insert(T i_value)
 {
-  if (m_pRoot == 0)
+  if (is_empty())
   {
     m_pRoot = new Node(i_value);
     return;
@@ -79,7 +96,7 @@ void Tree<T>::insert(T i_value)
   {
     m_pRoot->m_pLeft = new Node(i_value);
   }
-  else
+  else//and what if ==???
     insert(m_pRoot->m_pLeft, i_value);
 }
 
@@ -87,7 +104,7 @@ void Tree<T>::insert(T i_value)
 template <typename T>
 void Tree<T>::pop(T i_value)
 {
-  
+
 }
 
 
@@ -105,7 +122,7 @@ void Tree<T>::Show(Node* m_pRoot)
 template <typename T>
 void Tree<T>::Show()
 {
- 
+
 }
 
 
