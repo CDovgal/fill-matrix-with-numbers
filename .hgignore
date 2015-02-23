@@ -1,5 +1,9 @@
 syntax: glob
 
+template_spec/bin/
+boost_test/bin/
+Unkillable/bin/
+PointerToClassMembers/bin/
 StrOutFromProc/bin/
 RunOtherApp/bin/
 consolemain/bin/
