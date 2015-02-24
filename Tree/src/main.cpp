@@ -5,7 +5,7 @@ int main()
 {
   {
     Tree<int> tr;
-    tr.insert(5);
+   /* tr.insert(5);
     tr.insert(3);
     tr.insert(8);
     tr.insert(6);
@@ -19,12 +19,14 @@ int main()
     tr.insert(18);
     tr.insert(13);
     tr.insert(16);
-    tr.insert(17);
-    tr.Show();
+    tr.insert(17);*/
+    tr.load_tree();
+    tr.BFS();
+    //tr.Show();
     std::cout << tr.size() << std::endl;
     std::cout << tr.longest_branch() << std::endl;
-    tr.BFS();
-    tr.save_tree();
+    //tr.BFS();
+    //tr.save_tree();
   }
   if (_CrtDumpMemoryLeaks())
     std::cout << "MEMORY LEAKS." << std::endl;
