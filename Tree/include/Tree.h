@@ -37,7 +37,6 @@ class Tree
   int longest_branch(Node* i_node) const;
   void printLevel(Node* i_node, int i_level);
   void BFS(Node *i_node);
-  void write_stream(T i_value);
 public:
   Tree();
   ~Tree();
@@ -131,6 +130,7 @@ void Tree<T>::printLevel(Node* i_node, int i_level)
   {
     std::cout << i_node->m_pValue << " ";
     tree_data.push_back(i_node->m_pValue);
+
   }
   else 
   {
@@ -147,6 +147,7 @@ void Tree<T>::BFS(Node* i_node)
   {
     printLevel(i_node, i);
     std::cout << std::endl;
+    tree_data.push_back(0);
   }
 }
 
@@ -288,14 +289,6 @@ void Tree<T>::load_tree()
   tree_file.close();
 }
 
-
-template <typename T> 
-void Tree<T>::write_stream(T i_value)
-{
-  /*std::ostream str;
-  str << i_value << 
-  str << tree_data.at(i) << " ";*/
-}
 
 
 
