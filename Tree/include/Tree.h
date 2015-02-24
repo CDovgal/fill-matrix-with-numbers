@@ -278,11 +278,20 @@ void Tree<T>::save_tree()
 template <typename T>
 void Tree<T>::load_tree()
 {
+  tree_data.clear();
+  size_t count = 0;
+  int data;
   std::ifstream tree_file;
   tree_file.open("TreeFile.dat", std::ios::binary);
   if (tree_file.is_open())
   {
-    
+    tree_file >> count;
+    for (unsigned i = 0; i < count; ++i)
+    {
+      tree_file >> data;
+      if (data != 0)
+        insert(data);
+    }
   }
   else
     std::cout << "Couldn't read file." << std::endl;
