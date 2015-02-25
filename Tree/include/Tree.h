@@ -57,6 +57,7 @@ class Tree
       }
       find_node(i_node->m_pLeft, i_value);
       find_node(i_node->m_pRight, i_value);
+      //need to fix
     }
   }
 public:
