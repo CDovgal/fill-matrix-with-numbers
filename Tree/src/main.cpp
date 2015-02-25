@@ -26,7 +26,7 @@ int main()
     std::cout << tr.size() << std::endl;
     std::cout << tr.longest_branch() << std::endl;
     //tr.find_node(4);
-    tr.pop(21);
+    tr.delete_by_value(6);
     //tr.BFS();
     //tr.save_tree();
     tr.Show();

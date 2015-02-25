@@ -49,21 +49,21 @@ class Tree
   Node* find_node(Node* i_node, T i_value)
   {
     if (i_node != nullptr)
-    {
-      find_node(i_node->m_pLeft, i_value);
+    { 
       if (i_node->m_pValue == i_value)
       {
         i_node->m_pTop = getTop(m_pRoot, i_value);
         return i_node;
-      } 
+      }
+      find_node(i_node->m_pLeft, i_value);
       find_node(i_node->m_pRight, i_value);
     }
-  };
+  }
 public:
   Tree();
   ~Tree();
   void insert(T i_value);
-  void pop(T i_value);
+  void delete_by_value(T i_value);
   void Show();
   bool is_empty() const;
   void destroy_tree();
@@ -159,10 +159,10 @@ void Tree<T>::printLevel(Node* i_node, int i_level)
     std::cout << i_node->m_pValue << " ";
     tree_data.push_back(i_node->m_pValue);
   }
-  else 
+  else
   {
-    printLevel(i_node->m_pLeft, i_level-1);
-    printLevel(i_node->m_pRight, i_level-1);
+    printLevel(i_node->m_pLeft, i_level - 1);
+    printLevel(i_node->m_pRight, i_level - 1);
   }
 }
 
@@ -257,22 +257,26 @@ void Tree<T>::insert(T i_value)
 
 
 template <typename T>
-void Tree<T>::pop(T i_value)
+void Tree<T>::delete_by_value(T i_value)
 {
   if (is_empty())
     return;
   else
   {
     Node* to_delete = find_node(i_value);
-    if (to_delete->m_pLeft)
+    if (to_delete->m_pLeft != nullptr)
     {
       to_delete->m_pLeft->m_pTop = to_delete->m_pTop;
       to_delete->m_pTop->m_pRight = to_delete->m_pLeft;
       if (to_delete->m_pRight)
         to_delete->m_pLeft->m_pRight = to_delete->m_pRight;
     }
+    else
+    {
+      to_delete->m_pRight->m_pTop = to_delete->m_pTop;
+      to_delete->m_pTop->m_pLeft = to_delete->m_pRight;
+    }
     delete to_delete;
-    std::cout << "Popped" << std::endl;
   }
 }
 
