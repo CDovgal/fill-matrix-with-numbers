@@ -37,6 +37,28 @@ class Tree
   int longest_branch(Node* i_node) const;
   void printLevel(Node* i_node, int i_level);
   void BFS(Node *i_node);
+  Node* getTop(Node* i_node, T i_value)
+  {
+    if (i_node->m_pLeft)
+      getTop(i_node->m_pLeft, i_value);
+    if (i_node->m_pLeft && i_node->m_pLeft->m_pValue == i_value || i_node->m_pRight && i_node->m_pRight->m_pValue == i_value)
+      return i_node;
+    if (i_node->m_pRight)
+      getTop(i_node->m_pRight, i_value);
+  }
+  Node* find_node(Node* i_node, T i_value)
+  {
+    if (i_node != nullptr)
+    {
+      find_node(i_node->m_pLeft, i_value);
+      if (i_node->m_pValue == i_value)
+      {
+        i_node->m_pTop = getTop(m_pRoot, i_value);
+        return i_node;
+      } 
+      find_node(i_node->m_pRight, i_value);
+    }
+  };
 public:
   Tree();
   ~Tree();
@@ -50,6 +72,12 @@ public:
   void BFS();
   void save_tree();
   void load_tree();
+  Node* find_node(T i_value)
+  {
+    if (is_empty())
+      return nullptr;
+    return find_node(m_pRoot, i_value);
+  }
 };
 
 template <typename T>
@@ -130,7 +158,6 @@ void Tree<T>::printLevel(Node* i_node, int i_level)
   {
     std::cout << i_node->m_pValue << " ";
     tree_data.push_back(i_node->m_pValue);
-
   }
   else 
   {
@@ -232,7 +259,21 @@ void Tree<T>::insert(T i_value)
 template <typename T>
 void Tree<T>::pop(T i_value)
 {
-
+  if (is_empty())
+    return;
+  else
+  {
+    Node* to_delete = find_node(i_value);
+    if (to_delete->m_pLeft)
+    {
+      to_delete->m_pLeft->m_pTop = to_delete->m_pTop;
+      to_delete->m_pTop->m_pRight = to_delete->m_pLeft;
+      if (to_delete->m_pRight)
+        to_delete->m_pLeft->m_pRight = to_delete->m_pRight;
+    }
+    delete to_delete;
+    std::cout << "Popped" << std::endl;
+  }
 }
 
 
@@ -276,7 +317,7 @@ void Tree<T>::save_tree()
 
 
 template <typename T>
-void Tree<T>::load_tree()
+void Tree<T>::load_tree() //need to rewrite.
 {
   tree_data.clear();
   size_t count = 0;
