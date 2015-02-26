@@ -14,20 +14,6 @@ class Tree
     Node(T i_value);
     Node();
     ~Node();
-    //Node* getLeft() const
-    //{
-    //  if (this->m_pLeft)
-    //    return this->m_pLeft;
-    //  else
-    //    return nullptr;
-    //};
-    //Node* getRight() const
-    //{
-    //  if (this->m_pRight)
-    //    return this->m_pRight;
-    //  else
-    //    return nullptr;
-    //};
   } *m_pRoot;
   std::vector<T> tree_data;
   void insert(Node* i_node, T i_value);
@@ -48,17 +34,20 @@ class Tree
   }
   Node* find_node(Node* i_node, T i_value)
   {
-    if (i_node != nullptr)
-    { 
-      if (i_node->m_pValue == i_value)
+    if (i_node)
+    {
+      if (i_value == i_node->m_pValue)
       {
         i_node->m_pTop = getTop(m_pRoot, i_value);
         return i_node;
       }
-      find_node(i_node->m_pLeft, i_value);
-      find_node(i_node->m_pRight, i_value);
-      //need to fix
+      else if (i_value < i_node->m_pValue)
+        return find_node(i_node->m_pLeft, i_value);
+      else if (i_value > i_node->m_pValue)
+        return find_node(i_node->m_pRight, i_value);
     }
+    else
+      return nullptr;
   }
 public:
   Tree();
