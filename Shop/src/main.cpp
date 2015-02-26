@@ -6,7 +6,6 @@
 int main()
 {
   Shop sh;
-
   switch (sh.start_menu())
   {
   case 1:

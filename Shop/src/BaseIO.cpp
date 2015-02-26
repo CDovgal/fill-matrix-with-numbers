@@ -7,6 +7,7 @@
 
 void BaseInput::Input()
 {
+
   std::cout << "Base Input Function" << std::endl;
 }
 
