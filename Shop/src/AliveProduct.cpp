@@ -3,8 +3,8 @@
 std::vector<Good> Alive::make_alive_list(const Good& good)
 {
   std::vector<Good> alive_vec;
-  Good alive_good = good;
-  alive_vec.push_back(alive_good);
+  //Good alive_good = good;
+  alive_vec.push_back(good);
   return alive_vec;
 }
 

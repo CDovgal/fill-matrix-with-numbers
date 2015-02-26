@@ -1,5 +1,7 @@
 syntax: glob
 
+ProjectEulerProblem1/bin/
+Shop_test/bin/
 template_spec/bin/
 boost_test/bin/
 Unkillable/bin/
