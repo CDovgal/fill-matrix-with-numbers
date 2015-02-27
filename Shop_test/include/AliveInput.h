@@ -8,6 +8,7 @@ class AliveInput : public BaseInput
 public:
   AliveInput();
   ~AliveInput();
+  void Input();
 };
 
 #endif //!ALIVEINPUT_H

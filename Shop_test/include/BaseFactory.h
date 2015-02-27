@@ -7,7 +7,7 @@
 class BaseFactory
 {
 public:
-  ~BaseFactory();
+  virtual ~BaseFactory(){};
   virtual BaseInput* createInput() = 0;
   virtual BaseOutput* createOutput() = 0;
 };
