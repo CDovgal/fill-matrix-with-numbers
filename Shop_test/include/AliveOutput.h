@@ -8,6 +8,7 @@ class AliveOutput : public BaseOutput
 public:
   AliveOutput();
   ~AliveOutput();
+  void Output();
 };
 
 #endif //!ALIVEOUTPUT_H

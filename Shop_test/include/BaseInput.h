@@ -7,6 +7,7 @@ class BaseInput
 public:
   BaseInput();
   ~BaseInput();
+  virtual void Input();
 };
 
 

@@ -10,3 +10,8 @@ BaseInput::~BaseInput()
 {
   std::cout << "Base Input Destructor" << std::endl;
 }
+
+void BaseInput::Input()
+{
+  std::cout << "BaseInput Input Function" << std::endl;
+}

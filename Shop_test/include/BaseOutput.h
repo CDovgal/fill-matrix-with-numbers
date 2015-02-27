@@ -7,6 +7,7 @@ class BaseOutput
 public:
   BaseOutput();
   ~BaseOutput();
+  virtual void Output();
 };
 
 

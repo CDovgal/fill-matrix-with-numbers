@@ -10,3 +10,8 @@ UnaliveInput::~UnaliveInput()
 {
   std::cout << "Unalive Input Destructor" << std::endl;
 }
+
+void UnaliveInput::Input()
+{
+  BaseInput::Input();
+}
