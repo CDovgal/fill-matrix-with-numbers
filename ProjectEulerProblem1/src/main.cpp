@@ -31,11 +31,16 @@ void PrimeFactor()
 {
   //What is the largest prime factor of the number 600851475143 ?
   long long number = 600851475143;
-  for (long long i = 1; i < 600851475144; ++i)
+  for (long long i = 600851475143; i > 2; --i)
   {
-    if (number % i == 0)
-      std::cout << i << " ";
+    if (i % 2 != 0 && number % i == 0)
+      std::cout << number << std::endl;
   }
+  /*for (long long i = 600851475142; i > 1; --i)
+  {
+  if (number % i == 0)
+  std::cout << i << " ";
+  }*/
 }
 
 int main()
