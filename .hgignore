@@ -1,5 +1,6 @@
 syntax: glob
 
+Network/
 March_1_boost/bin/
 ProjectEulerProblem1/bin/
 Shop_test/bin/
