@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 
 void FindSumMultiplies()
 {
@@ -31,23 +31,34 @@ void PrimeFactor()
 {
   //What is the largest prime factor of the number 600851475143 ?
   long long number = 600851475143;
-  for (long long i = 600851475143; i > 2; --i)
+  long long LPF = 1;
+  for (long long i = 2; i <= 600851475143 && number != 1; ++i)
   {
-    if (i % 2 != 0 && number % i == 0)
-      std::cout << number << std::endl;
+    while (number % i == 0)
+    {
+      number/= i;
+      LPF = i;
+    }
+      
   }
-  /*for (long long i = 600851475142; i > 1; --i)
-  {
-  if (number % i == 0)
-  std::cout << i << " ";
-  }*/
+  std::cout << LPF << std::endl;
 }
+
+void LargestPalindromeProduct()
+{
+  //A palindromic number reads the same both ways. 
+  //The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
+  //Find the largest palindrome made from the product of two 3 - digit numbers.
+
+}
+
 
 int main()
 {
   //FindSumMultiplies();
   //FibonacciNumbers();
-  PrimeFactor();
+  //PrimeFactor();
+  LargestPalindromeProduct();
 
   return 0;
 }
