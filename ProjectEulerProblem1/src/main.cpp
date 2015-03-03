@@ -74,19 +74,18 @@ void LargestPalindromeProduct()
   //The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
   //Find the largest palindrome made from the product of two 3 - digit numbers.
 
-  for (int i = 999; i > 100;)
+  for (int i = 800; i < 1000; ++i)
   {
-    for (int j = 999; j > 100;)
+    for (int j = 800; j < 1000; ++j)
     {
       if (check_palindromness(i*j))
       {
-        std::cout << i << "  " << j << "  " << i*j << std::endl;
-        return;
-      }
-      else
-      {
-        --i;
-        --j;
+        if (i*j > 900000)
+        {
+
+          std::cout << i << "  " << j << "  " << i*j << std::endl;
+          //return;
+        }
       }
     }
   }
