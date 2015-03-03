@@ -90,12 +90,40 @@ void LargestPalindromeProduct()
 }
 
 
+void SmallestMultiple()
+{
+  //2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
+  //What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20 ?
+  int number = 1;
+  bool passed = true;
+  for (;;)
+  {
+    for (int i = 1; i < 21; ++i)
+    {
+      passed = true;
+      if (number % i != 0)
+      {
+        passed = false;
+        ++number;
+        break;
+      }
+    }
+    if (passed)
+    {
+      std::cout << number << std::endl;
+      break;
+    }
+  }
+}
+
+
 int main()
 {
   //FindSumMultiplies();
   //FibonacciNumbers();
   //PrimeFactor();
-  LargestPalindromeProduct();
+  //LargestPalindromeProduct();
+  SmallestMultiple();
 
   return 0;
 }
