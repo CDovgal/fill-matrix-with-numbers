@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <vector>
 
 void FindSumMultiplies()
 {
@@ -44,11 +45,56 @@ void PrimeFactor()
   std::cout << LPF << std::endl;
 }
 
+
+bool check_palindromness(int i_numb)
+{
+  std::vector<int> digits;
+
+  while (i_numb != 0)
+  {
+    digits.push_back(i_numb % 10);
+    i_numb /= 10;
+  }
+
+  auto it_begin = digits.cbegin();
+  auto it_end = digits.crbegin();
+  while (it_begin != digits.cend() && it_end != digits.crend())
+  {
+    if (*it_begin != *it_end)
+      return false;
+    ++it_begin;
+    ++it_end;
+  }
+  return true;
+}
+
 void LargestPalindromeProduct()
 {
   //A palindromic number reads the same both ways. 
   //The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
   //Find the largest palindrome made from the product of two 3 - digit numbers.
+
+  for (int i = 999; i > 100;)
+  {
+    for (int j = 999; j > 100;)
+    {
+      if (check_palindromness(i*j))
+      {
+        std::cout << i << "  " << j << "  " << i*j << std::endl;
+        return;
+      }
+      else
+      {
+        --i;
+        --j;
+      }
+    }
+  }
+  /*int numb = 6666;
+  if (check_palindromness(numb))
+    std::cout << numb << std::endl;
+  else
+    std::cout << "NOT P" << std::endl;*/
 
 }
 
