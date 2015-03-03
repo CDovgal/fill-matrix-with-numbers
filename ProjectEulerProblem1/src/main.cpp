@@ -37,10 +37,10 @@ void PrimeFactor()
   {
     while (number % i == 0)
     {
-      number/= i;
+      number /= i;
       LPF = i;
     }
-      
+
   }
   std::cout << LPF << std::endl;
 }
@@ -73,28 +73,20 @@ void LargestPalindromeProduct()
   //A palindromic number reads the same both ways. 
   //The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
   //Find the largest palindrome made from the product of two 3 - digit numbers.
-
-  for (int i = 800; i < 1000; ++i)
+  int temp = 0;
+  for (int i = 999; i > 99; --i)
   {
-    for (int j = 800; j < 1000; ++j)
+    for (int j = 999; j > 99; --j)
     {
       if (check_palindromness(i*j))
       {
-        if (i*j > 900000)
-        {
-
-          std::cout << i << "  " << j << "  " << i*j << std::endl;
-          //return;
-        }
+        if (i*j > temp)
+          temp = i*j;
       }
     }
   }
-  /*int numb = 6666;
-  if (check_palindromness(numb))
-    std::cout << numb << std::endl;
-  else
-    std::cout << "NOT P" << std::endl;*/
-
+  std::cout << temp << std::endl;
+  //906609 right answer
 }
 
 
