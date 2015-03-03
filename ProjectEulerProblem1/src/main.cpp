@@ -116,6 +116,34 @@ void SmallestMultiple()
   }
 }
 
+void SumSquareDifference()
+{
+  //The sum of the squares of the first ten natural numbers is,
+  //12 + 22 + ... + 102 = 385
+  // The square of the sum of the first ten natural numbers is,
+  //(1 + 2 + ... + 10)2 = 552 = 3025
+  //Hence the difference between the sum of the squares of the first ten natural numbers and the square of the sum is 3025 − 385 = 2640.
+  //Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.
+  int sum_of_squares = 0;
+  int square_of_the_sum = 0;
+
+  for (int i = 1; i < 101; ++i)
+  {
+    sum_of_squares += pow(i, 2);
+  }
+  std::cout << "Sum of squares: " << sum_of_squares << std::endl;
+
+  int temp = 0;
+  for (int i = 1; i < 101; ++i)
+  {
+    temp += i;
+  }
+  square_of_the_sum = pow(temp, 2);
+  std::cout << "Square of the sum: " << square_of_the_sum << std::endl;
+
+  std::cout << "Difference between square of the sum and sum of suares: " << square_of_the_sum - sum_of_squares << std::endl;
+}
+
 
 int main()
 {
@@ -123,7 +151,8 @@ int main()
   //FibonacciNumbers();
   //PrimeFactor();
   //LargestPalindromeProduct();
-  SmallestMultiple();
+  //SmallestMultiple();
+  SumSquareDifference();
 
   return 0;
 }
