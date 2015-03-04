@@ -145,6 +145,35 @@ void SumSquareDifference()
 }
 
 
+bool is_prime(int i_numb)
+{
+  if (i_numb == 1)
+    return false;
+  for (int d = 2; d*d <= i_numb; ++d){
+    if (i_numb % d == 0)
+      return false;
+  }
+  return true;
+}
+
+void Prime_10001()
+{
+  //By listing the first six prime numbers : 2, 3, 5, 7, 11, and 13, we can see that the 6th prime is 13.
+  //What is the 10 001st prime number ?
+  int count = 0;
+  for (int i = 2;; ++i)
+  {
+    if (count == 10001)
+    {
+      std::cout << i-1 << std::endl;
+      break;
+    }
+    if (is_prime(i))
+      ++count;
+  }
+}
+
+
 int main()
 {
   //FindSumMultiplies();
@@ -152,7 +181,8 @@ int main()
   //PrimeFactor();
   //LargestPalindromeProduct();
   //SmallestMultiple();
-  SumSquareDifference();
+  //SumSquareDifference();
+  Prime_10001();
 
   return 0;
 }
