@@ -1,12 +1,16 @@
 #include "Category.h"
 #include <iostream>
+#include <vector>
 
 class Shop
 {
-  Category* m_category;
+  std::vector<Category> *m_category;
 public:
   Shop();
   ~Shop();
+  void Init();
+  void add_category();
+  void add_new_product();
   void startup_menu();
   void admin_menu();
   void user_menu();

@@ -8,7 +8,7 @@ class UnaliveProduct : public Product
 {
   //std::string type;
 public:
-  UnaliveProduct(const std::string& i_name, int i_count);
+  UnaliveProduct(const std::string& i_name, int i_count, int i_price);
   ~UnaliveProduct();
   void Input();
   void Output();
