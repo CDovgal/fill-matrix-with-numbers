@@ -31,7 +31,6 @@ void Shop::set_startup_sun(int i_sum)
 
 void Shop::input()
 {
-  
   system("cls");
   int choise;
   std::cout << "1. Add alive good." << std::endl;
