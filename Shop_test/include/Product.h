@@ -11,7 +11,7 @@ class Product
 public:
   Product() : m_name("No name"), m_count(0), m_price(0){}
   Product(const std::string& i_name, int count, int i_price);
-  ~Product();
+  virtual ~Product();
   virtual void Input();
   virtual void Output();
 };

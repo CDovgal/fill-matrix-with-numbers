@@ -65,6 +65,7 @@ void Shop::add_category()
   Category new_cat(name);
   m_category->push_back(new_cat);
   std::cout << "Category " << name << " added..." << std::endl;
+  system("pause");
   admin_menu();
 }
 
@@ -116,6 +117,7 @@ void Shop::admin_menu()
   std::cout << "2. Add new product." << std::endl;
   std::cout << "3. Delete category." << std::endl;
   std::cout << "4. Delete product." << std::endl;
+  std::cout << "5. Exit." << std::endl;
   int choise;
   std::cin >> choise;
   switch (choise)
@@ -129,6 +131,9 @@ void Shop::admin_menu()
   case 3:
     break;
   case 4: 
+    break;
+  case 5:
+    return;
     break;
   }
 }
