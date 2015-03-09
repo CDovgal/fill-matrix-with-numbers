@@ -212,7 +212,18 @@ void PythagoreanTriplet()
       }
     }
   }
+}
 
+
+void SummationPrimes()
+{
+  long long sum = 0;
+  for (int i = 1; i < 2000001; ++i)
+  {
+    if (is_prime(i))
+      sum += i;
+  }
+  std::cout << sum << std::endl;
 }
 
 
@@ -227,7 +238,7 @@ int main()
   //Prime_10001();
   //adjacent_digit_product();
   //PythagoreanTriplet();
-
+  SummationPrimes();
 
   return 0;
 }
