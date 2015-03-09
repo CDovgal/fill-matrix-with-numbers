@@ -186,7 +186,7 @@ void adjacent_digit_product()
     temp = number.at(0) - 48;
     for (int i = 1; i < 13; ++i)
     {
-      temp *= number.at(i)-48;
+      temp *= number.at(i) - 48;
     }
     if (temp > result)
       result = temp;
@@ -194,6 +194,27 @@ void adjacent_digit_product()
   }
   std::cout << result << std::endl;
 }
+
+
+void PythagoreanTriplet()
+{
+  //There exists exactly one Pythagorean triplet for which a + b + c = 1000.
+  //Find the product abc.
+  for (int a = 0; a < 1001; ++a)
+  {
+    for (int b = 0; b < 1001; ++b)
+    {
+      int c = 1000 - (a + b);
+      if (a < b && b < c && (a*a + b*b == c*c) && (a + b + c) == 1000)
+      {
+        std::cout << a << " " << b << " " << c << std::endl;
+        std::cout << a*b*c << std::endl;
+      }
+    }
+  }
+
+}
+
 
 int main()
 {
@@ -204,7 +225,9 @@ int main()
   //SmallestMultiple();
   //SumSquareDifference();
   //Prime_10001();
-  adjacent_digit_product();
+  //adjacent_digit_product();
+  //PythagoreanTriplet();
+
 
   return 0;
 }

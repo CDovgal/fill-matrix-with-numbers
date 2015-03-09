@@ -8,10 +8,10 @@ Shop::Shop() : m_category(new std::vector<Category>)
   //m_category->push_back(Some_category);
   Category cat1("Alive");
   Category cat2("Unalive");
-  Category cat3("Olololo");
+  //Category cat3("Olololo");
   m_category->push_back(cat1);
   m_category->push_back(cat2);
-  m_category->push_back(cat3);
+  //m_category->push_back(cat3);
 }
 
 Shop::~Shop()
