@@ -36,6 +36,7 @@ Category::~Category()
 
 void Category::Input()
 {
+  
   m_base_factory->createInput()->Input();
 }
 
@@ -69,3 +70,5 @@ void Category::Generate() //function for testing workability
   m_product_container.push_back(unal3);
   m_product_container.push_back(unal4);
 }
+
+
