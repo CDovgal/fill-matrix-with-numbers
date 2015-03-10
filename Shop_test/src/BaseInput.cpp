@@ -1,5 +1,6 @@
 #include "BaseInput.h"
 #include <iostream>
+#include <string>
 
 BaseInput::BaseInput()
 {
@@ -11,7 +12,8 @@ BaseInput::~BaseInput()
   std::cout << "Base Input Destructor" << std::endl;
 }
 
-void BaseInput::Input()
+Product* BaseInput::Input()
 {
-  std::cout << "BaseInput Input Function" << std::endl;
+  return nullptr;
+  std::cout << "Base Input Input" << std::endl;
 }

@@ -5,12 +5,12 @@
 
 AliveFactory::AliveFactory()
 {
-  std::cout << "Alive Factory Constructor" << std::endl;
+  //std::cout << "Alive Factory Constructor" << std::endl;
 }
 
 AliveFactory::~AliveFactory()
 {
-  std::cout << "Alive Factory Destructor" << std::endl;
+  //std::cout << "Alive Factory Destructor" << std::endl;
 }
 
 BaseInput* AliveFactory::createInput()

@@ -95,16 +95,30 @@ void Shop::add_new_product()
     int choise;
     std::cin >> choise;
     system("cls");
-    std::string name;
-    std::cout << "Please, enter name of new product: " << std::endl;
-    std::cin >> name;
-    int count;
-    std::cout << "Please, enter amount of new product: " << std::endl;
-    std::cin >> count;
-    int price;
-    std::cout << "Please, enter the price(per unit) of new product: " << std::endl;
-    std::cin >> price;
     m_category->at(choise).Input();
+  }
+  admin_menu();
+}
+
+
+void Shop::show_products()
+{
+  if (m_category->empty())
+  {
+    std::cout << "There are no products..." << std::endl;
+    admin_menu();
+  }
+  else
+  {
+    std::cout << "Products from which category tou want to see? " << std::endl;
+    for (unsigned i = 0; i < m_category->size(); ++i)
+    {
+      std::cout << i << ". " << m_category->at(i).name() << std::endl;
+    }
+    int choise;
+    std::cin >> choise;
+    system("cls");
+    m_category->at(choise).Output();
   }
 }
 
@@ -117,7 +131,8 @@ void Shop::admin_menu()
   std::cout << "2. Add new product." << std::endl;
   std::cout << "3. Delete category." << std::endl;
   std::cout << "4. Delete product." << std::endl;
-  std::cout << "5. Exit." << std::endl;
+  std::cout << "5. Show all products." << std::endl;
+  std::cout << "6. Exit." << std::endl;
   int choise;
   std::cin >> choise;
   switch (choise)
@@ -133,6 +148,9 @@ void Shop::admin_menu()
   case 4: 
     break;
   case 5:
+    show_products();
+    break;
+  case 6:
     return;
     break;
   }

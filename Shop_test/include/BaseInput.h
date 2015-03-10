@@ -1,13 +1,13 @@
 #ifndef BASEINPUT_H
 #define BASEINPUT_H
-
+#include "Product.h"
 
 class BaseInput
 {
 public:
   BaseInput();
-  ~BaseInput();
-  virtual void Input();
+  virtual ~BaseInput();
+  virtual Product* Input();
 };
 
 

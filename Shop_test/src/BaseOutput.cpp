@@ -13,5 +13,5 @@ BaseOutput::~BaseOutput()
 
 void BaseOutput::Output()
 {
-  std::cout << "BaseOutput Output Function" << std::endl;
+  
 }

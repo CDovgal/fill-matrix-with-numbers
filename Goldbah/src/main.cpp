@@ -8,8 +8,6 @@ bool isSimple(int i_numb)
     {
       return false;
     }
-    else
-      return true;
   }
 }
 

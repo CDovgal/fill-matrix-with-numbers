@@ -6,9 +6,10 @@
 
 class AliveProduct : public Product
 {
-  //std::string type;
+  int m_suitability_time;
+  friend class AliveOutput;
 public:
-  AliveProduct(const std::string& i_name, int i_count, int i_price);
+  AliveProduct(const std::string& i_name, int i_count, int i_price, int suitability_time);
   ~AliveProduct();
   void Input();
   void Output();
