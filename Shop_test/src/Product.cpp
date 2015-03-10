@@ -17,10 +17,9 @@ Product::~Product()
 
 void Product::Input()
 {
-  std::cout << "Product Input" << std::endl;
 }
 
 void Product::Output()
 {
-  std::cout << "Product Output" << std::endl;
+  std::cout << m_name << " " << m_price << " " << m_count << " ";
 }

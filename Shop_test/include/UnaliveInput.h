@@ -8,7 +8,7 @@ class UnaliveInput : public BaseInput
 public:
   UnaliveInput();
   ~UnaliveInput();
-  void Input();
+  Product* Input();
 };
 
 #endif //!UNALIVEINPUT_H

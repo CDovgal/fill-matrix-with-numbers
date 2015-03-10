@@ -6,7 +6,7 @@ class BaseOutput
 {
 public:
   BaseOutput();
-  ~BaseOutput();
+  virtual ~BaseOutput();
   virtual void Output();
 };
 

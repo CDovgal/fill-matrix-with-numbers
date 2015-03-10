@@ -8,7 +8,7 @@ class AliveInput : public BaseInput
 public:
   AliveInput();
   ~AliveInput();
-  void Input();
+  Product* Input();
 };
 
 #endif //!ALIVEINPUT_H

@@ -6,9 +6,10 @@
 
 class UnaliveProduct : public Product
 {
-  //std::string type;
+  int m_weight;
+  friend class UnaliveOutput;
 public:
-  UnaliveProduct(const std::string& i_name, int i_count, int i_price);
+  UnaliveProduct(const std::string& i_name, int i_count, int i_price, int i_weight);
   ~UnaliveProduct();
   void Input();
   void Output();
