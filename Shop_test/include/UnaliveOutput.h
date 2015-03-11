@@ -8,7 +8,7 @@ class UnaliveOutput : public BaseOutput
 public:
   UnaliveOutput();
   ~UnaliveOutput();
-  void Output();
+  void Output(std::vector<Product*>& i_prod_vec);
 };
 
 #endif //!UNALIVEOUTPUT_H

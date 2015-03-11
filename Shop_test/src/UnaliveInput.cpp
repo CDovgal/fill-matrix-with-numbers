@@ -14,7 +14,7 @@ UnaliveInput::~UnaliveInput()
   //std::cout << "Unalive Input Destructor" << std::endl;
 }
 
-Product* UnaliveInput::Input()
+void UnaliveInput::Input(std::vector<Product*>& i_prod_vec)
 {
   //std::cout << "Unalive Input" << std::endl;
   //BaseInput::Input();
@@ -32,5 +32,6 @@ Product* UnaliveInput::Input()
   std::cout << "Please, enter the weight of new product: " << std::endl;
   std::cin >> weight;
   UnaliveProduct *unalive_product = new UnaliveProduct(name, count, price, weight);
-  return unalive_product;
+  i_prod_vec.push_back(unalive_product);
+  //return unalive_product;
 }

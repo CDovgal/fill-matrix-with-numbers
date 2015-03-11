@@ -12,8 +12,7 @@ BaseInput::~BaseInput()
   std::cout << "Base Input Destructor" << std::endl;
 }
 
-Product* BaseInput::Input()
+void BaseInput::Input(std::vector<Product*>& i_prod_vec)
 {
-  return nullptr;
   std::cout << "Base Input Input" << std::endl;
 }

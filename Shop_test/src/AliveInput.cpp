@@ -14,7 +14,7 @@ AliveInput::~AliveInput()
   //std::cout << "Alive Input Destructor" << std::endl;
 }
 
-Product* AliveInput::Input()
+void AliveInput::Input(std::vector<Product*>& i_prod_vec)
 {
   std::cout << "Enter alive product properties:\n" << std::endl;
   std::string name;
@@ -30,5 +30,6 @@ Product* AliveInput::Input()
   std::cout << "Please, enter the suitability days count of new product: " << std::endl;
   std::cin >> suitability;
   AliveProduct *alive_product = new AliveProduct(name, count, price, suitability);
-  return alive_product;
+  //return alive_product;
+  i_prod_vec.push_back(alive_product);
 }

@@ -100,6 +100,17 @@ void Shop::add_new_product()
   admin_menu();
 }
 
+void Shop::write_to_file()
+{
+
+}
+
+
+void Shop::read_from_file()
+{
+
+}
+
 
 void Shop::show_products()
 {
@@ -110,7 +121,7 @@ void Shop::show_products()
   }
   else
   {
-    std::cout << "Products from which category tou want to see? " << std::endl;
+    std::cout << "Products from which category you want to see? " << std::endl;
     for (unsigned i = 0; i < m_category->size(); ++i)
     {
       std::cout << i << ". " << m_category->at(i).name() << std::endl;

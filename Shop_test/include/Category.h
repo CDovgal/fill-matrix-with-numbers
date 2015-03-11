@@ -20,7 +20,9 @@ public:
   void show_product();
   void Input();
   void Output();
-  //void Generate();
+  void write_to_file();
+  void read_from_file();
+  void Generate();
 };
 
 #endif //!CATEGORY_H
