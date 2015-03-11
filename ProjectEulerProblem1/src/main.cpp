@@ -267,14 +267,16 @@ void LargestProductInAGrid()
   long long temp = 0;
   for (int i = 0; i < 20; ++i)
   {
-    int n = 0;
-    for (int j = 0; j < 4; ++j)
+    int n = 4;
+    for (int j = 0; j < n; ++j)
     {
-      //temp = Matrix[i][j]; //need to do
+      temp = Matrix[i][j];
+      temp *= Matrix[i][j + 1];//need to do
       if (temp > result)
         result = temp;
     }
   }
+  std::cout << result << std::endl;
 
 
 }
