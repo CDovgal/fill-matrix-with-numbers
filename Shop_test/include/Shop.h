@@ -15,4 +15,6 @@ public:
   void startup_menu();
   void admin_menu();
   void user_menu();
+  void write_to_file();
+  void read_from_file();
 };

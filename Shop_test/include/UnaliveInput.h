@@ -8,7 +8,7 @@ class UnaliveInput : public BaseInput
 public:
   UnaliveInput();
   ~UnaliveInput();
-  Product* Input();
+  void Input(std::vector<Product*>& i_prod_vec);
 };
 
 #endif //!UNALIVEINPUT_H

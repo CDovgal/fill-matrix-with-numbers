@@ -8,7 +8,7 @@ class AliveOutput : public BaseOutput
 public:
   AliveOutput();
   ~AliveOutput();
-  void Output();
+  void Output(std::vector<Product*>& i_prod_vec);
 };
 
 #endif //!ALIVEOUTPUT_H

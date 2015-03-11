@@ -1,13 +1,14 @@
 #ifndef BASEINPUT_H
 #define BASEINPUT_H
 #include "Product.h"
+#include <vector>
 
 class BaseInput
 {
 public:
   BaseInput();
   virtual ~BaseInput();
-  virtual Product* Input();
+  virtual void Input(std::vector<Product*>& i_prod_vec);
 };
 
 

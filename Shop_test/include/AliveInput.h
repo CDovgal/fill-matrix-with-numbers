@@ -8,7 +8,7 @@ class AliveInput : public BaseInput
 public:
   AliveInput();
   ~AliveInput();
-  Product* Input();
+  void Input(std::vector<Product*>& i_prod_vec);
 };
 
 #endif //!ALIVEINPUT_H
