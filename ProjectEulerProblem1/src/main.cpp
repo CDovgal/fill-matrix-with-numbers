@@ -370,10 +370,59 @@ void LargestProductInAGrid()
       dr_last = 15;
     }
   }
-  
+
   std::cout << "Right diagonal / Product: " << dr_result << std::endl;
 
 }
+
+
+//int check_for_divisors(long long i_numb)
+//{
+//  int count = 0;
+//  for (long long i = 1; i < i_numb; ++i)
+//  {
+//    if (i_numb % i == 0)
+//      ++count;
+//  }
+//  return count;
+//}
+
+void DivisibleTriangularNumber()
+{
+  //What is the value of the first triangle number to have over five hundred divisors?
+
+  /*int num_of_divisors = 0;
+  long long sum = 1;
+  long long cur_numb = 2;
+  while (num_of_divisors < 501)
+  {
+    num_of_divisors = check_for_divisors(sum);
+    sum += cur_numb;
+    ++cur_numb;
+  }
+  std::cout << sum << std::endl;*/
+
+
+  long long int i = 1;
+  long long int sum = 0;
+
+  while (true) {
+    int number = 2;
+    sum += i;
+    for (long long int n = 2; n < sqrt(sum); ++n)
+    if (sum % n == 0)
+      number += 2;
+
+    if (number > 500) {
+      std::cout << sum << std::endl;
+      break;
+    }
+
+    ++i;
+
+  }
+}
+
 
 int main()
 {
@@ -387,7 +436,9 @@ int main()
   //adjacent_digit_product();
   //PythagoreanTriplet();
   //SummationPrimes();
-  LargestProductInAGrid();
+  //LargestProductInAGrid();
+  //DivisibleTriangularNumber();
+
 
   return 0;
 }
